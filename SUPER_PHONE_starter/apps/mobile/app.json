@@ -14,7 +14,7 @@
       "package": "com.superphone.app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#08152F"
+        "backgroundColor": "#0b1728"
       }
     },
     "plugins": [
