@@ -1,0 +1,47 @@
+name: Apply SUPER PHONE UI patch
+
+on:
+  push:
+    branches:
+      - ui/navy-gold-integration
+    paths:
+      - superphone-ui-patch.b64
+
+permissions:
+  contents: write
+
+jobs:
+  apply-ui:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout integration branch
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ui/navy-gold-integration
+          persist-credentials: true
+
+      - name: Apply approved UI files
+        shell: bash
+        run: |
+          set -euo pipefail
+          base64 --decode superphone-ui-patch.b64 | tar -xz -C SUPER_PHONE_starter
+          git add -A \
+            SUPER_PHONE_starter/apps/mobile/App.js \
+            SUPER_PHONE_starter/apps/mobile/components \
+            SUPER_PHONE_starter/apps/mobile/screens \
+            SUPER_PHONE_starter/apps/mobile/lib/constants.js \
+            SUPER_PHONE_starter/apps/mobile/assets/brand \
+            SUPER_PHONE_starter/apps/web/app/globals.css \
+            SUPER_PHONE_starter/apps/web/app/layout.tsx \
+            SUPER_PHONE_starter/apps/web/app/page.tsx \
+            SUPER_PHONE_starter/apps/web/components/Header.tsx \
+            SUPER_PHONE_starter/apps/web/components/ListingCard.tsx \
+            SUPER_PHONE_starter/apps/web/public/brand
+          if git diff --cached --quiet; then
+            echo "No UI changes to apply."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Apply approved navy and muted-gold UI across web and mobile"
+          git push origin HEAD:ui/navy-gold-integration
