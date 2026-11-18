@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "./superphone-theme.css";
 import Header from "../components/Header";
@@ -9,10 +9,11 @@ export const metadata: Metadata = {
   description: "SUPER PHONE — سوق الهواتف والأجهزة الذكية للبيع والشراء والاستبدال في العراق.",
   applicationName: "SUPER PHONE",
   manifest: "/manifest.webmanifest",
-  themeColor: "#0b1728",
   icons: { icon: "/icon.png", apple: "/apple-icon.png" },
   appleWebApp: { capable: true, title: "SUPER PHONE", statusBarStyle: "black-translucent" },
 };
+
+export const viewport: Viewport = { themeColor: "#0b1728", colorScheme: "dark" };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
