@@ -47,7 +47,7 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
       <h1>{l.title}</h1>
       <p className="price big">{formatPrice(Number(l.price), l.currency)}</p>
       <p className="meta">
-        {CONDITION_LABELS[l.condition as keyof typeof CONDITION_LABELS]} · {l.categories?.name_ar} · {l.governorate}
+        {CONDITION_LABELS[l.condition as keyof typeof CONDITION_LABELS]} · {l.categories?.[0]?.name_ar} · {l.governorate}
         {l.city ? ` — ${l.city}` : ""}
       </p>
       {(l.brand || l.model) && <p className="meta">{[l.brand, l.model].filter(Boolean).join(" ")}</p>}
