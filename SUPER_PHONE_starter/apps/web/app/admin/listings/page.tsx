@@ -50,7 +50,7 @@ export default async function AdminListings() {
           <article key={l.id} className="admin-item">
             <h3><Link href={`/listing/${l.id}`} target="_blank">{l.title}</Link></h3>
             <p className="price">{formatPrice(Number(l.price), l.currency)}</p>
-            <p className="meta">{l.categories?.name_ar} · {l.governorate} · {l.contact_phone}</p>
+            <p className="meta">{l.categories?.[0]?.name_ar} · {l.governorate} · {l.contact_phone}</p>
             {l.description && <p className="desc">{l.description}</p>}
             <div className="admin-actions">
               <form action={approve}>
