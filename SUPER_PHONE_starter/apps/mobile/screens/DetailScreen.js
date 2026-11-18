@@ -48,7 +48,7 @@ export default function DetailScreen({ id, onNeedLogin }) {
     setReportMsg(error?.code === '23505' ? 'سبق أن أبلغت عن هذا الإعلان.' : error ? 'تعذّر إرسال البلاغ.' : 'شكراً، وصل بلاغك للإدارة.');
   }
 
-  if (state === 'loading') return <ActivityIndicator style={{ marginTop: 40 }} color={COLORS.green} />;
+  if (state === 'loading') return <ActivityIndicator style={{ marginTop: 40 }} color={COLORS.gold} />;
   if (state === 'missing') return <Text style={styles.center}>الإعلان غير موجود.</Text>;
 
   const images = [...l.listing_images].sort((a, b) => a.sort_order - b.sort_order);
