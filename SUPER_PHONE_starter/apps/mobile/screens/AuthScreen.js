@@ -40,7 +40,7 @@ export default function AuthScreen() {
         autoCapitalize="none" keyboardType="email-address" autoComplete="email" />
       <TextInput style={styles.input} placeholder="كلمة المرور" value={password} onChangeText={setPassword} secureTextEntry autoCapitalize="none" />
       <Pressable style={[styles.btn, busy && { opacity: 0.6 }]} onPress={submit} disabled={busy}>
-        {busy ? <ActivityIndicator color="#fff" /> : <Text style={styles.btnText}>{mode === 'login' ? 'دخول' : 'إنشاء الحساب'}</Text>}
+        {busy ? <ActivityIndicator color={COLORS.bg} /> : <Text style={styles.btnText}>{mode === 'login' ? 'دخول' : 'إنشاء الحساب'}</Text>}
       </Pressable>
       {!!error && <Text style={styles.err}>{error}</Text>}
       {!!info && <Text style={styles.ok}>{info}</Text>}
@@ -59,5 +59,5 @@ const styles = StyleSheet.create({
   btnText: { color: COLORS.bg, fontWeight: '700', fontSize: 16 },
   err: { color: COLORS.danger, textAlign: 'center' },
   ok: { color: COLORS.gold, textAlign: 'center' },
-  alt: { color: COLORS.green, textAlign: 'center', marginTop: 12 },
+  alt: { color: COLORS.gold, textAlign: 'center', marginTop: 12 },
 });
