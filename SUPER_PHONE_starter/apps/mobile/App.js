@@ -11,9 +11,11 @@ import NewListingScreen from './screens/NewListingScreen';
 import MyListingsScreen from './screens/MyListingsScreen';
 
 const TABS = [
-  { key: 'home', label: 'الرئيسية' },
-  { key: 'favorites', label: 'المفضلة' },
-  { key: 'account', label: 'حسابي' },
+  { key: 'home', icon: '⌂', label: 'الرئيسية' },
+  { key: 'favorites', icon: '♡', label: 'المفضلة' },
+  { key: 'new', icon: '+', label: 'إعلان' },
+  { key: 'mine', icon: '▤', label: 'إعلاناتي' },
+  { key: 'account', icon: '○', label: 'حسابي' },
 ];
 
 function Shell() {
@@ -37,7 +39,7 @@ function Shell() {
   if (route?.name === 'detail') body = <DetailScreen id={route.id} onNeedLogin={goLogin} />;
   else if (route?.name === 'new' && user) body = <NewListingScreen onDone={() => setRoute({ name: 'mine', posted: true })} />;
   else if (route?.name === 'mine' && user) body = <MyListingsScreen onOpen={openDetail} posted={route.posted} />;
-  else if (tab === 'home') body = <BrowseScreen onOpen={openDetail} />;
+  else if (tab === 'home') body = <BrowseScreen onOpen={openDetail} />;\n  else if (tab === 'mine' && user) body = <MyListingsScreen onOpen={openDetail} />;\n  else if (tab === 'new' && user) body = <NewListingScreen onDone={() => { setRoute({ name: 'mine', posted: true }); setTab('mine'); }} />;
   else if (tab === 'favorites')
     body = user ? <FavoritesScreen onOpen={openDetail} /> : (
       <View style={styles.center}>
@@ -80,14 +82,14 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.bg, paddingTop: Platform.OS === 'android' ? RNStatusBar.currentHeight : 0 },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 10 },
-  brand: { fontSize: 16, fontWeight: '700', letterSpacing: 2, color: COLORS.green },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 18, paddingVertical: 13, backgroundColor: COLORS.bg, borderBottomWidth: 1, borderBottomColor: COLORS.border },
+  brand: { fontSize: 19, fontWeight: '800', letterSpacing: 2, color: COLORS.goldLight },
   back: { color: COLORS.green, fontSize: 16 },
-  tabs: { flexDirection: 'row-reverse', borderTopWidth: 1, borderTopColor: COLORS.border, backgroundColor: '#fff' },
-  tab: { flex: 1, paddingVertical: 14, alignItems: 'center' },
-  tabText: { color: COLORS.muted },
-  tabOn: { color: COLORS.green, fontWeight: '700' },
+  tabs: { flexDirection: 'row-reverse', borderTopWidth: 1, borderTopColor: COLORS.border, backgroundColor: COLORS.panel, paddingBottom: Platform.OS === 'ios' ? 8 : 2 },
+  tab: { flex: 1, paddingVertical: 9, alignItems: 'center', gap: 3 },
+  tabIcon: { color: COLORS.muted, fontSize: 20, lineHeight: 23 },\n  tabText: { color: COLORS.muted, fontSize: 10 },
+  tabOn: { color: COLORS.gold, fontWeight: '800' },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 8 },
   muted: { color: COLORS.muted },
-  link: { color: COLORS.green, fontWeight: '700' },
+  link: { color: COLORS.gold, fontWeight: '700' },
 });
