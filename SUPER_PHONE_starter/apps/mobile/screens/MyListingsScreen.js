@@ -5,7 +5,7 @@ import { useAuth } from '../lib/AuthContext';
 import { COLORS, STATUS_LABELS, formatPrice } from '../lib/constants';
 
 const BADGE = {
-  active: ['#dcf3e7', COLORS.green], pending_review: ['#fdf1d6', '#8a5a00'], rejected: ['#fde4e1', COLORS.danger],
+  active: ['#234436', COLORS.success], pending_review: ['#49391f', COLORS.goldLight], rejected: ['#482a2b', COLORS.danger],
 };
 
 export default function MyListingsScreen({ onOpen, posted }) {
@@ -24,7 +24,7 @@ export default function MyListingsScreen({ onOpen, posted }) {
 
   useEffect(() => { load(); }, [load]);
 
-  if (loading) return <ActivityIndicator style={{ marginTop: 40 }} color={COLORS.green} />;
+  if (loading) return <ActivityIndicator style={{ marginTop: 40 }} color={COLORS.gold} />;
   return (
     <FlatList
       data={items}
@@ -41,7 +41,7 @@ export default function MyListingsScreen({ onOpen, posted }) {
       ListEmptyComponent={<Text style={styles.empty}>لم تنشر أي إعلان بعد.</Text>}
       renderItem={({ item }) => {
         const first = [...item.listing_images].sort((a, b) => a.sort_order - b.sort_order)[0];
-        const [bg, fg] = BADGE[item.status] || ['#eef2f0', COLORS.text];
+        const [bg, fg] = BADGE[item.status] || [COLORS.panelAlt, COLORS.text];
         return (
           <Pressable style={styles.row} onPress={() => onOpen(item.id)}>
             {first ? <Image source={{ uri: imageUrl(first.storage_path) }} style={styles.img} /> : <View style={styles.img} />}
@@ -64,10 +64,10 @@ export default function MyListingsScreen({ onOpen, posted }) {
 
 const styles = StyleSheet.create({
   h1: { fontSize: 22, fontWeight: '700', textAlign: 'center', color: COLORS.text, marginBottom: 12 },
-  ok: { color: COLORS.green, textAlign: 'center', marginBottom: 12 },
+  ok: { color: COLORS.gold, textAlign: 'center', marginBottom: 12 },
   empty: { textAlign: 'center', color: COLORS.muted, marginTop: 40 },
-  row: { flexDirection: 'row-reverse', gap: 12, backgroundColor: '#fff', borderRadius: 12, borderWidth: 1, borderColor: COLORS.border, padding: 10, marginBottom: 10 },
-  img: { width: 80, height: 80, borderRadius: 8, backgroundColor: '#eef2f0' },
+  row: { flexDirection: 'row-reverse', gap: 12, backgroundColor: COLORS.panel, borderRadius: 12, borderWidth: 1, borderColor: COLORS.border, padding: 10, marginBottom: 10 },
+  img: { width: 80, height: 80, borderRadius: 8, backgroundColor: COLORS.panelAlt },
   title: { fontWeight: '600', color: COLORS.text, textAlign: 'right' },
   price: { color: COLORS.green, fontWeight: '700', textAlign: 'right', marginVertical: 2 },
   badge: { alignSelf: 'flex-end', paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999 },
