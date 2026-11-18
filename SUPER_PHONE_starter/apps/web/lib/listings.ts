@@ -9,7 +9,7 @@ export type ListingCard = {
   governorate: string;
   city: string | null;
   created_at: string;
-  categories: { slug: string; name_ar: string };
+  categories: { slug: string; name_ar: string }[];
   listing_images: { storage_path: string; sort_order: number }[];
 };
 
