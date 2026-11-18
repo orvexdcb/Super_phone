@@ -116,12 +116,12 @@ export default function BrowseScreen({ onOpen }) {
               onChangeText={set('min')} keyboardType="numeric" textAlign="right" />
           </View>
           <View style={styles.priceRow}>
-            <Pressable style={[styles.apply, { backgroundColor: '#fff', borderColor: '#cfd8d3', borderWidth: 1 }]}
+            <Pressable style={[styles.apply, { backgroundColor: COLORS.panel, borderColor: COLORS.border, borderWidth: 1 }]}
               onPress={() => { const cleared = { ...EMPTY, q: draft.q, category: draft.category }; setDraft(cleared); apply(cleared); }}>
-              <Text>مسح</Text>
+              <Text style={{ color: COLORS.text }}>مسح</Text>
             </Pressable>
             <Pressable style={styles.apply} onPress={() => apply(draft)}>
-              <Text style={{ color: '#fff', fontWeight: '700' }}>تطبيق</Text>
+              <Text style={{ color: COLORS.bg, fontWeight: '800' }}>تطبيق</Text>
             </Pressable>
           </View>
         </ScrollView>
@@ -137,7 +137,7 @@ export default function BrowseScreen({ onOpen }) {
       </View>
 
       {loading ? (
-        <ActivityIndicator style={{ marginTop: 40 }} color={COLORS.green} />
+        <ActivityIndicator style={{ marginTop: 40 }} color={COLORS.gold} />
       ) : (
         <FlatList
           data={items}
@@ -159,13 +159,13 @@ export default function BrowseScreen({ onOpen }) {
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   search: { flexDirection: 'row-reverse', gap: 8, padding: 16, paddingBottom: 8 },
-  input: { backgroundColor: '#fff', borderWidth: 1, borderColor: '#cfd8d3', borderRadius: 10, padding: 12, fontSize: 16 },
-  filterBtn: { justifyContent: 'center', paddingHorizontal: 14, borderRadius: 10, borderWidth: 1, borderColor: COLORS.green, backgroundColor: '#fff' },
-  panel: { maxHeight: 360, paddingHorizontal: 16, paddingBottom: 8 },
+  input: { backgroundColor: COLORS.panel, borderWidth: 1, borderColor: COLORS.border, borderRadius: 10, padding: 12, fontSize: 16, color: COLORS.text },
+  filterBtn: { justifyContent: 'center', paddingHorizontal: 14, borderRadius: 10, borderWidth: 1, borderColor: COLORS.gold, backgroundColor: COLORS.panel },
+  panel: { maxHeight: 360, paddingHorizontal: 16, paddingBottom: 8, backgroundColor: COLORS.bg },
   label: { color: COLORS.muted, textAlign: 'right', marginTop: 8, marginBottom: 6 },
   wrap: { flexDirection: 'row-reverse', flexWrap: 'wrap', gap: 8 },
   priceRow: { flexDirection: 'row-reverse', gap: 8, marginTop: 8 },
-  apply: { flex: 1, backgroundColor: COLORS.green, borderRadius: 10, padding: 12, alignItems: 'center' },
+  apply: { flex: 1, backgroundColor: COLORS.gold, borderRadius: 10, padding: 12, alignItems: 'center' },
   chips: { paddingHorizontal: 16, gap: 8, paddingBottom: 4, flexDirection: 'row-reverse' },
   empty: { textAlign: 'center', color: COLORS.muted, marginTop: 40 },
 });

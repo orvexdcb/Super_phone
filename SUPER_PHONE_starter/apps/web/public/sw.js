@@ -1,0 +1,62 @@
+const CACHE_NAME = "super-phone-static-v1";
+const OFFLINE_URL = "/offline.html";
+const STATIC_URLS = [
+  OFFLINE_URL,
+  "/pwa-icon.png",
+  "/pwa-icon.svg",
+  "/pwa-maskable.svg",
+  "/icon.png",
+  "/apple-icon.png"
+];
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then((cache) => cache.addAll(STATIC_URLS))
+      .then(() => self.skipWaiting())
+  );
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys()
+      .then((keys) => Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))))
+      .then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener("fetch", (event) => {
+  const request = event.request;
+  if (request.method !== "GET") return;
+
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return;
+
+  const isStaticAsset =
+    url.pathname.startsWith("/_next/static/") ||
+    STATIC_URLS.includes(url.pathname);
+
+  if (isStaticAsset) {
+    event.respondWith(
+      caches.open(CACHE_NAME).then(async (cache) => {
+        const cached = await cache.match(request);
+        if (cached) return cached;
+        const response = await fetch(request);
+        if (response.ok) await cache.put(request, response.clone());
+        return response;
+      })
+    );
+    return;
+  }
+
+  // Never cache authenticated pages, account data, or Supabase responses.
+  // Use the network for pages and show a static offline notice only on failure.
+  if (request.mode === "navigate") {
+    event.respondWith(
+      fetch(request).catch(async () => {
+        const offline = await caches.match(OFFLINE_URL);
+        return offline || Response.error();
+      })
+    );
+  }
+});

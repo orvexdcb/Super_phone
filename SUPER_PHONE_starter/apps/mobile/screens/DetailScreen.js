@@ -48,7 +48,7 @@ export default function DetailScreen({ id, onNeedLogin }) {
     setReportMsg(error?.code === '23505' ? 'سبق أن أبلغت عن هذا الإعلان.' : error ? 'تعذّر إرسال البلاغ.' : 'شكراً، وصل بلاغك للإدارة.');
   }
 
-  if (state === 'loading') return <ActivityIndicator style={{ marginTop: 40 }} color={COLORS.green} />;
+  if (state === 'loading') return <ActivityIndicator style={{ marginTop: 40 }} color={COLORS.gold} />;
   if (state === 'missing') return <Text style={styles.center}>الإعلان غير موجود.</Text>;
 
   const images = [...l.listing_images].sort((a, b) => a.sort_order - b.sort_order);
@@ -124,19 +124,19 @@ export default function DetailScreen({ id, onNeedLogin }) {
 const styles = StyleSheet.create({
   center: { textAlign: 'center', marginTop: 40, color: COLORS.muted },
   warn: { textAlign: 'center', color: '#8a5a00', backgroundColor: '#fdf1d6', padding: 10 },
-  noimg: { height: 200, backgroundColor: '#eef2f0', alignItems: 'center', justifyContent: 'center' },
+  noimg: { height: 200, backgroundColor: COLORS.panelAlt, alignItems: 'center', justifyContent: 'center' },
   body: { padding: 16 },
   title: { fontSize: 20, fontWeight: '700', color: COLORS.text, textAlign: 'right' },
-  price: { fontSize: 20, fontWeight: '700', color: COLORS.green, marginVertical: 6, textAlign: 'right' },
+  price: { fontSize: 20, fontWeight: '700', color: COLORS.gold, marginVertical: 6, textAlign: 'right' },
   muted: { color: COLORS.muted, textAlign: 'right' },
-  specs: { backgroundColor: '#fff', borderRadius: 10, borderWidth: 1, borderColor: COLORS.border, marginTop: 14 },
+  specs: { backgroundColor: COLORS.panel, borderRadius: 10, borderWidth: 1, borderColor: COLORS.border, marginTop: 14 },
   specRow: { flexDirection: 'row-reverse', justifyContent: 'space-between', padding: 12, borderBottomWidth: 1, borderBottomColor: COLORS.border },
   specVal: { color: COLORS.text, fontWeight: '600' },
   desc: { marginTop: 14, lineHeight: 24, color: COLORS.text, textAlign: 'right' },
-  ghost: { marginTop: 16, borderWidth: 1, borderColor: '#cfd8d3', backgroundColor: '#fff', borderRadius: 10, padding: 12, alignItems: 'center' },
+  ghost: { marginTop: 16, borderWidth: 1, borderColor: COLORS.border, backgroundColor: COLORS.panel, borderRadius: 10, padding: 12, alignItems: 'center' },
   contact: { flexDirection: 'row-reverse', gap: 10, marginTop: 12 },
-  btn: { flex: 1, backgroundColor: COLORS.green, borderRadius: 10, padding: 14, alignItems: 'center' },
-  btnText: { color: '#fff', fontWeight: '700' },
-  reportInput: { backgroundColor: '#fff', borderWidth: 1, borderColor: '#cfd8d3', borderRadius: 10, padding: 12, minHeight: 70, textAlignVertical: 'top' },
-  safety: { marginTop: 16, backgroundColor: '#fdf1d6', color: '#6b4a00', padding: 12, borderRadius: 10, textAlign: 'right' },
+  btn: { flex: 1, backgroundColor: COLORS.gold, borderRadius: 10, padding: 14, alignItems: 'center' },
+  btnText: { color: COLORS.bg, fontWeight: '700' },
+  reportInput: { backgroundColor: COLORS.panel, borderWidth: 1, borderColor: COLORS.border, borderRadius: 10, padding: 12, minHeight: 70, textAlignVertical: 'top' },
+  safety: { marginTop: 16, backgroundColor: COLORS.panelAlt, color: COLORS.goldLight, padding: 12, borderRadius: 10, textAlign: 'right' },
 });

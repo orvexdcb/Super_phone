@@ -161,7 +161,7 @@ export default function NewListingScreen({ onDone }) {
           value={f.description} onChangeText={set('description')} multiline maxLength={4000} textAlign="right" />
 
         <Pressable style={styles.pick} onPress={pick}>
-          <Text style={{ color: COLORS.green }}>إضافة صور ({images.length}/{MAX_IMAGES})</Text>
+          <Text style={{ color: COLORS.gold }}>إضافة صور ({images.length}/{MAX_IMAGES})</Text>
         </Pressable>
         <Row>{images.map((img, i) => (
           <View key={img.uri} style={styles.thumbWrap}>
@@ -175,7 +175,7 @@ export default function NewListingScreen({ onDone }) {
         <Text style={styles.note}>الإعلان يُراجَع من الإدارة قبل ظهوره. المنصة وسيط للتواصل فقط، والبيع والتسليم شخصياً بين الطرفين.</Text>
         {!!error && <Text style={styles.err}>{error}</Text>}
         <Pressable style={[styles.btn, busy && { opacity: 0.6 }]} onPress={submit} disabled={busy}>
-          {busy ? <ActivityIndicator color="#fff" /> : <Text style={styles.btnText}>نشر الإعلان</Text>}
+          {busy ? <ActivityIndicator color={COLORS.bg} /> : <Text style={styles.btnText}>نشر الإعلان</Text>}
         </Pressable>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -186,14 +186,14 @@ const styles = StyleSheet.create({
   form: { padding: 16, gap: 10, paddingBottom: 60 },
   h1: { fontSize: 22, fontWeight: '700', textAlign: 'center', color: COLORS.text },
   label: { color: COLORS.muted, textAlign: 'right', marginTop: 6 },
-  input: { backgroundColor: '#fff', borderWidth: 1, borderColor: '#cfd8d3', borderRadius: 10, padding: 12, fontSize: 16 },
+  input: { backgroundColor: COLORS.panel, borderWidth: 1, borderColor: COLORS.border, borderRadius: 10, padding: 12, fontSize: 16, color: COLORS.text },
   wrap: { flexDirection: 'row-reverse', flexWrap: 'wrap', gap: 8 },
-  pick: { borderWidth: 1, borderStyle: 'dashed', borderColor: COLORS.green, borderRadius: 10, padding: 12, alignItems: 'center' },
+  pick: { borderWidth: 1, borderStyle: 'dashed', borderColor: COLORS.gold, borderRadius: 10, padding: 12, alignItems: 'center' },
   thumbWrap: { width: 84, height: 84 },
   thumb: { width: 84, height: 84, borderRadius: 8 },
   x: { position: 'absolute', top: -6, left: -6, width: 22, height: 22, borderRadius: 11, backgroundColor: COLORS.danger, alignItems: 'center', justifyContent: 'center' },
   note: { color: COLORS.muted, textAlign: 'right', fontSize: 13 },
   err: { color: COLORS.danger, textAlign: 'center' },
-  btn: { backgroundColor: COLORS.green, borderRadius: 10, padding: 14, alignItems: 'center', marginTop: 6 },
-  btnText: { color: '#fff', fontWeight: '700', fontSize: 16 },
+  btn: { backgroundColor: COLORS.gold, borderRadius: 10, padding: 14, alignItems: 'center', marginTop: 6 },
+  btnText: { color: COLORS.bg, fontWeight: '700', fontSize: 16 },
 });

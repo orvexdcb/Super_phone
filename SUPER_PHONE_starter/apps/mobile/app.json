@@ -4,7 +4,7 @@
     "slug": "super-phone",
     "version": "0.1.0",
     "orientation": "portrait",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "dark",
     "icon": "./assets/icon.png",
     "ios": {
       "supportsTablet": true,
@@ -14,7 +14,7 @@
       "package": "com.superphone.app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#08152F"
+        "backgroundColor": "#0b1728"
       }
     },
     "plugins": [
@@ -24,6 +24,17 @@
           "photosPermission": "نحتاج الوصول لصورك لإرفاقها بإعلانك."
         }
       ]
-    ]
+    ],
+    "splash": {
+      "backgroundColor": "#0b1728"
+    },
+    "androidStatusBar": {
+      "backgroundColor": "#0b1728",
+      "barStyle": "light-content"
+    },
+    "androidNavigationBar": {
+      "backgroundColor": "#0b1728",
+      "barStyle": "light-content"
+    }
   }
 }

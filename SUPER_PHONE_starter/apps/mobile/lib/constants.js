@@ -5,7 +5,7 @@ export const SPEC_LABELS = {
 };
 
 export const COLORS = {
-  green: '#16734f', bg: '#f5f7f6', text: '#17231f', muted: '#65736d', border: '#e3e9e6', danger: '#b42318',
+  green: '#d8ad5e', gold: '#d8ad5e', goldLight: '#f0d39a', bg: '#0b1728', panel: '#17263a', panelAlt: '#223249', text: '#f7f4ed', muted: '#b8c1ce', border: '#35445a', danger: '#d87970', success: '#75bd99',
 };
 
 export function formatPrice(price, currency) {

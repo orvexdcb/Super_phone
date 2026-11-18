@@ -24,7 +24,7 @@ export default function FavoritesScreen({ onOpen }) {
 
   useEffect(() => { load(); }, [load]);
 
-  if (loading) return <ActivityIndicator style={{ marginTop: 40 }} color={COLORS.green} />;
+  if (loading) return <ActivityIndicator style={{ marginTop: 40 }} color={COLORS.gold} />;
   return (
     <FlatList
       data={items}

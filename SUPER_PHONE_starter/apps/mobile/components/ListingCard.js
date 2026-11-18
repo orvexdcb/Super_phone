@@ -27,11 +27,11 @@ export default function ListingCard({ listing, onPress }) {
 }
 
 const styles = StyleSheet.create({
-  card: { backgroundColor: '#fff', borderRadius: 12, borderWidth: 1, borderColor: COLORS.border, overflow: 'hidden', marginBottom: 12 },
-  img: { width: '100%', aspectRatio: 4 / 3, backgroundColor: '#eef2f0' },
+  card: { backgroundColor: COLORS.panel, borderRadius: 12, borderWidth: 1, borderColor: COLORS.border, overflow: 'hidden', marginBottom: 12 },
+  img: { width: '100%', aspectRatio: 4 / 3, backgroundColor: COLORS.panelAlt },
   noimg: { alignItems: 'center', justifyContent: 'center' },
   body: { padding: 12 },
   title: { fontSize: 16, fontWeight: '600', color: COLORS.text, textAlign: 'right' },
-  price: { fontSize: 16, fontWeight: '700', color: COLORS.green, marginVertical: 4, textAlign: 'right' },
+  price: { fontSize: 16, fontWeight: '700', color: COLORS.gold, marginVertical: 4, textAlign: 'right' },
   muted: { color: COLORS.muted, fontSize: 13, textAlign: 'right' },
 });
