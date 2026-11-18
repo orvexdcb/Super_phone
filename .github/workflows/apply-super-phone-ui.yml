@@ -24,7 +24,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          base64 --decode superphone-ui-patch.b64 | tar -xz -C SUPER_PHONE_starter
+          base64 --decode superphone-ui-patch.b64 | xz -dc | tar -xf - -C SUPER_PHONE_starter
           git add -A \
             SUPER_PHONE_starter/apps/mobile/App.js \
             SUPER_PHONE_starter/apps/mobile/components \
