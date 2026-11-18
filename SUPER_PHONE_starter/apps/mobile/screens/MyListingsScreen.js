@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   row: { flexDirection: 'row-reverse', gap: 12, backgroundColor: COLORS.panel, borderRadius: 12, borderWidth: 1, borderColor: COLORS.border, padding: 10, marginBottom: 10 },
   img: { width: 80, height: 80, borderRadius: 8, backgroundColor: COLORS.panelAlt },
   title: { fontWeight: '600', color: COLORS.text, textAlign: 'right' },
-  price: { color: COLORS.green, fontWeight: '700', textAlign: 'right', marginVertical: 2 },
+  price: { color: COLORS.gold, fontWeight: '700', textAlign: 'right', marginVertical: 2 },
   badge: { alignSelf: 'flex-end', paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999 },
   muted: { color: COLORS.muted, textAlign: 'right', fontSize: 13 },
 });
