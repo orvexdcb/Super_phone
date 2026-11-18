@@ -26,10 +26,10 @@ export default function AccountScreen({ onNavigate }) {
 }
 
 const styles = StyleSheet.create({
-  primary: { alignSelf: 'stretch', backgroundColor: COLORS.green, borderRadius: 10, padding: 14, alignItems: 'center', marginTop: 8 },
-  primaryText: { color: '#fff', fontWeight: '700', fontSize: 16 },
-  secondary: { alignSelf: 'stretch', borderWidth: 1, borderColor: COLORS.green, borderRadius: 10, padding: 14, alignItems: 'center' },
-  secondaryText: { color: COLORS.green, fontWeight: '700', fontSize: 16 },
+  primary: { alignSelf: 'stretch', backgroundColor: COLORS.gold, borderRadius: 10, padding: 14, alignItems: 'center', marginTop: 8 },
+  primaryText: { color: COLORS.bg, fontWeight: '700', fontSize: 16 },
+  secondary: { alignSelf: 'stretch', borderWidth: 1, borderColor: COLORS.gold, borderRadius: 10, padding: 14, alignItems: 'center' },
+  secondaryText: { color: COLORS.gold, fontWeight: '700', fontSize: 16 },
   wrap: { padding: 24, gap: 12, alignItems: 'center' },
   h1: { fontSize: 22, fontWeight: '700', color: COLORS.text },
   email: { color: COLORS.muted },
