@@ -175,7 +175,7 @@ export default function NewListingScreen({ onDone }) {
         <Text style={styles.note}>الإعلان يُراجَع من الإدارة قبل ظهوره. المنصة وسيط للتواصل فقط، والبيع والتسليم شخصياً بين الطرفين.</Text>
         {!!error && <Text style={styles.err}>{error}</Text>}
         <Pressable style={[styles.btn, busy && { opacity: 0.6 }]} onPress={submit} disabled={busy}>
-          {busy ? <ActivityIndicator color="#fff" /> : <Text style={styles.btnText}>نشر الإعلان</Text>}
+          {busy ? <ActivityIndicator color={COLORS.bg} /> : <Text style={styles.btnText}>نشر الإعلان</Text>}
         </Pressable>
       </ScrollView>
     </KeyboardAvoidingView>
