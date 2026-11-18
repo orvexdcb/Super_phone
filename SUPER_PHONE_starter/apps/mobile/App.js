@@ -21,9 +21,10 @@ const TABS = [
 function Shell() {
   const { user } = useAuth();
   const [tab, setTab] = useState('home');
-  const [route, setRoute] = useState(null); // null | {name:'detail',id} | {name:'new'} | {name:'mine',posted?}
-  const detailId = route?.name === 'detail' ? route.id : null;
+  const [route, setRoute] = useState(null);
+
   const openDetail = (id) => setRoute({ name: 'detail', id });
+  const goLogin = () => { setRoute(null); setTab('account'); };
 
   useEffect(() => {
     const sub = BackHandler.addEventListener('hardwareBackPress', () => {
@@ -33,21 +34,21 @@ function Shell() {
     return () => sub.remove();
   }, [route]);
 
-  const goLogin = () => { setRoute(null); setTab('account'); };
-
   let body;
   if (route?.name === 'detail') body = <DetailScreen id={route.id} onNeedLogin={goLogin} />;
-  else if (route?.name === 'new' && user) body = <NewListingScreen onDone={() => setRoute({ name: 'mine', posted: true })} />;
+  else if (route?.name === 'new' && user) body = <NewListingScreen onDone={() => { setRoute({ name: 'mine', posted: true }); setTab('mine'); }} />;
   else if (route?.name === 'mine' && user) body = <MyListingsScreen onOpen={openDetail} posted={route.posted} />;
-  else if (tab === 'home') body = <BrowseScreen onOpen={openDetail} />;\n  else if (tab === 'mine' && user) body = <MyListingsScreen onOpen={openDetail} />;\n  else if (tab === 'new' && user) body = <NewListingScreen onDone={() => { setRoute({ name: 'mine', posted: true }); setTab('mine'); }} />;
-  else if (tab === 'favorites')
+  else if (tab === 'home') body = <BrowseScreen onOpen={openDetail} />;
+  else if (tab === 'favorites') {
     body = user ? <FavoritesScreen onOpen={openDetail} /> : (
       <View style={styles.center}>
         <Text style={styles.muted}>سجّل الدخول لعرض مفضلتك.</Text>
         <Pressable onPress={() => setTab('account')}><Text style={styles.link}>تسجيل الدخول</Text></Pressable>
       </View>
     );
-  else body = <AccountScreen onNavigate={setRoute} />;
+  } else {
+    body = <AccountScreen onNavigate={setRoute} />;
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -61,7 +62,17 @@ function Shell() {
       {!route && (
         <View style={styles.tabs}>
           {TABS.map((t) => (
-            <Pressable key={t.key} style={styles.tab} onPress={() => setTab(t.key)}>
+            <Pressable key={t.key} style={styles.tab} onPress={() => {
+              if (t.key === 'new' || t.key === 'mine') {
+                if (!user) { setRoute(null); setTab('account'); return; }
+                setTab(t.key);
+                setRoute(t.key === 'new' ? { name: 'new' } : { name: 'mine' });
+                return;
+              }
+              setRoute(null);
+              setTab(t.key);
+            }}>
+              <Text style={[styles.tabIcon, (tab === t.key || route?.name === t.key) && styles.tabOn]}>{t.icon}</Text>
               <Text style={[styles.tabText, tab === t.key && styles.tabOn]}>{t.label}</Text>
             </Pressable>
           ))}
@@ -81,13 +92,14 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.bg, paddingTop: Platform.OS === 'android' ? RNStatusBar.currentHeight : 0 },
+  container: { flex: 1, backgroundColor: COLORS.bg, paddingTop: Platform.OS === 'android' ? (RNStatusBar.currentHeight || 0) : 0 },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 18, paddingVertical: 13, backgroundColor: COLORS.bg, borderBottomWidth: 1, borderBottomColor: COLORS.border },
   brand: { fontSize: 19, fontWeight: '800', letterSpacing: 2, color: COLORS.goldLight },
   back: { color: COLORS.gold, fontSize: 16 },
   tabs: { flexDirection: 'row-reverse', borderTopWidth: 1, borderTopColor: COLORS.border, backgroundColor: COLORS.panel, paddingBottom: Platform.OS === 'ios' ? 8 : 2 },
   tab: { flex: 1, paddingVertical: 9, alignItems: 'center', gap: 3 },
-  tabIcon: { color: COLORS.muted, fontSize: 20, lineHeight: 23 },\n  tabText: { color: COLORS.muted, fontSize: 10 },
+  tabIcon: { color: COLORS.muted, fontSize: 20, lineHeight: 23 },
+  tabText: { color: COLORS.muted, fontSize: 10 },
   tabOn: { color: COLORS.gold, fontWeight: '800' },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 8 },
   muted: { color: COLORS.muted },
