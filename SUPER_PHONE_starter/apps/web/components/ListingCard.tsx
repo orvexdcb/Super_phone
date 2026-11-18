@@ -20,7 +20,7 @@ export default function ListingCard({ listing }: { listing: Listing }) {
         <h3>{listing.title}</h3>
         <p className="price">{formatPrice(listing.price, listing.currency)}</p>
         <p className="meta">
-          {CONDITION_LABELS[listing.condition]} · {listing.categories.name_ar}
+          {CONDITION_LABELS[listing.condition]} · {listing.categories?.[0]?.name_ar}
         </p>
         <p className="meta">
           {listing.governorate}
