@@ -11,8 +11,8 @@ export default function Chip({ label, on, onPress }) {
 }
 
 const styles = StyleSheet.create({
-  chip: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 999, backgroundColor: '#fff', borderWidth: 1, borderColor: '#cfd8d3' },
+  chip: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 999, backgroundColor: COLORS.panel, borderWidth: 1, borderColor: COLORS.border },
   on: { backgroundColor: COLORS.green, borderColor: COLORS.green },
   text: { color: COLORS.text },
-  textOn: { color: '#fff' },
+  textOn: { color: COLORS.bg, fontWeight: '700' },
 });
