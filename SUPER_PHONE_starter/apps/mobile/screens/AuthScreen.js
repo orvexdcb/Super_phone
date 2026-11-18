@@ -54,10 +54,10 @@ export default function AuthScreen() {
 const styles = StyleSheet.create({
   wrap: { padding: 24, gap: 10 },
   h1: { fontSize: 22, fontWeight: '700', textAlign: 'center', marginBottom: 8, color: COLORS.text },
-  input: { backgroundColor: '#fff', borderWidth: 1, borderColor: '#cfd8d3', borderRadius: 10, padding: 12, fontSize: 16 },
-  btn: { backgroundColor: COLORS.green, borderRadius: 10, padding: 14, alignItems: 'center' },
-  btnText: { color: '#fff', fontWeight: '700', fontSize: 16 },
+  input: { backgroundColor: COLORS.panel, borderWidth: 1, borderColor: COLORS.border, borderRadius: 10, padding: 12, fontSize: 16, color: COLORS.text },
+  btn: { backgroundColor: COLORS.gold, borderRadius: 10, padding: 14, alignItems: 'center' },
+  btnText: { color: COLORS.bg, fontWeight: '700', fontSize: 16 },
   err: { color: COLORS.danger, textAlign: 'center' },
-  ok: { color: COLORS.green, textAlign: 'center' },
+  ok: { color: COLORS.gold, textAlign: 'center' },
   alt: { color: COLORS.green, textAlign: 'center', marginTop: 12 },
 });
