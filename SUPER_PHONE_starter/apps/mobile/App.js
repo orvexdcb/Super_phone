@@ -67,7 +67,7 @@ function Shell() {
           ))}
         </View>
       )}
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
     </SafeAreaView>
   );
 }
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.bg, paddingTop: Platform.OS === 'android' ? RNStatusBar.currentHeight : 0 },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 18, paddingVertical: 13, backgroundColor: COLORS.bg, borderBottomWidth: 1, borderBottomColor: COLORS.border },
   brand: { fontSize: 19, fontWeight: '800', letterSpacing: 2, color: COLORS.goldLight },
-  back: { color: COLORS.green, fontSize: 16 },
+  back: { color: COLORS.gold, fontSize: 16 },
   tabs: { flexDirection: 'row-reverse', borderTopWidth: 1, borderTopColor: COLORS.border, backgroundColor: COLORS.panel, paddingBottom: Platform.OS === 'ios' ? 8 : 2 },
   tab: { flex: 1, paddingVertical: 9, alignItems: 'center', gap: 3 },
   tabIcon: { color: COLORS.muted, fontSize: 20, lineHeight: 23 },\n  tabText: { color: COLORS.muted, fontSize: 10 },
