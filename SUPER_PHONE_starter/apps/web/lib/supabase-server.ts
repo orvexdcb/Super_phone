@@ -9,7 +9,7 @@ export async function createServerSupabase() {
     {
       cookies: {
         getAll: () => cookieStore.getAll(),
-        setAll(list) {
+        setAll(list: { name: string; value: string; options?: Parameters<typeof cookieStore.set>[2] }[]) {
           try {
             list.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
           } catch {
