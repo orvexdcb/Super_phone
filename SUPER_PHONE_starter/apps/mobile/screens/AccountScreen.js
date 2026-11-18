@@ -1,0 +1,38 @@
+import React from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../lib/AuthContext';
+import { COLORS } from '../lib/constants';
+import AuthScreen from './AuthScreen';
+
+export default function AccountScreen({ onNavigate }) {
+  const { user } = useAuth();
+  if (!user) return <AuthScreen />;
+  return (
+    <View style={styles.wrap}>
+      <Text style={styles.h1}>حسابي</Text>
+      <Text style={styles.email}>{user.email}</Text>
+      <Pressable style={styles.primary} onPress={() => onNavigate({ name: 'new' })}>
+        <Text style={styles.primaryText}>+ نشر إعلان</Text>
+      </Pressable>
+      <Pressable style={styles.secondary} onPress={() => onNavigate({ name: 'mine' })}>
+        <Text style={styles.secondaryText}>إعلاناتي</Text>
+      </Pressable>
+      <Pressable style={styles.btn} onPress={() => supabase.auth.signOut()}>
+        <Text style={styles.btnText}>تسجيل الخروج</Text>
+      </Pressable>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  primary: { alignSelf: 'stretch', backgroundColor: COLORS.green, borderRadius: 10, padding: 14, alignItems: 'center', marginTop: 8 },
+  primaryText: { color: '#fff', fontWeight: '700', fontSize: 16 },
+  secondary: { alignSelf: 'stretch', borderWidth: 1, borderColor: COLORS.green, borderRadius: 10, padding: 14, alignItems: 'center' },
+  secondaryText: { color: COLORS.green, fontWeight: '700', fontSize: 16 },
+  wrap: { padding: 24, gap: 12, alignItems: 'center' },
+  h1: { fontSize: 22, fontWeight: '700', color: COLORS.text },
+  email: { color: COLORS.muted },
+  btn: { borderWidth: 1, borderColor: COLORS.danger, borderRadius: 10, paddingVertical: 12, paddingHorizontal: 24, marginTop: 12 },
+  btnText: { color: COLORS.danger, fontWeight: '700' },
+});

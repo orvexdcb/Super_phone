@@ -1,0 +1,75 @@
+import React, { useCallback, useEffect, useState } from 'react';
+import { ActivityIndicator, FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { supabase, imageUrl } from '../lib/supabase';
+import { useAuth } from '../lib/AuthContext';
+import { COLORS, STATUS_LABELS, formatPrice } from '../lib/constants';
+
+const BADGE = {
+  active: ['#dcf3e7', COLORS.green], pending_review: ['#fdf1d6', '#8a5a00'], rejected: ['#fde4e1', COLORS.danger],
+};
+
+export default function MyListingsScreen({ onOpen, posted }) {
+  const { user } = useAuth();
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    const { data } = await supabase.from('listings')
+      .select('id,title,price,currency,status,rejection_reason,listing_images(storage_path,sort_order)')
+      .eq('seller_id', user.id).order('created_at', { ascending: false });
+    setItems(data || []);
+    setLoading(false);
+  }, [user.id]);
+
+  useEffect(() => { load(); }, [load]);
+
+  if (loading) return <ActivityIndicator style={{ marginTop: 40 }} color={COLORS.green} />;
+  return (
+    <FlatList
+      data={items}
+      keyExtractor={(i) => i.id}
+      contentContainerStyle={{ padding: 16 }}
+      refreshing={loading}
+      onRefresh={load}
+      ListHeaderComponent={
+        <>
+          <Text style={styles.h1}>إعلاناتي</Text>
+          {posted && <Text style={styles.ok}>تم إرسال إعلانك للمراجعة، وسيظهر بعد الموافقة.</Text>}
+        </>
+      }
+      ListEmptyComponent={<Text style={styles.empty}>لم تنشر أي إعلان بعد.</Text>}
+      renderItem={({ item }) => {
+        const first = [...item.listing_images].sort((a, b) => a.sort_order - b.sort_order)[0];
+        const [bg, fg] = BADGE[item.status] || ['#eef2f0', COLORS.text];
+        return (
+          <Pressable style={styles.row} onPress={() => onOpen(item.id)}>
+            {first ? <Image source={{ uri: imageUrl(first.storage_path) }} style={styles.img} /> : <View style={styles.img} />}
+            <View style={{ flex: 1 }}>
+              <Text style={styles.title} numberOfLines={2}>{item.title}</Text>
+              <Text style={styles.price}>{formatPrice(item.price, item.currency)}</Text>
+              <View style={[styles.badge, { backgroundColor: bg }]}>
+                <Text style={{ color: fg, fontSize: 12 }}>{STATUS_LABELS[item.status]}</Text>
+              </View>
+              {item.status === 'rejected' && !!item.rejection_reason && (
+                <Text style={styles.muted}>السبب: {item.rejection_reason}</Text>
+              )}
+            </View>
+          </Pressable>
+        );
+      }}
+    />
+  );
+}
+
+const styles = StyleSheet.create({
+  h1: { fontSize: 22, fontWeight: '700', textAlign: 'center', color: COLORS.text, marginBottom: 12 },
+  ok: { color: COLORS.green, textAlign: 'center', marginBottom: 12 },
+  empty: { textAlign: 'center', color: COLORS.muted, marginTop: 40 },
+  row: { flexDirection: 'row-reverse', gap: 12, backgroundColor: '#fff', borderRadius: 12, borderWidth: 1, borderColor: COLORS.border, padding: 10, marginBottom: 10 },
+  img: { width: 80, height: 80, borderRadius: 8, backgroundColor: '#eef2f0' },
+  title: { fontWeight: '600', color: COLORS.text, textAlign: 'right' },
+  price: { color: COLORS.green, fontWeight: '700', textAlign: 'right', marginVertical: 2 },
+  badge: { alignSelf: 'flex-end', paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999 },
+  muted: { color: COLORS.muted, textAlign: 'right', fontSize: 13 },
+});

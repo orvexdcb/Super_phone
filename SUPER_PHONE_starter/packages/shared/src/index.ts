@@ -1,0 +1,33 @@
+export type ListingStatus = "draft" | "pending_review" | "active" | "paused" | "sold" | "rejected";
+export type DeviceCondition = "new" | "used" | "refurbished";
+export type DeviceCategory = "phone" | "tablet" | "desktop" | "laptop" | "headphones" | "smartwatch";
+
+export const CONDITION_LABELS: Record<DeviceCondition, string> = {
+  new: "جديد",
+  used: "مستعمل",
+  refurbished: "مجدَّد",
+};
+
+export const GOVERNORATES = [
+  "بغداد", "نينوى", "البصرة", "أربيل", "السليمانية", "دهوك", "كركوك", "الأنبار",
+  "النجف", "كربلاء", "بابل", "ديالى", "صلاح الدين", "ذي قار", "واسط", "ميسان",
+  "المثنى", "القادسية", "حلبجة",
+] as const;
+
+export function formatPrice(price: number, currency: string): string {
+  const n = new Intl.NumberFormat("en-US").format(price);
+  return currency === "USD" ? `$${n}` : `${n} د.ع`;
+}
+
+export const STATUS_LABELS: Record<ListingStatus, string> = {
+  draft: "مسودة",
+  pending_review: "قيد المراجعة",
+  active: "منشور",
+  paused: "متوقف",
+  sold: "تم البيع",
+  rejected: "مرفوض",
+};
+
+export const MAX_IMAGES = 6;
+export const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+export const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
