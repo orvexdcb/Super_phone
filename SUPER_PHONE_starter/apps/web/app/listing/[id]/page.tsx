@@ -55,7 +55,7 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
       {l.listing_specs.length > 0 && (
         <table className="specs">
           <tbody>
-            {l.listing_specs.map((s) => (
+            {l.listing_specs.map((s: { spec_key: string; spec_value: string }) => (
               <tr key={s.spec_key}><th>{SPEC_LABELS[s.spec_key] ?? s.spec_key}</th><td>{s.spec_value}</td></tr>
             ))}
           </tbody>
