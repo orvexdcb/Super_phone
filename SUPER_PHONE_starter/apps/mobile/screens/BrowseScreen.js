@@ -137,7 +137,7 @@ export default function BrowseScreen({ onOpen }) {
       </View>
 
       {loading ? (
-        <ActivityIndicator style={{ marginTop: 40 }} color={COLORS.green} />
+        <ActivityIndicator style={{ marginTop: 40 }} color={COLORS.gold} />
       ) : (
         <FlatList
           data={items}
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
   label: { color: COLORS.muted, textAlign: 'right', marginTop: 8, marginBottom: 6 },
   wrap: { flexDirection: 'row-reverse', flexWrap: 'wrap', gap: 8 },
   priceRow: { flexDirection: 'row-reverse', gap: 8, marginTop: 8 },
-  apply: { flex: 1, backgroundColor: COLORS.green, borderRadius: 10, padding: 12, alignItems: 'center' },
+  apply: { flex: 1, backgroundColor: COLORS.gold, borderRadius: 10, padding: 12, alignItems: 'center' },
   chips: { paddingHorizontal: 16, gap: 8, paddingBottom: 4, flexDirection: 'row-reverse' },
   empty: { textAlign: 'center', color: COLORS.muted, marginTop: 40 },
 });
