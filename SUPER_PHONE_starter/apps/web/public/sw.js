@@ -3,7 +3,8 @@ const OFFLINE_URL = "/offline.html";
 const STATIC_URLS = [
   OFFLINE_URL,
   "/pwa-icon.png",
-  "/pwa-maskable.png",
+  "/pwa-icon.svg",
+  "/pwa-maskable.svg",
   "/icon.png",
   "/apple-icon.png"
 ];
