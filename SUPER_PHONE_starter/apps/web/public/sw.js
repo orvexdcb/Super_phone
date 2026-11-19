@@ -1,10 +1,9 @@
-const CACHE_NAME = "super-phone-static-v2";
+const CACHE_NAME = "super-phone-static-v3";
 const OFFLINE_URL = "/offline.html";
 const STATIC_URLS = [
   OFFLINE_URL,
   "/pwa-icon.png",
-  "/pwa-icon.svg",
-  "/pwa-maskable.svg",
+  "/pwa-maskable.png",
   "/icon.png",
   "/apple-icon.png"
 ];
