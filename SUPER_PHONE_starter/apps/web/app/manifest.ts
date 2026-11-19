@@ -17,8 +17,9 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: "#0b1728",
     prefer_related_applications: false,
     icons: [
-      { src: "/pwa-icon.png", sizes: "256x256", type: "image/png", purpose: "any" },
-      { src: "/pwa-maskable.png", sizes: "256x256", type: "image/png", purpose: "maskable" }
+      { src: "/pwa-icon.svg", sizes: "any", type: "image/svg+xml", purpose: "any" },
+      { src: "/pwa-icon.png", sizes: "512x512", type: "image/png", purpose: "any" },
+      { src: "/pwa-maskable.svg", sizes: "any", type: "image/svg+xml", purpose: "maskable" }
     ]
   };
 }
