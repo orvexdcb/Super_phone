@@ -22,7 +22,7 @@ export default async function Header() {
       <header className="site-header">
         <nav className="topbar">
           <Link href="/" className="brand-lockup" aria-label="SUPER PHONE - الرئيسية">
-            <Image src="/icon.png" alt="" width={54} height={54} priority className="brand-mark" />
+            <Image src="/brand-icon.png" alt="شعار SUPER PHONE" width={54} height={54} priority className="brand-mark" />
             <span className="brand-copy"><strong>SUPER <i>PHONE</i></strong><small>سوق الهواتف والأجهزة الذكية</small></span>
           </Link>
           <div className="nav-actions">
