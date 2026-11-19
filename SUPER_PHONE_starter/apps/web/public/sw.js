@@ -1,9 +1,11 @@
-const CACHE_NAME = "super-phone-static-v3";
+const CACHE_NAME = "super-phone-static-v4";
 const OFFLINE_URL = "/offline.html";
 const STATIC_URLS = [
   OFFLINE_URL,
-  "/pwa-icon.png",
+  "/pwa-icon-192.png",
+  "/pwa-icon-512.png",
   "/pwa-maskable.png",
+  "/pwa-icon.png",
   "/icon.png",
   "/apple-icon.png"
 ];
@@ -27,7 +29,6 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const request = event.request;
   if (request.method !== "GET") return;
-
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
@@ -49,7 +50,6 @@ self.addEventListener("fetch", (event) => {
   }
 
   // Never cache authenticated pages, account data, or Supabase responses.
-  // Use the network for pages and show a static offline notice only on failure.
   if (request.mode === "navigate") {
     event.respondWith(
       fetch(request).catch(async () => {
