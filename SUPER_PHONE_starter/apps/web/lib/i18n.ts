@@ -8,3 +8,14 @@ export function t(lang: string | undefined, key: keyof typeof words.ar): string 
   const selected = words[(lang === "en" || lang === "ku" ? lang : "ar")];
   return selected[key] || words.ar[key] || key;
 }
+
+const govNames = {
+ en: { "بغداد":"Baghdad","نينوى":"Nineveh","البصرة":"Basra","أربيل":"Erbil","السليمانية":"Sulaymaniyah","دهوك":"Duhok","كركوك":"Kirkuk","الأنبار":"Anbar","النجف":"Najaf","كربلاء":"Karbala","بابل":"Babylon","ديالى":"Diyala","صلاح الدين":"Saladin","ذي قار":"Dhi Qar","واسط":"Wasit","ميسان":"Maysan","المثنى":"Muthanna","القادسية":"Qadisiyyah","حلبجة":"Halabja" },
+ ku: { "بغداد":"بەغدا","نينوى":"نەینەوا","البصرة":"بەسرە","أربيل":"هەولێر","السليمانية":"سلێمانی","دهوك":"دهۆک","كركوك":"کەرکووک","الأنبار":"ئەنبار","النجف":"نەجەف","كربلاء":"کەربەلا","بابل":"بابل","ديالى":"دیالە","صلاح الدين":"سەلاحەدین","ذي قار":"زی قار","واسط":"واسط","ميسان":"مەیسان","المثنى":"مەسنا","القادسية":"قادسیە","حلبجة":"هەڵەبجە" }
+};
+const districtNames = {
+ en: { "الموصل":"Mosul","تلعفر":"Tal Afar","سنجار":"Sinjar","الحمدانية":"Hamdaniya","تلكيف":"Tel Keppe","البصرة":"Basra","الزبير":"Zubair","أبو الخصيب":"Abu Al-Khaseeb","القرنة":"Qurna","شط العرب":"Shatt al-Arab","الفاو":"Al-Faw","أم قصر":"Umm Qasr","أربيل":"Erbil","شقلاوة":"Shaqlawa","سوران":"Soran","كويسنجق":"Koysinjaq","السليمانية":"Sulaymaniyah","حلبجة":"Halabja","رانية":"Ranya","دهوك":"Duhok","زاخو":"Zakho","كركوك":"Kirkuk","الرمادي":"Ramadi","الفلوجة":"Fallujah","هيت":"Hit","النجف":"Najaf","الكوفة":"Kufa","كربلاء":"Karbala","الهندية":"Hindiyah","الحلة":"Hillah","المسيب":"Musayyib","بعقوبة":"Baqubah","الخالص":"Khalis","تكريت":"Tikrit","سامراء":"Samarra","بيجي":"Baiji","الناصرية":"Nasiriyah","الشطرة":"Shatrah","الكوت":"Kut","العمارة":"Amarah","السماوة":"Samawah","الديوانية":"Diwaniyah" },
+ ku: { "الموصل":"مووسڵ","تلعفر":"تەلعەفەر","سنجار":"شەنگال","البصرة":"بەسرە","الزبير":"زوبەیر","أربيل":"هەولێر","شقلاوة":"شەقڵاوە","سوران":"سۆران","السليمانية":"سلێمانی","حلبجة":"هەڵەبجە","دهوك":"دهۆک","زاخو":"زاخۆ","كركوك":"کەرکووک","الرمادي":"ڕەمادی","الفلوجة":"فەللوجە","النجف":"نەجەف","الكوفة":"کوفە","كربلاء":"کەربەلا","الحلة":"حیللە","بعقوبة":"بەعقوبە","تكريت":"تکریت","سامراء":"سامەڕا","الناصرية":"ناسیریە","الكوت":"کوت","العمارة":"عەمارە","السماوة":"سەماوە","الديوانية":"دیوانیە" }
+};
+export const governorateName = (lang: AppLanguage, value: string) => lang === "ar" ? value : govNames[lang]?.[value] || value;
+export const districtName = (lang: AppLanguage, value: string) => lang === "ar" ? value : districtNames[lang]?.[value] || value;
