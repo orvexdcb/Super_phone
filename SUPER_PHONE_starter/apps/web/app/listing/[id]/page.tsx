@@ -5,7 +5,7 @@ import { listingImageUrl } from "../../../lib/supabase";
 import { toWhatsApp } from "../../../lib/phone";
 import ListingActions from "../../../components/ListingActions";
 import { cookies } from "next/headers";
-import { t, categoryName, governorateName } from "../../../lib/i18n";
+import { t, categoryName, governorateName, conditionName } from "../../../lib/i18n";
 
 export const dynamic = "force-dynamic";
 
@@ -51,7 +51,7 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
       <h1>{l.title}</h1>
       <p className="price big">{formatPrice(Number(l.price), l.currency)}</p>
       <p className="meta">
-        {lang === "en" ? ({new:"New",like_new:"Like new",used:"Used",for_parts:"For parts"}[l.condition] || CONDITION_LABELS[l.condition as keyof typeof CONDITION_LABELS]) : lang === "ku" ? ({new:"نوێ",like_new:"وەک نوێ",used:"بەکارهاتوو",for_parts:"بۆ پارچە"}[l.condition] || CONDITION_LABELS[l.condition as keyof typeof CONDITION_LABELS]) : CONDITION_LABELS[l.condition as keyof typeof CONDITION_LABELS]} · {categoryName(lang, l.categories?.[0]?.name_ar || "")} · {governorateName(lang, l.governorate)}
+        {conditionName(lang, l.condition, CONDITION_LABELS[l.condition as keyof typeof CONDITION_LABELS])} · {categoryName(lang, l.categories?.[0]?.name_ar || "")} · {governorateName(lang, l.governorate)}
         {l.city ? ` — ${l.city}` : ""}
       </p>
       {(l.brand || l.model) && <p className="meta">{[l.brand, l.model].filter(Boolean).join(" ")}</p>}
