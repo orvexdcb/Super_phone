@@ -18,7 +18,7 @@ export default function ListingCard({ listing, onPress, lang = 'ar' }) {
         <Text style={styles.title} numberOfLines={2}>{listing.title}</Text>
         <Text style={styles.price}>{formatPrice(listing.price, listing.currency)}</Text>
         <Text style={styles.muted}>
-          {CONDITION_LABELS[listing.condition]} · {listing.categories?.name_ar}
+          {lang === 'en' ? ({new:'New',like_new:'Like new',used:'Used',for_parts:'For parts'}[listing.condition] || CONDITION_LABELS[listing.condition]) : lang === 'ku' ? ({new:'نوێ',like_new:'وەک نوێ',used:'بەکارهاتوو',for_parts:'بۆ پارچە'}[listing.condition] || CONDITION_LABELS[listing.condition]) : CONDITION_LABELS[listing.condition]} · {listing.categories?.name_ar}
         </Text>
         <Text style={styles.muted}>
           {listing.governorate}{listing.city ? ` — ${listing.city}` : ''}
