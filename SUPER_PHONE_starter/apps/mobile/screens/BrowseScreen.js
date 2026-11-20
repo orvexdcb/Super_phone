@@ -56,7 +56,7 @@ export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar' 
     setItems(rows.slice(0, PAGE));
     setHasMore(rows.length > PAGE);
     setLoading(false);
-  }, [fetchPage]);
+  }, [fetchPage, t.error]);
 
   const loadMore = useCallback(async () => {
     if (!hasMore || loadingMore || loading) return;
