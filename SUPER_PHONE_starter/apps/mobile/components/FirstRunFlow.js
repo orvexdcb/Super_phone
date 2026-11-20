@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {StatusBar} from 'expo-status-bar';
 import {COLORS,GOVERNORATES} from '../lib/constants';
 import { supabase } from '../lib/supabase';
+import * as Location from 'expo-location';
 const KEY='superphone:first-run:v1';
 const T={
 ar:{language:'اختر اللغة',place:'حدد مكان السكن',governorate:'المحافظة',area:'المنطقة / القضاء',gps:'طلب تحديد الموقع',next:'التالي',skip:'تخطي',start:'ابدأ الاستخدام',intro:['زر بيع هاتفك يتيح لك عرض جهازك للبيع مع الصور والسعر.','زر البحث يساعدك في العثور على الجهاز الذي تريده.','المفضلة تحفظ الأجهزة التي تريد العودة إليها.','الأزرار الرئيسية موجودة في الشريط السفلي.'],hint:'يمكنك إكمال تحديد المكان يدوياً.'},
@@ -17,7 +18,7 @@ export default function FirstRunFlow({children}){
  if(done)return children;
  const t=T[lang];
  const finish=async()=>{await AsyncStorage.setItem(KEY,JSON.stringify({lang,governorate:gov,area,completed:true}));try{const {data:{user}}=await supabase.auth.getUser();if(user&&gov)await supabase.from('profiles').update({governorate:gov,city:area.trim()||null}).eq('id',user.id)}catch{}setDone(true)};
- const requestLocation=()=>setGps(t.hint);
+ const requestLocation=async()=>{try{const permission=await Location.requestForegroundPermissionsAsync();if(!permission.granted){setGps(t.hint);return;}const position=await Location.getCurrentPositionAsync({accuracy:Location.Accuracy.Balanced});setGps(t.hint); }catch{setGps(t.hint)}};
  return <View style={s.root}><StatusBar style="light"/>
  {step===0?<View style={s.splash}><Image source={require('../assets/icon.png')} style={s.logo} resizeMode="contain"/><Text style={s.brand}>SUPER PHONE</Text><Pressable onPress={()=>setStep(1)} style={s.btn}><Text style={s.btnText}>{t.next}</Text></Pressable></View>:
  step===1?<View style={s.panel}><Text style={s.title}>{t.language}</Text>{[['ar','العربية'],['en','English'],['ku','کوردی']].map(([v,label])=><Pressable key={v} onPress={()=>setLang(v)} style={[s.option,lang===v&&s.selected]}><Text style={s.optionText}>{label}</Text></Pressable>)}<Pressable style={s.btn} onPress={()=>setStep(2)}><Text style={s.btnText}>{t.next}</Text></Pressable></View>:
