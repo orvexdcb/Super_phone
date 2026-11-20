@@ -42,8 +42,6 @@ export default async function EditListing({
   const { id } = await params;
   const cookieStore = await cookies();
   const lang = (cookieStore.get("sp_lang")?.value || "ar") as "ar" | "en" | "ku";
-  const cookieStore = await cookies();
-  const lang = (cookieStore.get("sp_lang")?.value || "ar") as "ar" | "en" | "ku";
   const sp = await searchParams;
   if (!UUID.test(id)) notFound();
   const supabase = await createServerSupabase();
