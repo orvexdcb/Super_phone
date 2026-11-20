@@ -19,6 +19,7 @@ async function saveProfile(formData: FormData) {
       phone: String(formData.get("phone") ?? "").trim().slice(0, 20),
       governorate: (GOVERNORATES as readonly string[]).includes(gov) ? gov : null,
       city: String(formData.get("city") ?? "").trim().slice(0, 60) || null,
+      city: String(formData.get("city") ?? "").trim().slice(0, 60) || null,
     })
     .eq("id", user.id);
   revalidatePath("/account");
