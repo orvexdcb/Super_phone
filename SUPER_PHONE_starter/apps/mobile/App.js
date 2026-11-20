@@ -55,7 +55,7 @@ function Shell() {
 
   return (
     <FirstRunFlow onComplete={setLang}>
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { direction: lang === "en" ? "ltr" : "rtl" }]}>
       <View style={styles.header}>
         {route ? (
           <Pressable onPress={() => setRoute(null)}><Text style={styles.back}>{tr(lang,'back')} ›</Text></Pressable>
