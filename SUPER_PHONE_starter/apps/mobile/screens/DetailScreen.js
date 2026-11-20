@@ -51,7 +51,7 @@ export default function DetailScreen({ id, onNeedLogin, lang = 'ar' }) {
   }
 
   if (state === 'loading') return <ActivityIndicator style={{ marginTop: 40 }} color={COLORS.gold} />;
-  if (state === 'missing') return <Text style={styles.center}>الإعلان غير موجود.</Text>;
+  if (state === 'missing') return <Text style={styles.center}>{t('notFound')}</Text>;
 
   const images = [...l.listing_images].sort((a, b) => a.sort_order - b.sort_order);
   const wa = l.contact_phone ? toWhatsApp(l.contact_phone) : null;
@@ -91,7 +91,7 @@ export default function DetailScreen({ id, onNeedLogin, lang = 'ar' }) {
 
         {l.status === 'active' && user?.id !== l.seller_id && (
           <Pressable style={[styles.ghost, { marginTop: 8 }]} onPress={() => (user ? setReporting(!reporting) : onNeedLogin())}>
-            <Text>⚑ إبلاغ عن الإعلان</Text>
+            <Text>⚑ {t('report')}</Text>
           </Pressable>
         )}
         {reporting && (
@@ -99,7 +99,7 @@ export default function DetailScreen({ id, onNeedLogin, lang = 'ar' }) {
             <TextInput style={styles.reportInput} placeholder={t('reportPlaceholder')}
               value={reason} onChangeText={setReason} maxLength={500} textAlign="right" multiline />
             <Pressable style={[styles.btn, { backgroundColor: '#b42318' }]} onPress={sendReport}>
-              <Text style={styles.btnText}>إرسال البلاغ</Text>
+              <Text style={styles.btnText}>{t('sendReport')}</Text>
             </Pressable>
           </View>
         )}
@@ -108,11 +108,11 @@ export default function DetailScreen({ id, onNeedLogin, lang = 'ar' }) {
         {!!l.contact_phone && (
           <View style={styles.contact}>
             <Pressable style={styles.btn} onPress={() => Linking.openURL(`tel:${l.contact_phone.replace(/[^\d+]/g, '')}`)}>
-              <Text style={styles.btnText}>اتصال</Text>
+              <Text style={styles.btnText}>{t('call')}</Text>
             </Pressable>
             {wa && (
               <Pressable style={[styles.btn, { backgroundColor: '#1faa59' }]} onPress={() => Linking.openURL(`https://wa.me/${wa}`)}>
-                <Text style={styles.btnText}>واتساب</Text>
+                <Text style={styles.btnText}>{t('whatsapp')}</Text>
               </Pressable>
             )}
           </View>
