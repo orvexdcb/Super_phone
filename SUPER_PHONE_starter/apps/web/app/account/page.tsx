@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { GOVERNORATES } from "@super-phone/shared";
 import { createServerSupabase } from "../../lib/supabase-server";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
+import { t } from "../../lib/i18n";
 
 async function saveProfile(formData: FormData) {
   "use server";
@@ -22,6 +24,8 @@ async function saveProfile(formData: FormData) {
 }
 
 export default async function AccountPage() {
+  const cookieStore = await cookies();
+  const lang = (cookieStore.get("sp_lang")?.value || "ar") as "ar" | "en" | "ku";
   const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/account");
@@ -33,19 +37,19 @@ export default async function AccountPage() {
 
   return (
     <main className="auth">
-      <h1>حسابي</h1>
+      <h1>{t(lang, "account")}</h1>
       <p className="meta" dir="ltr">{user.email}</p>
       <form action={saveProfile} className="auth-form">
-        <input name="full_name" defaultValue={profile?.full_name ?? ""} placeholder="الاسم" maxLength={80} />
-        <input name="phone" defaultValue={profile?.phone ?? ""} placeholder="رقم الهاتف" maxLength={20} dir="ltr" />
+        <input name="full_name" defaultValue={profile?.full_name ?? ""} placeholder={t(lang, "name")} maxLength={80} />
+        <input name="phone" defaultValue={profile?.phone ?? ""} placeholder={t(lang, "phone")} maxLength={20} dir="ltr" />
         <select name="governorate" defaultValue={profile?.governorate ?? ""}>
-          <option value="">المحافظة</option>
+          <option value="">{t(lang, "governorate")}</option>
           {GOVERNORATES.map((g) => <option key={g} value={g}>{g}</option>)}
         </select>
-        <button type="submit">حفظ</button>
+        <button type="submit">{t(lang, "save")}</button>
       </form>
       <p className="alt">
-        <Link href="/account/listings">إعلاناتي</Link> · <Link href="/account/listings/new">نشر إعلان</Link>
+        <Link href="/account/listings">{t(lang, "myListings")}</Link> · <Link href="/account/listings/new">{t(lang, "post")}</Link>
       </p>
     </main>
   );
