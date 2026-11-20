@@ -51,7 +51,7 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
       <h1>{l.title}</h1>
       <p className="price big">{formatPrice(Number(l.price), l.currency)}</p>
       <p className="meta">
-        {CONDITION_LABELS[l.condition as keyof typeof CONDITION_LABELS]} · {l.categories?.[0]?.name_ar} · {l.governorate}
+        {lang === "en" ? ({new:"New",like_new:"Like new",used:"Used",for_parts:"For parts"}[l.condition] || CONDITION_LABELS[l.condition as keyof typeof CONDITION_LABELS]) : lang === "ku" ? ({new:"نوێ",like_new:"وەک نوێ",used:"بەکارهاتوو",for_parts:"بۆ پارچە"}[l.condition] || CONDITION_LABELS[l.condition as keyof typeof CONDITION_LABELS]) : CONDITION_LABELS[l.condition as keyof typeof CONDITION_LABELS]} · {l.categories?.[0]?.name_ar} · {l.governorate}
         {l.city ? ` — ${l.city}` : ""}
       </p>
       {(l.brand || l.model) && <p className="meta">{[l.brand, l.model].filter(Boolean).join(" ")}</p>}
@@ -60,7 +60,7 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
         <table className="specs">
           <tbody>
             {l.listing_specs.map((s: { spec_key: string; spec_value: string }) => (
-              <tr key={s.spec_key}><th>{SPEC_LABELS[s.spec_key] ?? s.spec_key}</th><td>{s.spec_value}</td></tr>
+              <tr key={s.spec_key}><th>{lang === "en" ? ({storage:"Storage",ram:"RAM",battery_health:"Battery health",color:"Color"}[s.spec_key] ?? s.spec_key) : lang === "ku" ? ({storage:"بیرگە",ram:"ڕام",battery_health:"تەندروستی باتری",color:"ڕەنگ"}[s.spec_key] ?? s.spec_key) : SPEC_LABELS[s.spec_key] ?? s.spec_key}</th><td>{s.spec_value}</td></tr>
             ))}
           </tbody>
         </table>
