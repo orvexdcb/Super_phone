@@ -11,6 +11,7 @@ import AccountScreen from './screens/AccountScreen';
 import NewListingScreen from './screens/NewListingScreen';
 import MyListingsScreen from './screens/MyListingsScreen';
 import FirstRunFlow from './components/FirstRunFlow';
+import { tr } from './lib/i18n';
 
 const TAB_LABELS = { ar: ['الرئيسية','المفضلة','إعلان','إعلاناتي','حسابي'], en: ['Home','Favorites','Post','My listings','Account'], ku: ['سەرەکی','دڵخوازەکان','بڵاوکردنەوە','بڵاوکراوەکانم','هەژمار'] };
 const TAB_KEYS = ['home','favorites','new','mine','account'];
@@ -35,21 +36,21 @@ function Shell() {
   }, [route]);
 
   let body;
-  if (route?.name === 'detail') body = <DetailScreen id={route.id} onNeedLogin={goLogin} />;
-  else if (route?.name === 'new' && user) body = <NewListingScreen onDone={() => { setRoute({ name: 'mine', posted: true }); setTab('mine'); }} />;
-  else if (route?.name === 'mine' && user) body = <MyListingsScreen onOpen={openDetail} posted={route.posted} />;
+  if (route?.name === 'detail') body = <DetailScreen lang={lang} id={route.id} onNeedLogin={goLogin} />;
+  else if (route?.name === 'new' && user) body = <NewListingScreen lang={lang} onDone={() => { setRoute({ name: 'mine', posted: true }); setTab('mine'); }} />;
+  else if (route?.name === 'mine' && user) body = <MyListingsScreen lang={lang} onOpen={openDetail} posted={route.posted} />;
   else if (tab === 'home') body = <BrowseScreen lang={lang} onOpen={openDetail}
     onSell={() => { if (user) { setTab('new'); setRoute({ name: 'new' }); } else { setRoute(null); setTab('account'); } }}
     onFavorites={() => setTab('favorites')} />;
   else if (tab === 'favorites') {
-    body = user ? <FavoritesScreen onOpen={openDetail} /> : (
+    body = user ? <FavoritesScreen lang={lang} onOpen={openDetail} /> : (
       <View style={styles.center}>
-        <Text style={styles.muted}>سجّل الدخول لعرض مفضلتك.</Text>
-        <Pressable onPress={() => setTab('account')}><Text style={styles.link}>تسجيل الدخول</Text></Pressable>
+        <Text style={styles.muted}>{tr(lang,'signInToFavorites')}</Text>
+        <Pressable onPress={() => setTab('account')}><Text style={styles.link}>{tr(lang,'loginNow')}</Text></Pressable>
       </View>
     );
   } else {
-    body = <AccountScreen onNavigate={setRoute} />;
+    body = <AccountScreen lang={lang} onNavigate={setRoute} />;
   }
 
   return (
@@ -57,7 +58,7 @@ function Shell() {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         {route ? (
-          <Pressable onPress={() => setRoute(null)}><Text style={styles.back}>رجوع ›</Text></Pressable>
+          <Pressable onPress={() => setRoute(null)}><Text style={styles.back}>{tr(lang,'back')} ›</Text></Pressable>
         ) : <View />}
         <Text style={styles.brand}>SUPER PHONE</Text>
       </View>
