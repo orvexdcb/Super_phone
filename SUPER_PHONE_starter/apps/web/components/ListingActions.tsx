@@ -3,9 +3,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createBrowserSupabase } from "../lib/supabase-browser";
 
-type Props = { listingId: string; userId: string | null; initialFav: boolean; canReport: boolean };
+type Props = { listingId: string; userId: string | null; initialFav: boolean; canReport: boolean; lang?: "ar" | "en" | "ku" };
 
-export default function ListingActions({ listingId, userId, initialFav, canReport }: Props) {
+export default function ListingActions({ listingId, userId, initialFav, canReport, lang = "ar" }: Props) {
+  const words = lang === "en" ? {reason:"Please enter a report reason.",duplicate:"You have already reported this listing.",error:"Could not submit the report.",sent:"Thank you. Your report was sent.",fav:"★ Saved to favorites",add:"☆ Add to favorites",report:"⚑ Report",placeholder:"Report reason",send:"Send"} : lang === "ku" ? {reason:"هۆکاری ڕاپۆرت بنووسە.",duplicate:"پێشتر ڕاپۆرتت ناردووە.",error:"ناردنی ڕاپۆرت سەرکەوتوو نەبوو.",sent:"سوپاس، ڕاپۆرتەکەت نێردرا.",fav:"★ لە دڵخوازەکانە",add:"☆ زیادکردن بۆ دڵخوازەکان",report:"⚑ ڕاپۆرت",placeholder:"هۆکاری ڕاپۆرت",send:"ناردن"} : {reason:words.reason,duplicate:words.duplicate,error:words.error,sent:words.sent,fav:words.fav,add:words.add,report:"{words.report}",placeholder:"سبب البلاغ (احتيال، سعر وهمي، محتوى مخالف...)",send:"إرسال"};
   const router = useRouter();
   const [fav, setFav] = useState(initialFav);
   const [busy, setBusy] = useState(false);
@@ -51,8 +52,8 @@ export default function ListingActions({ listingId, userId, initialFav, canRepor
       )}
       {reporting && (
         <form onSubmit={sendReport} className="report-form">
-          <input name="reason" placeholder="سبب البلاغ (احتيال، سعر وهمي، محتوى مخالف...)" maxLength={500} required />
-          <button type="submit" disabled={busy}>إرسال</button>
+          <input name="reason" placeholder={words.placeholder} maxLength={500} required />
+          <button type="submit" disabled={busy}>{words.send}</button>
         </form>
       )}
       {msg && <p className="meta">{msg}</p>}
