@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - feature/first-run-redesign
     paths:
       - "SUPER_PHONE_starter/apps/mobile/**"
       - ".github/workflows/android-apk.yml"
