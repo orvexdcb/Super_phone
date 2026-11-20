@@ -153,3 +153,64 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 
 .home-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:10px 0 18px}.home-action{display:flex;align-items:center;justify-content:center;min-height:50px;border:1px solid rgba(216,173,94,.45);border-radius:14px;background:#17263a;color:#f0cb7b;text-decoration:none;font-weight:800}.home-action.primary{background:linear-gradient(135deg,#f0cb7b,#bd8e43);color:#0c1725}.first-run-overlay{position:fixed;inset:0;z-index:1000;background:#091321;color:#f5f6f8;display:grid;place-items:center;padding:22px}.first-run-panel{width:min(100%,460px);background:#17263a;border:1px solid rgba(216,173,94,.3);border-radius:24px;padding:24px;text-align:center}.first-run-logo{width:124px;height:124px;object-fit:contain}.first-run-title{color:#f0cb7b;font-size:1.5rem;font-weight:900;margin:12px 0}.first-run-btn{border:0;border-radius:12px;padding:12px 20px;background:#d8ad5e;color:#0c1725;font-weight:900;cursor:pointer;margin:6px}.first-run-btn:disabled{opacity:.4}.first-run-option{display:block;width:100%;padding:12px;margin:8px 0;border:1px solid rgba(216,173,94,.3);border-radius:12px;cursor:pointer;background:#17263a;color:#f5f6f8}.first-run-option.active{background:#263950;border-color:#d8ad5e}.first-run-field{display:block;width:100%;padding:12px;margin:8px 0;border-radius:10px;background:#202f43;color:#f5f6f8;border:1px solid rgba(216,173,94,.3)}.first-run-btn.secondary{background:#263950;color:#f5f6f8}@media(max-width:600px){.home-actions{gap:7px}.home-action{min-height:46px;font-size:.85rem}}
+
+/* SUPER PHONE marketplace refresh — shared visual language for desktop and mobile */
+:root{color-scheme:light;--bg:#f4f5f7;--panel:#fff;--panel-soft:#edf0f4;--line:#e3e6eb;--text:#182538;--muted:#788292;--gold:#d8ad5e;--gold-light:#e8c77f;--ink:#0b1728}
+html,body{background:var(--bg);color:var(--text)}
+body{background:linear-gradient(180deg,#fff 0,#f4f5f7 360px);padding-bottom:0}
+.site-header{background:rgba(255,255,255,.96);border-bottom:1px solid #e8ebef}
+.nav-actions a{color:#344052}
+.brand-copy strong i{color:#182538}
+.brand-copy small{color:#7b8492}
+main{max-width:1180px;margin:0 auto;padding:22px 22px 54px}
+.marketplace-hero{text-align:start;padding:24px 0 14px}
+.marketplace-hero .eyebrow{display:inline-flex;padding:6px 12px;border-radius:99px;background:#f7f0e2;color:#9c7636;font-weight:800}
+.marketplace-hero h1{font-size:clamp(1.6rem,3vw,2.25rem);color:#142238}
+.marketplace-hero>p:last-child{color:#7b8492}
+.home-actions{gap:12px;margin:12px 0 16px}
+.home-action{min-height:56px;background:#fff;color:#263449;border:1px solid #e2e6eb;box-shadow:0 5px 16px rgba(15,30,50,.04)}
+.home-action.primary{background:linear-gradient(135deg,#e9cc8c,#d8ad5e);color:#172235;border-color:#d8ad5e}
+.marketplace-banner{display:flex;align-items:center;justify-content:space-between;min-height:150px;padding:24px 30px;margin:16px 0 20px;border-radius:20px;overflow:hidden;background:linear-gradient(115deg,#0b1728,#203550);color:#fff;box-shadow:0 12px 28px rgba(11,23,40,.13)}
+.marketplace-banner h2{margin:8px 0 5px;font-size:clamp(1.25rem,3vw,1.9rem);color:#f0d39a}
+.marketplace-banner p{margin:0;color:#d1d8e2}
+.banner-kicker{font:800 .75rem Arial,sans-serif;letter-spacing:2px;color:#e2bf78}
+.banner-device{font-size:6rem;line-height:1;color:#d8ad5e;opacity:.8;transform:rotate(-10deg);padding-inline:24px}
+.search-panel{background:#fff;border:1px solid #e6e9ee;box-shadow:0 8px 24px rgba(20,35,55,.05);border-radius:18px}
+.filters input,.filters select,.auth-form input,.auth-form select,.auth-form textarea{background:#f8f9fb;color:#243248;border-color:#e1e5eb}
+.filters input::placeholder,.auth-form input::placeholder,.auth-form textarea::placeholder{color:#8b94a1}
+.filters button,.auth-form button{background:linear-gradient(135deg,#e8c77f,#d1a34f)}
+.section-head{margin-top:26px}
+.section-head h2{color:#1a283b}
+.section-note{font-size:.8rem;color:#8b94a1}
+.grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.card{background:#fff;border-color:#e7e9ed;box-shadow:0 5px 18px rgba(15,30,50,.055)}
+.thumb{background:#eef1f5}
+.body h3{color:#263449}
+.price{color:#b7893d}
+.meta,.notice{color:#818b99}
+.auth{background:#fff;border-color:#e7e9ed;box-shadow:0 8px 26px rgba(15,30,50,.06)}
+.mobile-dock{background:rgba(255,255,255,.97);border-top:1px solid #e4e7ec}
+.dock-item,.dock-add{color:#5e6877}
+.dock-add{color:#172235}
+.dock-add svg{background:linear-gradient(135deg,#e8c77f,#d1a34f)}
+.pager a{background:#fff;color:#9b7437;border-color:#e4e7ec}
+@media(max-width:760px){
+ body{padding-bottom:86px}
+ main{padding:14px 12px 30px}
+ .topbar{min-height:64px}
+ .marketplace-hero{padding:14px 2px 10px}
+ .marketplace-hero h1{font-size:1.45rem}
+ .marketplace-banner{min-height:124px;padding:18px;border-radius:16px}
+ .banner-device{font-size:4rem;padding-inline:6px}
+ .marketplace-banner p{font-size:.82rem;max-width:260px}
+ .home-actions{gap:7px}
+ .home-action{min-height:48px;font-size:.84rem}
+ .search-panel{margin:12px 0 18px;padding:10px}
+ .grid{grid-template-columns:1fr;gap:10px}
+ .card-link .card{display:grid;grid-template-columns:42% minmax(0,1fr);min-height:132px}
+ .card-link .thumb{aspect-ratio:auto;min-height:132px;height:100%}
+ .card-link .body{display:flex;flex-direction:column;justify-content:center;padding:12px}
+ .card-link .body h3{font-size:.92rem}
+ .card-link .price{font-size:1rem;margin:7px 0}
+ .section-head{margin:20px 0 10px}
+}
