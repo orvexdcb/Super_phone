@@ -4,10 +4,12 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../lib/AuthContext';
 import { COLORS } from '../lib/constants';
 import AuthScreen from './AuthScreen';
+import { tr } from '../lib/i18n';
 
-export default function AccountScreen({ onNavigate }) {
+export default function AccountScreen({ onNavigate, lang = 'ar' }) {
+  const t = (key) => tr(lang, key);
   const { user } = useAuth();
-  if (!user) return <AuthScreen />;
+  if (!user) return <AuthScreen lang={lang} />;
   return (
     <View style={styles.wrap}>
       <Text style={styles.h1}>حسابي</Text>
