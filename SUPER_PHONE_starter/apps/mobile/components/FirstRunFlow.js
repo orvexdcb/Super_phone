@@ -5,6 +5,7 @@ import {StatusBar} from 'expo-status-bar';
 import {COLORS,GOVERNORATES,IRAQ_DISTRICTS} from '../lib/constants';
 import { governorateLabel, districtLabel } from '../lib/i18n';
 import { supabase } from '../lib/supabase';
+import { useAuth } from '../lib/AuthContext';
 import * as Location from 'expo-location';
 const KEY='superphone:first-run:v1';
 const T={
@@ -13,8 +14,10 @@ en:{language:'Choose your language',place:'Set your location',governorate:'Gover
 ku:{language:'زمان هەڵبژێرە',place:'شوێنی نیشتەجێبوون دیاری بکە',governorate:'پارێزگا',area:'ناوچە / قەزا',gps:'داوای شوێن',next:'دواتر',skip:'تێپەڕاندن',start:'دەستپێبکە',intro:['فرۆشتنی مۆبایل بۆ بڵاوکردنەوەی ئامێرەکەتە.','گەڕان بۆ دۆزینەوەی ئامێری دڵخوازە.','دڵخوازەکان ئامێرەکانت دەپارێزێت.','دوگمە سەرەکییەکان لە خوارەوەی شاشەکەن.'],hint:'دەتوانیت شوێنەکە بە دەستی دیاری بکەیت.'}
 };
 export default function FirstRunFlow({children,onComplete}){
+ const {user}=useAuth();
  const [loading,setLoading]=useState(true),[done,setDone]=useState(false),[step,setStep]=useState(0),[lang,setLang]=useState('ar'),[gov,setGov]=useState(''),[area,setArea]=useState(''),[gps,setGps]=useState('');
  useEffect(()=>{AsyncStorage.getItem(KEY).then(raw=>{if(raw){try{const saved=JSON.parse(raw);setLang(['ar','en','ku'].includes(saved.lang)?saved.lang:'ar');setDone(true)}catch{}}}).finally(()=>setLoading(false))},[]);
+ useEffect(()=>{if(!done||!user?.id)return;AsyncStorage.getItem(KEY).then(async raw=>{if(!raw)return;try{const saved=JSON.parse(raw);if(!saved.governorate)return;const {data:profile}=await supabase.from('profiles').select('governorate').eq('id',user.id).maybeSingle();if(profile&&!profile.governorate)await supabase.from('profiles').update({governorate:saved.governorate,city:saved.area||null}).eq('id',user.id)}catch{}})},[done,user?.id]);
  if(loading)return <View style={s.splash}><StatusBar style="light"/><ActivityIndicator color={COLORS.gold}/></View>;
  if(done)return children;
  const t=T[lang];
