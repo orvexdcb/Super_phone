@@ -19,3 +19,10 @@ const districtNames = {
 };
 export const governorateName = (lang: AppLanguage, value: string) => lang === "ar" ? value : govNames[lang]?.[value] || value;
 export const districtName = (lang: AppLanguage, value: string) => lang === "ar" ? value : districtNames[lang]?.[value] || value;
+
+const categoryNames = {
+ en: { "هواتف":"Phones","موبايلات":"Phones","أجهزة لوحية":"Tablets","تابلت":"Tablets","لابتوبات":"Laptops","أجهزة كمبيوتر":"Computers","اكسسوارات":"Accessories","إكسسوارات":"Accessories","ساعات ذكية":"Smartwatches","أجهزة ذكية":"Smart devices" },
+ ku: { "هواتف":"مۆبایل","موبايلات":"مۆبایل","أجهزة لوحية":"تابلێت","تابلت":"تابلێت","لابتوبات":"لاپتۆپ","أجهزة كمبيوتر":"کۆمپیوتەر","اكسسوارات":"ئاکسسوارات","إكسسوارات":"ئاکسسوارات","ساعات ذكية":"کاتژمێری زیرەک","أجهزة ذكية":"ئامێری زیرەک" }
+};
+export const categoryName = (lang: AppLanguage, value: string) => lang === "ar" ? value : categoryNames[lang]?.[value] || value;
+export const conditionName = (lang: AppLanguage, key: string, fallback: string) => lang === "en" ? ({new:"New",used:"Used",refurbished:"Refurbished"}[key] || fallback) : lang === "ku" ? ({new:"نوێ",used:"بەکارهاتوو",refurbished:"نوێکراوە"}[key] || fallback) : fallback;
