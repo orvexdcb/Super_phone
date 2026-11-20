@@ -2,7 +2,7 @@ import React from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { CONDITION_LABELS, COLORS, formatPrice } from '../lib/constants';
 import { imageUrl } from '../lib/supabase';
-import { tr } from '../lib/i18n';
+import { tr, conditionLabel, governorateLabel, categoryLabel } from '../lib/i18n';
 
 export default function ListingCard({ listing, onPress, lang = 'ar' }) {
   const t = (key) => tr(lang, key);
@@ -18,10 +18,10 @@ export default function ListingCard({ listing, onPress, lang = 'ar' }) {
         <Text style={styles.title} numberOfLines={2}>{listing.title}</Text>
         <Text style={styles.price}>{formatPrice(listing.price, listing.currency)}</Text>
         <Text style={styles.muted}>
-          {lang === 'en' ? ({new:'New',like_new:'Like new',used:'Used',for_parts:'For parts'}[listing.condition] || CONDITION_LABELS[listing.condition]) : lang === 'ku' ? ({new:'نوێ',like_new:'وەک نوێ',used:'بەکارهاتوو',for_parts:'بۆ پارچە'}[listing.condition] || CONDITION_LABELS[listing.condition]) : CONDITION_LABELS[listing.condition]} · {listing.categories?.name_ar}
+          {conditionLabel(lang, listing.condition, CONDITION_LABELS[listing.condition])} · {categoryLabel(lang, listing.categories?.name_ar || '')}
         </Text>
         <Text style={styles.muted}>
-          {listing.governorate}{listing.city ? ` — ${listing.city}` : ''}
+          {governorateLabel(lang, listing.governorate)}{listing.city ? ` — ${listing.city}` : ''}
         </Text>
       </View>
     </Pressable>
