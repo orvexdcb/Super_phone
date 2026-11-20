@@ -61,11 +61,11 @@ export default function NewListingScreen({ onDone, lang = 'ar' }) {
   async function submit() {
     setError('');
     const price = Number(f.price);
-    if (!f.category_id || !f.condition || !f.governorate) return setError(t('chooseRequired'));
-    if (f.title.trim().length < 3) return setError(t('titleRequired'));
-    if (!f.price || !Number.isFinite(price) || price < 0) return setError(t('priceRequired'));
-    if (!f.contact_phone.trim()) return setError(t('phoneRequired'));
-    if (images.length === 0) return setError(t('imageRequired'));
+    if (!f.category_id || !f.condition || !f.governorate) return setError(tx('chooseRequired'));
+    if (f.title.trim().length < 3) return setError(tx('titleRequired'));
+    if (!f.price || !Number.isFinite(price) || price < 0) return setError(tx('priceRequired'));
+    if (!f.contact_phone.trim()) return setError(tx('phoneRequired'));
+    if (images.length === 0) return setError(tx('imageRequired'));
 
     setBusy(true);
     const uploaded = [];
@@ -82,7 +82,7 @@ export default function NewListingScreen({ onDone, lang = 'ar' }) {
       } catch {
         await cleanup();
         setBusy(false);
-        return setError(t('uploadError'));
+        return setError(tx('uploadError'));
       }
     }
 
@@ -96,7 +96,7 @@ export default function NewListingScreen({ onDone, lang = 'ar' }) {
     if (insErr || !listing) {
       await cleanup();
       setBusy(false);
-      return setError(t('submitError'));
+      return setError(tx('submitError'));
     }
 
     const { error: imgErr } = await supabase.from('listing_images').insert(
@@ -107,7 +107,7 @@ export default function NewListingScreen({ onDone, lang = 'ar' }) {
       ? await supabase.from('listing_specs').insert(specRows) : { error: null };
 
     setBusy(false);
-    if (imgErr || specErr) return setError(t('partialError'));
+    if (imgErr || specErr) return setError(tx('partialError'));
     onDone();
   }
 
@@ -169,7 +169,7 @@ export default function NewListingScreen({ onDone, lang = 'ar' }) {
           </View>
         ))}</Row>
 
-        <Text style={styles.note}>{t('reviewNote')}</Text>
+        <Text style={styles.note}>{tx('reviewNote')}</Text>
         {!!error && <Text style={styles.err}>{error}</Text>}
         <Pressable style={[styles.btn, busy && { opacity: 0.6 }]} onPress={submit} disabled={busy}>
           {busy ? <ActivityIndicator color={COLORS.bg} /> : <Text style={styles.btnText}>{tx('publish')}</Text>}
