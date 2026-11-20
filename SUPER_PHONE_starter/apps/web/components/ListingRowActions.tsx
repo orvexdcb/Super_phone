@@ -16,17 +16,17 @@ export default function ListingRowActions({ id, status, lang = "ar" }: Props) {
     setBusy(true); setErr("");
     const { error } = await createBrowserSupabase().from("listings").update({ status: next }).eq("id", id);
     setBusy(false);
-    if (error) return setErr("تعذّر تنفيذ العملية.");
+    if (error) return setErr(labels.error);
     router.refresh();
   }
 
   async function remove() {
-    if (!window.confirm("حذف الإعلان نهائياً؟")) return;
+    if (!window.confirm(labels.deleteConfirm)) return;
     setBusy(true); setErr("");
     const supabase = createBrowserSupabase();
     const { data: imgs } = await supabase.from("listing_images").select("storage_path").eq("listing_id", id);
     const { error } = await supabase.from("listings").delete().eq("id", id);
-    if (error) { setBusy(false); return setErr("تعذّر الحذف."); }
+    if (error) { setBusy(false); return setErr(labels.deleteError); }
     if (imgs?.length) await supabase.storage.from("listing-images").remove(imgs.map((i) => i.storage_path));
     setBusy(false);
     router.refresh();
