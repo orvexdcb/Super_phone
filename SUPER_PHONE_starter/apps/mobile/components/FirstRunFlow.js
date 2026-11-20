@@ -12,13 +12,13 @@ ar:{language:'اختر اللغة',place:'حدد مكان السكن',governorat
 en:{language:'Choose your language',place:'Set your location',governorate:'Governorate',area:'Area / District',gps:'Request location',next:'Next',skip:'Skip',start:'Start using the app',intro:['Sell your phone lets you publish your device with photos and a price.','Search helps you find the device you need.','Favorites saves devices for later.','Main actions are available in the bottom navigation.'],hint:'You can complete location selection manually.'},
 ku:{language:'زمان هەڵبژێرە',place:'شوێنی نیشتەجێبوون دیاری بکە',governorate:'پارێزگا',area:'ناوچە / قەزا',gps:'داوای شوێن',next:'دواتر',skip:'تێپەڕاندن',start:'دەستپێبکە',intro:['فرۆشتنی مۆبایل بۆ بڵاوکردنەوەی ئامێرەکەتە.','گەڕان بۆ دۆزینەوەی ئامێری دڵخوازە.','دڵخوازەکان ئامێرەکانت دەپارێزێت.','دوگمە سەرەکییەکان لە خوارەوەی شاشەکەن.'],hint:'دەتوانیت شوێنەکە بە دەستی دیاری بکەیت.'}
 };
-export default function FirstRunFlow({children}){
+export default function FirstRunFlow({children,onComplete}){
  const [loading,setLoading]=useState(true),[done,setDone]=useState(false),[step,setStep]=useState(0),[lang,setLang]=useState('ar'),[gov,setGov]=useState(''),[area,setArea]=useState(''),[gps,setGps]=useState('');
  useEffect(()=>{AsyncStorage.getItem(KEY).then(raw=>{if(raw){try{const saved=JSON.parse(raw);setLang(['ar','en','ku'].includes(saved.lang)?saved.lang:'ar');setDone(true)}catch{}}}).finally(()=>setLoading(false))},[]);
  if(loading)return <View style={s.splash}><StatusBar style="light"/><ActivityIndicator color={COLORS.gold}/></View>;
  if(done)return children;
  const t=T[lang];
- const finish=async()=>{await AsyncStorage.setItem(KEY,JSON.stringify({lang,governorate:gov,area,completed:true}));try{const {data:{user}}=await supabase.auth.getUser();if(user&&gov)await supabase.from('profiles').update({governorate:gov,city:area.trim()||null}).eq('id',user.id)}catch{}setDone(true)};
+ const finish=async()=>{await AsyncStorage.setItem(KEY,JSON.stringify({lang,governorate:gov,area,completed:true}));try{const {data:{user}}=await supabase.auth.getUser();if(user&&gov)await supabase.from('profiles').update({governorate:gov,city:area.trim()||null}).eq('id',user.id)}catch{}setDone(true);onComplete?.(lang)};
  const requestLocation=async()=>{try{const permission=await Location.requestForegroundPermissionsAsync();if(!permission.granted){setGps(t.hint);return;}const position=await Location.getCurrentPositionAsync({accuracy:Location.Accuracy.Balanced});setGps(t.hint); }catch{setGps(t.hint)}};
  return <View style={s.root}><StatusBar style="light"/>
  {step===0?<View style={s.splash}><Image source={require('../assets/icon.png')} style={s.logo} resizeMode="contain"/><Text style={s.brand}>SUPER PHONE</Text><Pressable onPress={()=>setStep(1)} style={s.btn}><Text style={s.btnText}>{t.next}</Text></Pressable></View>:
