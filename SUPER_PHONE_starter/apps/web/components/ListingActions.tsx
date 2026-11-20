@@ -30,20 +30,20 @@ export default function ListingActions({ listingId, userId, initialFav, canRepor
     e.preventDefault();
     if (!userId) return needLogin();
     const reason = String(new FormData(e.currentTarget).get("reason") ?? "").trim();
-    if (reason.length < 3) return setMsg("اكتب سبب البلاغ.");
+    if (reason.length < 3) return setMsg(words.reason);
     setBusy(true);
     const { error } = await createBrowserSupabase()
       .from("reports")
       .insert({ listing_id: listingId, reporter_id: userId, reason });
     setBusy(false);
     setReporting(false);
-    setMsg(error?.code === "23505" ? "سبق أن أبلغت عن هذا الإعلان." : error ? "تعذّر إرسال البلاغ." : "شكراً، وصل بلاغك للإدارة.");
+    setMsg(error?.code === "23505" ? words.duplicate : error ? words.error : words.sent);
   }
 
   return (
     <div className="actions">
       <button type="button" className="ghost" onClick={toggleFav} disabled={busy}>
-        {fav ? "★ في المفضلة" : "☆ أضف للمفضلة"}
+        {fav ? words.fav : words.add}
       </button>
       {canReport && (
         <button type="button" className="ghost" onClick={() => (userId ? setReporting(!reporting) : needLogin())}>
