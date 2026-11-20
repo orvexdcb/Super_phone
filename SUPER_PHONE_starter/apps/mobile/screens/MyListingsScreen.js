@@ -51,7 +51,7 @@ export default function MyListingsScreen({ onOpen, posted, lang = 'ar' }) {
               <Text style={styles.title} numberOfLines={2}>{item.title}</Text>
               <Text style={styles.price}>{formatPrice(item.price, item.currency)}</Text>
               <View style={[styles.badge, { backgroundColor: bg }]}>
-                <Text style={{ color: fg, fontSize: 12 }}>{lang === 'en' ? ({active:'Published',pending_review:'Under review',rejected:'Rejected'}[item.status] || item.status) : lang === 'ku' ? ({active:'بڵاوکراوەتەوە',pending_review:'لە پشکنیندایە',rejected:'ڕەتکراوەتەوە'}[item.status] || item.status) : STATUS_LABELS[item.status]}</Text>
+                <Text style={{ color: fg, fontSize: 12 }}>{lang === 'en' ? ({active:'Published',pending_review:'Under review',rejected:'Rejected',paused:'Paused',sold:'Sold'}[item.status] || item.status) : lang === 'ku' ? ({active:'بڵاوکراوەتەوە',pending_review:'لە پشکنیندایە',rejected:'ڕەتکراوەتەوە',paused:'وەستێنراوە',sold:'فرۆشراوە'}[item.status] || item.status) : STATUS_LABELS[item.status]}</Text>
               </View>
               {item.status === 'rejected' && !!item.rejection_reason && (
                 <Text style={styles.muted}>{t('rejectedReason')}: {item.rejection_reason}</Text>
