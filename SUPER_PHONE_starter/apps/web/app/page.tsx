@@ -19,12 +19,13 @@ export default async function Home({ searchParams }: { searchParams: SP }) {
   const { listings, error, hasNext, page } = result;
   const pageHref = (n: number) => { const p = new URLSearchParams(); (["q","category","condition","governorate","min","max"] as const).forEach(k=>{if(filters[k])p.set(k,filters[k]!)}); if(n>1)p.set("page",String(n)); return p.toString()?"/?"+p.toString():"/"; };
   return <FirstRunFlow><main>
-    <header className="hero"><p className="eyebrow">{copy.eyebrow}</p><h1>{copy.title}</h1><p>{copy.intro}</p></header>
+    <header className="hero marketplace-hero"><p className="eyebrow">{copy.eyebrow}</p><h1>{copy.title}</h1><p>{copy.intro}</p></header>
     <div className="home-actions">
       <a className="home-action primary" href="/account/listings/new">{copy.sell}</a>
       <a className="home-action" href="#search">{copy.search}</a>
       <a className="home-action" href="/account/favorites">{copy.favorites}</a>
     </div>
+    <section className="marketplace-banner"><div><span className="banner-kicker">SUPER PHONE</span><h2>{lang === "en" ? "Your next phone is closer" : lang === "ku" ? "مۆبایلی داهاتووت لێرەیە" : "هاتفك القادم أقرب مما تتخيل"}</h2><p>{lang === "en" ? "Browse trusted listings and compare devices in one place." : lang === "ku" ? "ڕیکلامەکان ببینە و ئامێرەکان لە یەک شوێن بەراورد بکە." : "تصفح إعلانات الهواتف وقارن الأجهزة بسهولة من مكان واحد."}</p></div><span className="banner-device" aria-hidden="true">▯</span></section>
     <section className="search-panel" id="search" aria-label={copy.searchLabel}><form method="get" className="filters">
       <input name="q" defaultValue={filters.q} placeholder={copy.searchPlaceholder} />
       <select name="category" defaultValue={filters.category}><option value="">{copy.allCategories}</option>{categories.map(c=><option key={c.slug} value={c.slug}>{categoryName(lang, c.name_ar)}</option>)}</select>
@@ -34,7 +35,7 @@ export default async function Home({ searchParams }: { searchParams: SP }) {
       <input name="max" type="number" min={0} defaultValue={filters.max} placeholder={copy.max} />
       <button type="submit">{copy.search}</button><a href="/" className="reset">{lang === "en" ? "Clear" : lang === "ku" ? "پاککردنەوە" : "مسح"}</a>
     </form></section>
-    <div className="section-head"><h2>{copy.newest}</h2></div>
+    <div className="section-head"><h2>{copy.newest}</h2><span className="section-note">● {lang === "en" ? "Recently added" : lang === "ku" ? "تازە زیادکراوەکان" : "أضيفت حديثاً"}</span></div>
     {error&&<p className="notice">{copy.error}</p>}
     {!error&&listings.length===0&&<p className="notice">{copy.empty}</p>}
     <section className="grid">{listings.map(l=><ListingCard key={l.id} listing={l}/>)}</section>

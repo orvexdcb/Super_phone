@@ -29,11 +29,11 @@ export default function ListingCard({ listing, onPress, lang = 'ar' }) {
 }
 
 const styles = StyleSheet.create({
-  card: { backgroundColor: COLORS.panel, borderRadius: 12, borderWidth: 1, borderColor: COLORS.border, overflow: 'hidden', marginBottom: 12 },
-  img: { width: '100%', aspectRatio: 4 / 3, backgroundColor: COLORS.panelAlt },
+  card: { backgroundColor: COLORS.panel, borderRadius: 14, borderWidth: 1, borderColor: COLORS.border, overflow: 'hidden', marginBottom: 12, flexDirection: 'row-reverse', minHeight: 124 },
+  img: { width: '40%', minHeight: 124, backgroundColor: COLORS.panelAlt },
   noimg: { alignItems: 'center', justifyContent: 'center' },
-  body: { padding: 12 },
-  title: { fontSize: 16, fontWeight: '600', color: COLORS.text, textAlign: 'right' },
+  body: { flex: 1, padding: 12, justifyContent: 'center', gap: 3 },
+  title: { fontSize: 15, fontWeight: '800', color: COLORS.text, textAlign: 'right' },
   price: { fontSize: 16, fontWeight: '700', color: COLORS.gold, marginVertical: 4, textAlign: 'right' },
   muted: { color: COLORS.muted, fontSize: 13, textAlign: 'right' },
 });
