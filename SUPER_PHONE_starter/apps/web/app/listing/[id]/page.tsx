@@ -4,6 +4,8 @@ import { createServerSupabase } from "../../../lib/supabase-server";
 import { listingImageUrl } from "../../../lib/supabase";
 import { toWhatsApp } from "../../../lib/phone";
 import ListingActions from "../../../components/ListingActions";
+import { cookies } from "next/headers";
+import { t } from "../../../lib/i18n";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +16,8 @@ const SPEC_LABELS: Record<string, string> = {
 
 export default async function ListingPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  const cookieStore = await cookies();
+  const lang = (cookieStore.get("sp_lang")?.value || "ar") as "ar" | "en" | "ku";
   if (!UUID.test(id)) notFound();
 
   const supabase = await createServerSupabase();
@@ -36,9 +40,9 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
 
   return (
     <main className="detail">
-      {l.status !== "active" && <p className="notice">هذا الإعلان غير منشور حالياً (معاينة لك فقط).</p>}
+      {l.status !== "active" && <p className="notice">{t(lang, "notPublished")}</p>}
       <div className="gallery">
-        {images.length === 0 && <div className="thumb"><span>بدون صورة</span></div>}
+        {images.length === 0 && <div className="thumb"><span>{t(lang, "noImage")}</span></div>}
         {images.map((im) => (
           // eslint-disable-next-line @next/next/no-img-element
           <img key={im.storage_path} src={listingImageUrl(im.storage_path)} alt={l.title} />
@@ -65,18 +69,19 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
 
       {l.contact_phone && (
         <div className="contact">
-          <a href={`tel:${l.contact_phone.replace(/[^\d+]/g, "")}`} className="cta-link">اتصال</a>
-          {wa && <a href={`https://wa.me/${wa}`} className="cta-link wa" target="_blank" rel="noopener noreferrer">واتساب</a>}
+          <a href={`tel:${l.contact_phone.replace(/[^\d+]/g, "")}`} className="cta-link">{t(lang, "call")}</a>
+          {wa && <a href={`https://wa.me/${wa}`} className="cta-link wa" target="_blank" rel="noopener noreferrer">{t(lang, "whatsapp")}</a>}
         </div>
       )}
       <ListingActions
         listingId={l.id}
         userId={user?.id ?? null}
+        lang={lang}
         initialFav={isFav}
         canReport={user?.id !== l.seller_id && l.status === "active"}
       />
       <p className="meta safety">
-        نصيحة: افحص الجهاز بنفسك قبل الدفع، وقابل البائع في مكان عام، ولا تحوّل مبالغ مقدماً.
+        {t(lang, "safety")}
       </p>
     </main>
   );
