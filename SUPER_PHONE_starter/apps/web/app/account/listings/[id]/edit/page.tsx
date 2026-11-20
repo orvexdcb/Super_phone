@@ -3,8 +3,6 @@ import { revalidatePath } from "next/cache";
 import { createServerSupabase } from "../../../../../lib/supabase-server";
 import { cookies } from "next/headers";
 import { t } from "../../../../../lib/i18n";
-import { cookies } from "next/headers";
-import { t } from "../../../../../lib/i18n";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
