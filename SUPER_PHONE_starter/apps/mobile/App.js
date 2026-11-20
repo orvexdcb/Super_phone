@@ -54,7 +54,7 @@ function Shell() {
   }
 
   return (
-    <FirstRunFlow>
+    <FirstRunFlow onComplete={setLang}>
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         {route ? (
