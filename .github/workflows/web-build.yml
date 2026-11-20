@@ -1,0 +1,42 @@
+name: SUPER PHONE web build check
+
+on:
+  push:
+    branches:
+      - feature/first-run-redesign
+    paths:
+      - "SUPER_PHONE_starter/apps/web/**"
+      - "SUPER_PHONE_starter/packages/shared/**"
+      - "SUPER_PHONE_starter/pnpm-lock.yaml"
+      - "SUPER_PHONE_starter/package.json"
+      - ".github/workflows/web-build.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  web-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: SUPER_PHONE_starter
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: https://build-check.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: build-check-only-placeholder
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Enable pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@10.10.0 --activate
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+      - name: Build Next.js web app
+        run: pnpm --filter @super-phone/web build
