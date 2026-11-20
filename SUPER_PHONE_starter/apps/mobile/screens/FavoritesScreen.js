@@ -4,8 +4,10 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../lib/AuthContext';
 import { COLORS } from '../lib/constants';
 import ListingCard from '../components/ListingCard';
+import { tr } from '../lib/i18n';
 
-export default function FavoritesScreen({ onOpen }) {
+export default function FavoritesScreen({ onOpen, lang = 'ar' }) {
+  const t = (key) => tr(lang, key);
   const { user } = useAuth();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,8 +34,8 @@ export default function FavoritesScreen({ onOpen }) {
       contentContainerStyle={{ padding: 16 }}
       refreshing={loading}
       onRefresh={load}
-      ListEmptyComponent={<Text style={styles.empty}>لم تضف أي إعلان للمفضلة بعد.</Text>}
-      renderItem={({ item }) => <ListingCard listing={item} onPress={() => onOpen(item.id)} />}
+      ListEmptyComponent={<Text style={styles.empty}>{t('noFavorites')}</Text>}
+      renderItem={({ item }) => <ListingCard lang={lang} listing={item} onPress={() => onOpen(item.id)} />}
     />
   );
 }
