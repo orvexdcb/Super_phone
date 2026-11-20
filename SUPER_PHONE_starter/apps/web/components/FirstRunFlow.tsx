@@ -1,5 +1,6 @@
 "use client";
 import { useEffect,useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { GOVERNORATES } from "@super-phone/shared";
 const KEY="superphone:first-run:v1";
@@ -9,12 +10,13 @@ en:{language:"Choose your language",place:"Set your location",province:"Governor
 ku:{language:"زمان هەڵبژێرە",place:"شوێنی نیشتەجێبوون دیاری بکە",province:"پارێزگا",area:"ناوچە / قەزا",gps:"داوای شوێن",next:"دواتر",skip:"تێپەڕاندن",start:"دەستپێبکە",intro:["فرۆشتنی مۆبایل بۆ بڵاوکردنەوەی ئامێرەکەتە.","گەڕان بۆ دۆزینەوەی ئامێری دڵخوازە.","دڵخوازەکان ئامێرەکانت دەپارێزێت.","دوگمە سەرەکییەکان لە سەرەوەی شاشەکەن."],gpsHint:"دەتوانیت مۆڵەتی شوێن بدەیت یان بە دەستی هەڵیبژێریت."}
 };
 export default function FirstRunFlow({children}:{children:React.ReactNode}){
+ const router=useRouter();
  const [done,setDone]=useState(true),[loaded,setLoaded]=useState(false),[step,setStep]=useState(0),[lang,setLang]=useState("ar"),[gov,setGov]=useState(""),[area,setArea]=useState(""),[gps,setGps]=useState("");
  useEffect(()=>{try{const raw=localStorage.getItem(KEY);if(!raw)setDone(false);else{const saved=JSON.parse(raw);setLang(saved.lang||"ar")}}catch{setDone(false)}setLoaded(true)},[]);
  if(!loaded)return <div className="first-run-overlay"><div className="first-run-panel"><Image src="/pwa-icon-512.png" alt="SUPER PHONE" width={124} height={124}/><div className="first-run-title">SUPER PHONE</div></div></div>;
  if(done)return <>{children}</>;
  const t=copy[lang as keyof typeof copy];
- const finish=()=>{localStorage.setItem(KEY,JSON.stringify({lang,governorate:gov,area,completed:true}));document.documentElement.lang=lang;document.documentElement.dir=lang==="en"?"ltr":"rtl";setDone(true)};
+ const finish=()=>{localStorage.setItem(KEY,JSON.stringify({lang,governorate:gov,area,completed:true}));document.documentElement.lang=lang;document.documentElement.dir=lang==="en"?"ltr":"rtl";setDone(true);router.refresh()};
  const requestLocation=()=>{setGps(t.gpsHint);if("geolocation" in navigator)navigator.geolocation.getCurrentPosition(()=>setGps(t.gpsHint),()=>setGps(t.gpsHint))};
  return <div className="first-run-overlay"><section className="first-run-panel">
  {step===0?<><Image src="/pwa-icon-512.png" alt="SUPER PHONE" width={124} height={124} className="first-run-logo"/><div className="first-run-title">SUPER PHONE</div><button className="first-run-btn" onClick={()=>setStep(1)}>{t.next}</button></>:
