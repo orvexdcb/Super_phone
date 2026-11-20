@@ -2,10 +2,14 @@ import { redirect } from "next/navigation";
 import ListingCard from "../../../components/ListingCard";
 import type { ListingCard as Listing } from "../../../lib/listings";
 import { createServerSupabase } from "../../../lib/supabase-server";
+import { cookies } from "next/headers";
+import { t } from "../../../lib/i18n";
 
 export const dynamic = "force-dynamic";
 
 export default async function FavoritesPage() {
+  const cookieStore = await cookies();
+  const lang = (cookieStore.get("sp_lang")?.value || "ar") as "ar" | "en" | "ku";
   const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/account/favorites");
@@ -22,8 +26,8 @@ export default async function FavoritesPage() {
 
   return (
     <main>
-      <h1>المفضلة</h1>
-      {listings.length === 0 && <p className="notice">لم تضف أي إعلان للمفضلة بعد.</p>}
+      <h1>{t(lang, "favorites")}</h1>
+      {listings.length === 0 && <p className="notice">{t(lang, "noFavorites")}</p>}
       <section className="grid">
         {listings.map((l) => <ListingCard key={l.id} listing={l} />)}
       </section>
