@@ -3,12 +3,14 @@ import { ActivityIndicator, FlatList, Image, Pressable, StyleSheet, Text, View }
 import { supabase, imageUrl } from '../lib/supabase';
 import { useAuth } from '../lib/AuthContext';
 import { COLORS, STATUS_LABELS, formatPrice } from '../lib/constants';
+import { tr } from '../lib/i18n';
 
 const BADGE = {
   active: ['#234436', COLORS.success], pending_review: ['#49391f', COLORS.goldLight], rejected: ['#482a2b', COLORS.danger],
 };
 
-export default function MyListingsScreen({ onOpen, posted }) {
+export default function MyListingsScreen({ onOpen, posted, lang = 'ar' }) {
+  const t = (key) => tr(lang, key);
   const { user } = useAuth();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,11 +36,11 @@ export default function MyListingsScreen({ onOpen, posted }) {
       onRefresh={load}
       ListHeaderComponent={
         <>
-          <Text style={styles.h1}>إعلاناتي</Text>
-          {posted && <Text style={styles.ok}>تم إرسال إعلانك للمراجعة، وسيظهر بعد الموافقة.</Text>}
+          <Text style={styles.h1}>{t('myListings')}</Text>
+          {posted && <Text style={styles.ok}>{t('submitted')}</Text>}
         </>
       }
-      ListEmptyComponent={<Text style={styles.empty}>لم تنشر أي إعلان بعد.</Text>}
+      ListEmptyComponent={<Text style={styles.empty}>{t('noListings')}</Text>}
       renderItem={({ item }) => {
         const first = [...item.listing_images].sort((a, b) => a.sort_order - b.sort_order)[0];
         const [bg, fg] = BADGE[item.status] || [COLORS.panelAlt, COLORS.text];
@@ -52,7 +54,7 @@ export default function MyListingsScreen({ onOpen, posted }) {
                 <Text style={{ color: fg, fontSize: 12 }}>{STATUS_LABELS[item.status]}</Text>
               </View>
               {item.status === 'rejected' && !!item.rejection_reason && (
-                <Text style={styles.muted}>السبب: {item.rejection_reason}</Text>
+                <Text style={styles.muted}>{t('rejectedReason')}: {item.rejection_reason}</Text>
               )}
             </View>
           </Pressable>
