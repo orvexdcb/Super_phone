@@ -9,6 +9,7 @@ import FavoritesScreen from './screens/FavoritesScreen';
 import AccountScreen from './screens/AccountScreen';
 import NewListingScreen from './screens/NewListingScreen';
 import MyListingsScreen from './screens/MyListingsScreen';
+import FirstRunFlow from './components/FirstRunFlow';
 
 const TABS = [
   { key: 'home', icon: '⌂', label: 'الرئيسية' },
@@ -51,6 +52,7 @@ function Shell() {
   }
 
   return (
+    <FirstRunFlow>
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         {route ? (
@@ -80,6 +82,7 @@ function Shell() {
       )}
       <StatusBar style="light" />
     </SafeAreaView>
+    </FirstRunFlow>
   );
 }
 
