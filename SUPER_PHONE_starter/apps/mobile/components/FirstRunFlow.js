@@ -13,7 +13,7 @@ ku:{language:'زمان هەڵبژێرە',place:'شوێنی نیشتەجێبوو�
 };
 export default function FirstRunFlow({children}){
  const [loading,setLoading]=useState(true),[done,setDone]=useState(false),[step,setStep]=useState(0),[lang,setLang]=useState('ar'),[gov,setGov]=useState(''),[area,setArea]=useState(''),[gps,setGps]=useState('');
- useEffect(()=>{AsyncStorage.getItem(KEY).then(raw=>{if(raw){try{const saved=JSON.parse(raw);setLang(saved.lang||'ar');setDone(true)}catch{}}}).finally(()=>setLoading(false))},[]);
+ useEffect(()=>{AsyncStorage.getItem(KEY).then(raw=>{if(raw){try{const saved=JSON.parse(raw);setLang(['ar','en','ku'].includes(saved.lang)?saved.lang:'ar');setDone(true)}catch{}}}).finally(()=>setLoading(false))},[]);
  if(loading)return <View style={s.splash}><StatusBar style="light"/><ActivityIndicator color={COLORS.gold}/></View>;
  if(done)return children;
  const t=T[lang];
