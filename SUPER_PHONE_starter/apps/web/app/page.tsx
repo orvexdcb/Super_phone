@@ -3,6 +3,7 @@ import ListingCard from "../components/ListingCard";
 import { fetchCategories, fetchListings, type Filters } from "../lib/listings";
 import FirstRunFlow from "../components/FirstRunFlow";
 import { cookies } from "next/headers";
+import { categoryName, conditionName, governorateName } from "../lib/i18n";
 
 export const dynamic = "force-dynamic";
 type SP = Promise<Record<string, string | string[] | undefined>>;
@@ -26,9 +27,9 @@ export default async function Home({ searchParams }: { searchParams: SP }) {
     </div>
     <section className="search-panel" id="search" aria-label={copy.searchLabel}><form method="get" className="filters">
       <input name="q" defaultValue={filters.q} placeholder={copy.searchPlaceholder} />
-      <select name="category" defaultValue={filters.category}><option value="">{copy.allCategories}</option>{categories.map(c=><option key={c.slug} value={c.slug}>{c.name_ar}</option>)}</select>
-      <select name="condition" defaultValue={filters.condition}><option value="">{copy.allConditions}</option>{Object.entries(CONDITION_LABELS).map(([k,v])=><option key={k} value={k}>{v}</option>)}</select>
-      <select name="governorate" defaultValue={filters.governorate}><option value="">{copy.allGovernorates}</option>{GOVERNORATES.map(g=><option key={g}>{g}</option>)}</select>
+      <select name="category" defaultValue={filters.category}><option value="">{copy.allCategories}</option>{categories.map(c=><option key={c.slug} value={c.slug}>{categoryName(lang, c.name_ar)}</option>)}</select>
+      <select name="condition" defaultValue={filters.condition}><option value="">{copy.allConditions}</option>{Object.entries(CONDITION_LABELS).map(([k,v])=><option key={k} value={k}>{conditionName(lang, k, v)}</option>)}</select>
+      <select name="governorate" defaultValue={filters.governorate}><option value="">{copy.allGovernorates}</option>{GOVERNORATES.map(g=><option key={g} value={g}>{governorateName(lang, g)}</option>)}</select>
       <input name="min" type="number" min={0} defaultValue={filters.min} placeholder={copy.min} />
       <input name="max" type="number" min={0} defaultValue={filters.max} placeholder={copy.max} />
       <button type="submit">{copy.search}</button><a href="/" className="reset">{lang === "en" ? "Clear" : lang === "ku" ? "پاککردنەوە" : "مسح"}</a>
