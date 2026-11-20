@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { createServerSupabase } from "../lib/supabase-server";
 import SignOutButton from "./SignOutButton";
+import { cookies } from "next/headers";
 
 function Icon({ name }: { name: "home" | "search" | "heart" | "plus" | "user" }) {
   const paths: Record<typeof name, React.ReactNode> = {
@@ -15,37 +16,40 @@ function Icon({ name }: { name: "home" | "search" | "heart" | "plus" | "user" })
 }
 
 export default async function Header() {
+  const cookieStore = await cookies();
+  const lang = cookieStore.get("sp_lang")?.value || "ar";
+  const words = { ar: { tagline:"سوق الهواتف والأجهزة الذكية", home:"الرئيسية", search:"البحث", sell:"＋ نشر إعلان", favorites:"المفضلة", account:"حسابي", login:"دخول", signup:"حساب جديد", post:"إعلان جديد" }, en: { tagline:"Phones and smart devices marketplace", home:"Home", search:"Search", sell:"＋ Post a listing", favorites:"Favorites", account:"Account", login:"Log in", signup:"Sign up", post:"New listing" }, ku: { tagline:"بازاڕی مۆبایل و ئامێرە زیرەکەکان", home:"سەرەکی", search:"گەڕان", sell:"＋ ڕیکلام دابنێ", favorites:"دڵخوازەکان", account:"هەژمار", login:"چوونەژوورەوە", signup:"هەژماری نوێ", post:"ڕیکلامی نوێ" } }[lang] || { tagline:"سوق الهواتف والأجهزة الذكية", home:"الرئيسية", search:"البحث", sell:"＋ نشر إعلان", favorites:"المفضلة", account:"حسابي", login:"دخول", signup:"حساب جديد", post:"إعلان جديد" };
   const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   return (
     <>
       <header className="site-header">
         <nav className="topbar">
-          <Link href="/" className="brand-lockup" aria-label="SUPER PHONE - الرئيسية">
-            <Image src="/pwa-icon-512.png" alt="شعار SUPER PHONE" width={54} height={54} priority className="brand-mark" />
-            <span className="brand-copy"><strong>SUPER <i>PHONE</i></strong><small>سوق الهواتف والأجهزة الذكية</small></span>
+          <Link href="/" className="brand-lockup" aria-label={`SUPER PHONE - ${words.home}`}>
+            <Image src="/pwa-icon-512.png" alt="SUPER PHONE" width={54} height={54} priority className="brand-mark" />
+            <span className="brand-copy"><strong>SUPER <i>PHONE</i></strong><small>{words.tagline}</small></span>
           </Link>
           <div className="nav-actions">
-            <Link href="/#search">البحث</Link>
+            <Link href="/#search">{words.search}</Link>
             {user ? (
               <>
-                <Link href="/account/listings/new" className="cta">＋ نشر إعلان</Link>
-                <Link href="/account/favorites">المفضلة</Link>
-                <Link href="/account">حسابي</Link>
+                <Link href="/account/listings/new" className="cta">{words.sell}</Link>
+                <Link href="/account/favorites">{words.favorites}</Link>
+                <Link href="/account">{words.account}</Link>
                 <SignOutButton />
               </>
             ) : (
-              <><Link href="/login">دخول</Link><Link href="/signup" className="cta">حساب جديد</Link></>
+              <><Link href="/login">{words.login}</Link><Link href="/signup" className="cta">{words.signup}</Link></>
             )}
           </div>
         </nav>
       </header>
       <nav className="mobile-dock" aria-label="التنقل الرئيسي">
-        <Link href="/" className="dock-item"><Icon name="home" /><span>الرئيسية</span></Link>
-        <Link href="/#search" className="dock-item"><Icon name="search" /><span>البحث</span></Link>
-        <Link href={user ? "/account/listings/new" : "/login?next=/account/listings/new"} className="dock-add"><Icon name="plus" /><span>إعلان جديد</span></Link>
-        <Link href={user ? "/account/favorites" : "/login?next=/account/favorites"} className="dock-item"><Icon name="heart" /><span>المفضلة</span></Link>
-        <Link href={user ? "/account" : "/login?next=/account"} className="dock-item"><Icon name="user" /><span>حسابي</span></Link>
+        <Link href="/" className="dock-item"><Icon name="home" /><span>{words.home}</span></Link>
+        <Link href="/#search" className="dock-item"><Icon name="search" /><span>{words.search}</span></Link>
+        <Link href={user ? "/account/listings/new" : "/login?next=/account/listings/new"} className="dock-add"><Icon name="plus" /><span>{words.post}</span></Link>
+        <Link href={user ? "/account/favorites" : "/login?next=/account/favorites"} className="dock-item"><Icon name="heart" /><span>{words.favorites}</span></Link>
+        <Link href={user ? "/account" : "/login?next=/account"} className="dock-item"><Icon name="user" /><span>{words.account}</span></Link>
       </nav>
     </>
   );
