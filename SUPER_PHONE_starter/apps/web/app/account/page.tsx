@@ -32,13 +32,14 @@ export default async function AccountPage() {
   if (!user) redirect("/login?next=/account");
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, phone, governorate, city")
+    .select("full_name, phone, governorate, city, role")
     .eq("id", user.id)
     .single();
 
   return (
     <main className="auth">
       <h1>{t(lang, "account")}</h1>
+      {profile?.role === "admin" && <p className="alt"><Link href="/founder/settings" className="founder-account-link">⚙ إعدادات البرنامج الكاملة · أدوات المؤسس</Link></p>}
       <p className="meta" dir="ltr">{user.email}</p>
       <form action={saveProfile} className="auth-form">
         <input name="full_name" defaultValue={profile?.full_name ?? ""} placeholder={t(lang, "name")} maxLength={80} />
