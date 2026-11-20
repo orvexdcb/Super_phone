@@ -2,6 +2,7 @@
 import { useEffect,useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { createBrowserSupabase } from "../lib/supabase-browser";
 import { GOVERNORATES } from "@super-phone/shared";
 const KEY="superphone:first-run:v1";
 const copy={
@@ -16,7 +17,7 @@ export default function FirstRunFlow({children}:{children:React.ReactNode}){
  if(!loaded)return <div className="first-run-overlay"><div className="first-run-panel"><Image src="/pwa-icon-512.png" alt="SUPER PHONE" width={124} height={124}/><div className="first-run-title">SUPER PHONE</div></div></div>;
  if(done)return <>{children}</>;
  const t=copy[lang as keyof typeof copy];
- const finish=()=>{localStorage.setItem(KEY,JSON.stringify({lang,governorate:gov,area,completed:true}));document.documentElement.lang=lang;document.documentElement.dir=lang==="en"?"ltr":"rtl";setDone(true);router.refresh()};
+ const finish=async()=>{localStorage.setItem(KEY,JSON.stringify({lang,governorate:gov,area,completed:true}));document.documentElement.lang=lang;document.documentElement.dir=lang==="en"?"ltr":"rtl";try{const sb=createBrowserSupabase();const {data:{user}}=await sb.auth.getUser();if(user&&gov)await sb.from("profiles").update({governorate:gov,city:area.trim()||null}).eq("id",user.id)}catch{}setDone(true);router.refresh()};
  const requestLocation=()=>{setGps(t.gpsHint);if("geolocation" in navigator)navigator.geolocation.getCurrentPosition(()=>setGps(t.gpsHint),()=>setGps(t.gpsHint))};
  return <div className="first-run-overlay"><section className="first-run-panel">
  {step===0?<><Image src="/pwa-icon-512.png" alt="SUPER PHONE" width={124} height={124} className="first-run-logo"/><div className="first-run-title">SUPER PHONE</div><button className="first-run-btn" onClick={()=>setStep(1)}>{t.next}</button></>:
