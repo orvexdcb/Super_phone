@@ -5,7 +5,7 @@ import {
   GOVERNORATES, CONDITION_LABELS, MAX_IMAGES, MAX_IMAGE_BYTES, ALLOWED_IMAGE_TYPES,
 } from "@super-phone/shared";
 import { createBrowserSupabase } from "../lib/supabase-browser";
-import { t } from "../lib/i18n";
+import { t, categoryName, conditionName, governorateName } from "../lib/i18n";
 
 type Cat = { id: string; name_ar: string };
 type Defaults = { phone: string; governorate: string; city: string };
@@ -109,7 +109,7 @@ export default function ListingForm({ categories, defaults, lang = "ar" }: { cat
     <form onSubmit={onSubmit} className="auth-form wide">
       <select name="category_id" required defaultValue="">
         <option value="" disabled>{tx("category")}</option>
-        {categories.map((c) => <option key={c.id} value={c.id}>{c.name_ar}</option>)}
+        {categories.map((c) => <option key={c.id} value={c.id}>{categoryName(lang, c.name_ar)}</option>)}
       </select>
       <input name="title" placeholder={tx("title")} required minLength={3} maxLength={120} />
       <div className="row">
@@ -130,7 +130,7 @@ export default function ListingForm({ categories, defaults, lang = "ar" }: { cat
       <div className="row">
         <select name="governorate" required defaultValue={defaults.governorate}>
           <option value="" disabled>{tx("governorate")}</option>
-          {GOVERNORATES.map((g) => <option key={g} value={g}>{g}</option>)}
+          {GOVERNORATES.map((g) => <option key={g} value={g}>{governorateName(lang, g)}</option>)}
         </select>
         <input name="city" defaultValue={defaults.city} placeholder={tx("area")} maxLength={60} />
       </div>
