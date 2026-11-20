@@ -10,7 +10,7 @@ const PAGE = 20;
 const SELECT =
   'id,title,price,currency,condition,governorate,city,created_at,categories!inner(slug,name_ar),listing_images(storage_path,sort_order)';
 const EMPTY = { q: '', category: '', condition: '', governorate: '', min: '', max: '' };
-const COPY = { ar: { search:'ابحث عن جهاز...', filter:'تصفية', condition:'الحالة', governorate:'المحافظة', price:'السعر', max:'أعلى سعر', min:'أدنى سعر', clear:'مسح', apply:'تطبيق', sell:'بيع هاتفك', find:'بحث', favorites:'المفضلة', all:'الكل', empty:'لا توجد إعلانات مطابقة حالياً.', error:'تعذّر تحميل الإعلانات.' }, en: { search:'Search devices...', filter:'Filters', condition:'Condition', governorate:'Governorate', price:'Price', max:'Max price', min:'Min price', clear:'Clear', apply:'Apply', sell:'Sell your phone', find:'Search', favorites:'Favorites', all:'All', empty:'No matching listings right now.', error:'Could not load listings.' }, ku: { search:'بگەڕێ بۆ ئامێر...', filter:'پاڵاوتن', condition:'دۆخ', governorate:'پارێزگا', price:'نرخ', max:'زۆرترین نرخ', min:'کەمترین نرخ', clear:'پاککردنەوە', apply:'جێبەجێکردن', sell:'مۆبایلەکەت بفرۆشە', find:'گەڕان', favorites:'دڵخوازەکان', all:'هەموو', empty:'هیچ ڕیکلامێکی گونجاو نییە.', error:'بارکردنی ڕیکلامەکان سەرکەوتوو نەبوو.' } };
+const COPY = { ar: { search:'ابحث عن جهاز...', filter:'تصفية', condition:'الحالة', governorate:'المحافظة', price:'السعر', max:'أعلى سعر', min:'أدنى سعر', clear:'مسح', apply:'تطبيق', sell:'بيع هاتفك', find:'بحث', favorites:'المفضلة', all:'الكل', headline:'كل الهواتف التي تبحث عنها في مكان واحد', intro:'اكتشف أحدث الأجهزة المعروضة وقارن الأسعار بسهولة.', banner:'اعثر على هاتفك القادم', bannerText:'تصفح الإعلانات واختر الجهاز الأنسب لك.', empty:'لا توجد إعلانات مطابقة حالياً.', error:'تعذّر تحميل الإعلانات.' }, en: { search:'Search devices...', filter:'Filters', condition:'Condition', governorate:'Governorate', price:'Price', max:'Max price', min:'Min price', clear:'Clear', apply:'Apply', sell:'Sell your phone', find:'Search', favorites:'Favorites', all:'All', headline:'Every phone you are looking for, in one place', intro:'Discover new listings and compare prices with ease.', banner:'Find your next phone', bannerText:'Browse listings and choose the right device.', empty:'No matching listings right now.', error:'Could not load listings.' }, ku: { search:'بگەڕێ بۆ ئامێر...', filter:'پاڵاوتن', condition:'دۆخ', governorate:'پارێزگا', price:'نرخ', max:'زۆرترین نرخ', min:'کەمترین نرخ', clear:'پاککردنەوە', apply:'جێبەجێکردن', sell:'مۆبایلەکەت بفرۆشە', find:'گەڕان', favorites:'دڵخوازەکان', all:'هەموو', headline:'هەموو مۆبایلەکان لە یەک شوێن', intro:'ئامێرە نوێیەکان ببینە و نرخەکان بە ئاسانی بەراورد بکە.', banner:'مۆبایلی داهاتووت بدۆزەرەوە', bannerText:'ڕیکلامەکان ببینە و ئامێری گونجاو هەڵبژێرە.', empty:'هیچ ڕیکلامێکی گونجاو نییە.', error:'بارکردنی ڕیکلامەکان سەرکەوتوو نەبوو.' } };
 
 export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar' }) {
   const t = COPY[lang] || COPY.ar;
@@ -130,6 +130,7 @@ export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar' 
         </ScrollView>
       )}
 
+      <View style={styles.promo}><View style={{ flex: 1 }}><Text style={styles.promoTitle}>{t.banner}</Text><Text style={styles.promoText}>{t.bannerText}</Text></View><Text style={styles.promoIcon}>▯</Text></View>
       <View style={styles.homeActions}>
         <Pressable style={styles.homeAction} onPress={onSell}><Text style={styles.homeActionText}>{t.sell}</Text></Pressable>
         <Pressable style={styles.homeAction} onPress={() => setShowFilters(true)}><Text style={styles.homeActionText}>{t.find}</Text></Pressable>
@@ -166,9 +167,17 @@ export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar' 
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
+  intro: { paddingHorizontal: 18, paddingTop: 14, paddingBottom: 8 },
+  eyebrow: { color: COLORS.gold, fontSize: 11, fontWeight: '900', letterSpacing: 2, textAlign: 'right' },
+  headline: { color: COLORS.text, fontSize: 21, fontWeight: '900', textAlign: 'right', marginTop: 5 },
+  introText: { color: COLORS.muted, fontSize: 13, textAlign: 'right', marginTop: 4 },
+  promo: { marginHorizontal: 16, marginTop: 14, marginBottom: 8, borderRadius: 16, padding: 18, minHeight: 112, backgroundColor: '#203550', flexDirection: 'row-reverse', alignItems: 'center', overflow: 'hidden' },
+  promoTitle: { color: '#f0d39a', fontSize: 19, fontWeight: '900', textAlign: 'right' },
+  promoText: { color: '#d2dbe6', fontSize: 12, textAlign: 'right', marginTop: 5 },
+  promoIcon: { color: COLORS.gold, fontSize: 54, opacity: 0.85, marginLeft: 12 },
   homeActions: { flexDirection: 'row-reverse', gap: 8, paddingHorizontal: 16, paddingTop: 8 },
-  homeAction: { flex: 1, backgroundColor: COLORS.gold, borderRadius: 12, paddingVertical: 12, alignItems: 'center' },
-  homeActionText: { color: COLORS.bg, fontWeight: '900', fontSize: 13 },
+  homeAction: { flex: 1, backgroundColor: COLORS.panel, borderWidth: 1, borderColor: COLORS.border, borderRadius: 12, paddingVertical: 12, alignItems: 'center' },
+  homeActionText: { color: COLORS.goldLight, fontWeight: '900', fontSize: 13 },
   search: { flexDirection: 'row-reverse', gap: 8, padding: 16, paddingBottom: 8 },
   input: { backgroundColor: COLORS.panel, borderWidth: 1, borderColor: COLORS.border, borderRadius: 10, padding: 12, fontSize: 16, color: COLORS.text },
   filterBtn: { justifyContent: 'center', paddingHorizontal: 14, borderRadius: 10, borderWidth: 1, borderColor: COLORS.gold, backgroundColor: COLORS.panel },
