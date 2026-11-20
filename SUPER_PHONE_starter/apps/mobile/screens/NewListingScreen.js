@@ -31,9 +31,9 @@ export default function NewListingScreen({ onDone, lang = 'ar' }) {
   useEffect(() => {
     supabase.from('categories').select('id,name_ar').eq('is_active', true).order('sort_order')
       .then(({ data }) => setCategories(data || []));
-    supabase.from('profiles').select('phone,governorate').eq('id', user.id).single()
+    supabase.from('profiles').select('phone,governorate,city').eq('id', user.id).single()
       .then(({ data }) => data && setF((p) => ({
-        ...p, contact_phone: p.contact_phone || data.phone || '', governorate: p.governorate || data.governorate || '',
+        ...p, contact_phone: p.contact_phone || data.phone || '', governorate: p.governorate || data.governorate || '', city: p.city || data.city || '',
       })));
   }, [user.id]);
 
