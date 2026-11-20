@@ -3,7 +3,7 @@ import { ActivityIndicator, Image, Linking, Pressable, ScrollView, StyleSheet, T
 import { supabase, imageUrl } from '../lib/supabase';
 import { useAuth } from '../lib/AuthContext';
 import { CONDITION_LABELS, COLORS, SPEC_LABELS, formatPrice, toWhatsApp } from '../lib/constants';
-import { tr } from '../lib/i18n';
+import { tr, conditionLabel, governorateLabel, categoryLabel } from '../lib/i18n';
 
 export default function DetailScreen({ id, onNeedLogin, lang = 'ar' }) {
   const t = (key) => tr(lang, key);
@@ -69,7 +69,7 @@ export default function DetailScreen({ id, onNeedLogin, lang = 'ar' }) {
         <Text style={styles.title}>{l.title}</Text>
         <Text style={styles.price}>{formatPrice(l.price, l.currency)}</Text>
         <Text style={styles.muted}>
-          {CONDITION_LABELS[l.condition]} · {l.categories?.name_ar} · {l.governorate}{l.city ? ` — ${l.city}` : ''}
+          {conditionLabel(lang, l.condition, CONDITION_LABELS[l.condition])} · {categoryLabel(lang, l.categories?.name_ar || '')} · {governorateLabel(lang, l.governorate)}{l.city ? ` — ${l.city}` : ''}
         </Text>
         {(l.brand || l.model) && <Text style={styles.muted}>{[l.brand, l.model].filter(Boolean).join(' ')}</Text>}
 
