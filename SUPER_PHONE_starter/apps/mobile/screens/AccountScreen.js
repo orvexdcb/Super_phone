@@ -12,16 +12,16 @@ export default function AccountScreen({ onNavigate, lang = 'ar' }) {
   if (!user) return <AuthScreen lang={lang} />;
   return (
     <View style={styles.wrap}>
-      <Text style={styles.h1}>حسابي</Text>
+      <Text style={styles.h1}>{t('account')}</Text>
       <Text style={styles.email}>{user.email}</Text>
       <Pressable style={styles.primary} onPress={() => onNavigate({ name: 'new' })}>
-        <Text style={styles.primaryText}>+ نشر إعلان</Text>
+        <Text style={styles.primaryText}>+ {t('post')}</Text>
       </Pressable>
       <Pressable style={styles.secondary} onPress={() => onNavigate({ name: 'mine' })}>
-        <Text style={styles.secondaryText}>إعلاناتي</Text>
+        <Text style={styles.secondaryText}>{t('myListings')}</Text>
       </Pressable>
       <Pressable style={styles.btn} onPress={() => supabase.auth.signOut()}>
-        <Text style={styles.btnText}>تسجيل الخروج</Text>
+        <Text style={styles.btnText}>{t('logout')}</Text>
       </Pressable>
     </View>
   );
