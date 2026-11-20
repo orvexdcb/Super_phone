@@ -2,7 +2,7 @@ import React, {useEffect,useState} from 'react';
 import {Image,Pressable,ScrollView,StyleSheet,Text,TextInput,View,ActivityIndicator} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {StatusBar} from 'expo-status-bar';
-import {COLORS,GOVERNORATES} from '../lib/constants';
+import {COLORS,GOVERNORATES,IRAQ_DISTRICTS} from '../lib/constants';
 import { supabase } from '../lib/supabase';
 import * as Location from 'expo-location';
 const KEY='superphone:first-run:v1';
@@ -22,7 +22,7 @@ export default function FirstRunFlow({children}){
  return <View style={s.root}><StatusBar style="light"/>
  {step===0?<View style={s.splash}><Image source={require('../assets/icon.png')} style={s.logo} resizeMode="contain"/><Text style={s.brand}>SUPER PHONE</Text><Pressable onPress={()=>setStep(1)} style={s.btn}><Text style={s.btnText}>{t.next}</Text></Pressable></View>:
  step===1?<View style={s.panel}><Text style={s.title}>{t.language}</Text>{[['ar','العربية'],['en','English'],['ku','کوردی']].map(([v,label])=><Pressable key={v} onPress={()=>setLang(v)} style={[s.option,lang===v&&s.selected]}><Text style={s.optionText}>{label}</Text></Pressable>)}<Pressable style={s.btn} onPress={()=>setStep(2)}><Text style={s.btnText}>{t.next}</Text></Pressable></View>:
- step===2?<ScrollView contentContainerStyle={s.panel}><Text style={s.title}>{t.place}</Text><Text style={s.label}>{t.governorate}</Text><ScrollView style={{maxHeight:190}}>{GOVERNORATES.map(g=><Pressable key={g} onPress={()=>setGov(g)} style={[s.option,gov===g&&s.selected]}><Text style={s.optionText}>{g}</Text></Pressable>)}</ScrollView><Text style={s.label}>{t.area}</Text><TextInput value={area} onChangeText={setArea} placeholder="..." placeholderTextColor={COLORS.muted} style={s.input}/><Pressable style={s.option} onPress={requestLocation}><Text style={s.optionText}>{t.gps}</Text></Pressable><Text style={s.hint}>{gps}</Text><Pressable style={s.btn} disabled={!gov||!area.trim()} onPress={()=>setStep(3)}><Text style={s.btnText}>{t.next}</Text></Pressable></ScrollView>:
+ step===2?<ScrollView contentContainerStyle={s.panel}><Text style={s.title}>{t.place}</Text><Text style={s.label}>{t.governorate}</Text><ScrollView style={{maxHeight:190}}>{GOVERNORATES.map(g=><Pressable key={g} onPress={()=>{setGov(g);setArea('')}} style={[s.option,gov===g&&s.selected]}><Text style={s.optionText}>{g}</Text></Pressable>)}</ScrollView><Text style={s.label}>{t.area}</Text><ScrollView style={{maxHeight:170}}>{(IRAQ_DISTRICTS[gov]||[]).map(d=><Pressable key={d} onPress={()=>setArea(d)} style={[s.option,area===d&&s.selected]}><Text style={s.optionText}>{d}</Text></Pressable>)}</ScrollView><Pressable style={s.option} onPress={requestLocation}><Text style={s.optionText}>{t.gps}</Text></Pressable><Text style={s.hint}>{gps}</Text><Pressable style={s.btn} disabled={!gov||!area.trim()} onPress={()=>setStep(3)}><Text style={s.btnText}>{t.next}</Text></Pressable></ScrollView>:
  <View style={s.panel}><Text style={s.title}>SUPER PHONE</Text><Text style={s.label}>{t.intro[step-3]}</Text><View style={s.row}><Pressable onPress={finish} style={s.skip}><Text style={s.optionText}>{t.skip}</Text></Pressable><Pressable style={s.btn} onPress={()=>step===6?finish():setStep(step+1)}><Text style={s.btnText}>{step===6?t.start:t.next}</Text></Pressable></View></View>}
  </View>;
 }
