@@ -78,7 +78,7 @@ export default function DetailScreen({ id, onNeedLogin, lang = 'ar' }) {
             {l.listing_specs.map((s) => (
               <View key={s.spec_key} style={styles.specRow}>
                 <Text style={styles.specVal}>{s.spec_value}</Text>
-                <Text style={styles.muted}>{SPEC_LABELS[s.spec_key] || s.spec_key}</Text>
+                <Text style={styles.muted}>{(lang === 'en' ? ({storage:'Storage',ram:'RAM',battery_health:'Battery health',color:'Color'}[s.spec_key] || s.spec_key) : lang === 'ku' ? ({storage:'بیرگە',ram:'ڕام',battery_health:'تەندروستی باتری',color:'ڕەنگ'}[s.spec_key] || s.spec_key) : SPEC_LABELS[s.spec_key] || s.spec_key)}</Text>
               </View>
             ))}
           </View>
