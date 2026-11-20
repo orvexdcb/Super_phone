@@ -29,7 +29,7 @@ export default function NewListingScreen({ onDone, lang = 'ar' }) {
   const set = (k) => (v) => setF((p) => ({ ...p, [k]: v }));
 
   useEffect(() => {
-    supabase.from('categories').selectx('id,name_ar').eq('is_active', true).order('sort_order')
+    supabase.from('categories').select('id,name_ar').eq('is_active', true).order('sort_order')
       .then(({ data }) => setCategories(data || []));
     supabase.from('profiles').select('phone,governorate').eq('id', user.id).single()
       .then(({ data }) => data && setF((p) => ({
@@ -50,8 +50,8 @@ export default function NewListingScreen({ onDone, lang = 'ar' }) {
     const next = [];
     for (const a of res.assets) {
       const type = a.mimeType || 'image/jpeg';
-      if (!IMAGE_EXT[type]) return setError(t('imageTypeError'));
-      if (a.fileSize && a.fileSize > MAX_IMAGE_BYTES) return setError(t('imageSizeError'));
+      if (!IMAGE_EXT[type]) return setError(tx('imageTypeError'));
+      if (a.fileSize && a.fileSize > MAX_IMAGE_BYTES) return setError(tx('imageSizeError'));
       next.push({ uri: a.uri, type });
     }
     setError('');
@@ -158,7 +158,7 @@ export default function NewListingScreen({ onDone, lang = 'ar' }) {
           value={f.description} onChangeText={set('description')} multiline maxLength={4000} textAlign="right" />
 
         <Pressable style={styles.pick} onPress={pick}>
-          <Text style={{ color: COLORS.gold }}>{t('addImages')} ({images.length}/{MAX_IMAGES})</Text>
+          <Text style={{ color: COLORS.gold }}>{tx('addImages')} ({images.length}/{MAX_IMAGES})</Text>
         </Pressable>
         <Row>{images.map((img, i) => (
           <View key={img.uri} style={styles.thumbWrap}>
