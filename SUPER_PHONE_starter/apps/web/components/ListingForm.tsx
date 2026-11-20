@@ -93,7 +93,7 @@ export default function ListingForm({ categories, defaults, lang = "ar" }: { cat
     const { error: imgErr } = await supabase.from("listing_images").insert(
       uploaded.map((storage_path, i) => ({ listing_id: listing.id, storage_path, sort_order: i }))
     );
-    const specRows = SPECS.map((s) => ({ listing_id: listing.id, spec_key: s.key, spec_value: text(`spec_${s.key}`) }))
+    const specRows = SPEC_KEYS.map((key) => ({ listing_id: listing.id, spec_key: key, spec_value: text(`spec_${key}`) }))
       .filter((s) => s.spec_value);
     const { error: specErr } = specRows.length
       ? await supabase.from("listing_specs").insert(specRows)
