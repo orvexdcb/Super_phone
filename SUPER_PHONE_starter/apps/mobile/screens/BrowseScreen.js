@@ -82,6 +82,7 @@ export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar' 
 
   return (
     <View style={styles.flex}>
+      <View style={styles.intro}><Text style={styles.eyebrow}>SUPER PHONE</Text><Text style={styles.headline}>{t.headline}</Text><Text style={styles.introText}>{t.intro}</Text></View>
       <View style={styles.search}>
         <TextInput
           style={[styles.input, { flex: 1 }]}
