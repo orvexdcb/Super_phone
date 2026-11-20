@@ -13,7 +13,7 @@ export default async function NewListingPage() {
 
   const [{ data: categories }, { data: profile }] = await Promise.all([
     supabase.from("categories").select("id, name_ar").eq("is_active", true).order("sort_order"),
-    supabase.from("profiles").select("phone, governorate, is_banned").eq("id", user.id).single(),
+    supabase.from("profiles").select("phone, governorate, city, is_banned").eq("id", user.id).single(),
   ]);
 
   if (profile?.is_banned) {
@@ -25,7 +25,7 @@ export default async function NewListingPage() {
       <h1>{t(lang, "post")}</h1>
       <ListingForm
         categories={categories ?? []}
-        defaults={{ phone: profile?.phone ?? "", governorate: profile?.governorate ?? "" }}
+        defaults={{ phone: profile?.phone ?? "", governorate: profile?.governorate ?? "", city: profile?.city ?? "" }}
         lang={lang}
       />
     </main>
