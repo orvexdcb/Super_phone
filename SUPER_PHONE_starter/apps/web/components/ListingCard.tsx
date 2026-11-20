@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { CONDITION_LABELS, formatPrice } from "@super-phone/shared";
+import { cookies } from "next/headers";
+import { conditionName, governorateName, categoryName } from "../lib/i18n";
 import { listingImageUrl } from "../lib/supabase";
 import type { ListingCard as Listing } from "../lib/listings";
 
@@ -20,10 +22,10 @@ export default function ListingCard({ listing }: { listing: Listing }) {
         <h3>{listing.title}</h3>
         <p className="price">{formatPrice(listing.price, listing.currency)}</p>
         <p className="meta">
-          {CONDITION_LABELS[listing.condition]} · {listing.categories?.[0]?.name_ar}
+          {conditionName(lang, listing.condition, CONDITION_LABELS[listing.condition])} · {listing.categories?.[0]?.name_ar}
         </p>
         <p className="meta">
-          {listing.governorate}
+          {governorateName(lang, listing.governorate)}
           {listing.city ? ` — ${listing.city}` : ""}
         </p>
       </div>
