@@ -8,7 +8,7 @@ import { createBrowserSupabase } from "../lib/supabase-browser";
 import { t } from "../lib/i18n";
 
 type Cat = { id: string; name_ar: string };
-type Defaults = { phone: string; governorate: string };
+type Defaults = { phone: string; governorate: string; city: string };
 
 const SPEC_KEYS = ["storage", "ram", "battery_health", "color"] as const;
 
@@ -132,7 +132,7 @@ export default function ListingForm({ categories, defaults, lang = "ar" }: { cat
           <option value="" disabled>{tx("governorate")}</option>
           {GOVERNORATES.map((g) => <option key={g} value={g}>{g}</option>)}
         </select>
-        <input name="city" placeholder={tx("area")} maxLength={60} />
+        <input name="city" defaultValue={defaults.city} placeholder={tx("area")} maxLength={60} />
       </div>
       <input name="contact_phone" defaultValue={defaults.phone} placeholder={tx("contact")} maxLength={20} dir="ltr" required />
 
