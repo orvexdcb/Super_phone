@@ -17,12 +17,12 @@ const districtNames = {
  en: { "الموصل":"Mosul","تلعفر":"Tal Afar","سنجار":"Sinjar","الحمدانية":"Hamdaniya","تلكيف":"Tel Keppe","البصرة":"Basra","الزبير":"Zubair","أبو الخصيب":"Abu Al-Khaseeb","القرنة":"Qurna","شط العرب":"Shatt al-Arab","الفاو":"Al-Faw","أم قصر":"Umm Qasr","أربيل":"Erbil","شقلاوة":"Shaqlawa","سوران":"Soran","كويسنجق":"Koysinjaq","السليمانية":"Sulaymaniyah","حلبجة":"Halabja","رانية":"Ranya","دهوك":"Duhok","زاخو":"Zakho","كركوك":"Kirkuk","الرمادي":"Ramadi","الفلوجة":"Fallujah","هيت":"Hit","النجف":"Najaf","الكوفة":"Kufa","كربلاء":"Karbala","الهندية":"Hindiyah","الحلة":"Hillah","المسيب":"Musayyib","بعقوبة":"Baqubah","الخالص":"Khalis","تكريت":"Tikrit","سامراء":"Samarra","بيجي":"Baiji","الناصرية":"Nasiriyah","الشطرة":"Shatrah","الكوت":"Kut","العمارة":"Amarah","السماوة":"Samawah","الديوانية":"Diwaniyah" },
  ku: { "الموصل":"مووسڵ","تلعفر":"تەلعەفەر","سنجار":"شەنگال","البصرة":"بەسرە","الزبير":"زوبەیر","أربيل":"هەولێر","شقلاوة":"شەقڵاوە","سوران":"سۆران","السليمانية":"سلێمانی","حلبجة":"هەڵەبجە","دهوك":"دهۆک","زاخو":"زاخۆ","كركوك":"کەرکووک","الرمادي":"ڕەمادی","الفلوجة":"فەللوجە","النجف":"نەجەف","الكوفة":"کوفە","كربلاء":"کەربەلا","الحلة":"حیللە","بعقوبة":"بەعقوبە","تكريت":"تکریت","سامراء":"سامەڕا","الناصرية":"ناسیریە","الكوت":"کوت","العمارة":"عەمارە","السماوة":"سەماوە","الديوانية":"دیوانیە" }
 };
-export const governorateName = (lang: AppLanguage, value: string) => lang === "ar" ? value : govNames[lang]?.[value] || value;
-export const districtName = (lang: AppLanguage, value: string) => lang === "ar" ? value : districtNames[lang]?.[value] || value;
+export const governorateName = (lang: AppLanguage, value: string) => lang === "ar" ? value : (govNames[lang] as Record<string, string> | undefined)?.[value] || value;
+export const districtName = (lang: AppLanguage, value: string) => lang === "ar" ? value : (districtNames[lang] as Record<string, string> | undefined)?.[value] || value;
 
 const categoryNames = {
  en: { "هواتف":"Phones","موبايلات":"Phones","أجهزة لوحية":"Tablets","تابلت":"Tablets","لابتوبات":"Laptops","أجهزة كمبيوتر":"Computers","اكسسوارات":"Accessories","إكسسوارات":"Accessories","ساعات ذكية":"Smartwatches","أجهزة ذكية":"Smart devices" },
  ku: { "هواتف":"مۆبایل","موبايلات":"مۆبایل","أجهزة لوحية":"تابلێت","تابلت":"تابلێت","لابتوبات":"لاپتۆپ","أجهزة كمبيوتر":"کۆمپیوتەر","اكسسوارات":"ئاکسسوارات","إكسسوارات":"ئاکسسوارات","ساعات ذكية":"کاتژمێری زیرەک","أجهزة ذكية":"ئامێری زیرەک" }
 };
-export const categoryName = (lang: AppLanguage, value: string) => lang === "ar" ? value : categoryNames[lang]?.[value] || value;
-export const conditionName = (lang: AppLanguage, key: string, fallback: string) => lang === "en" ? ({new:"New",used:"Used",refurbished:"Refurbished"}[key] || fallback) : lang === "ku" ? ({new:"نوێ",used:"بەکارهاتوو",refurbished:"نوێکراوە"}[key] || fallback) : fallback;
+export const categoryName = (lang: AppLanguage, value: string) => lang === "ar" ? value : (categoryNames[lang] as Record<string, string> | undefined)?.[value] || value;
+export const conditionName = (lang: AppLanguage, key: string, fallback: string) => lang === "en" ? (({new:"New",used:"Used",refurbished:"Refurbished"} as Record<string, string>)[key] || fallback) : lang === "ku" ? (({new:"نوێ",used:"بەکارهاتوو",refurbished:"نوێکراوە"} as Record<string, string>)[key] || fallback) : fallback;
