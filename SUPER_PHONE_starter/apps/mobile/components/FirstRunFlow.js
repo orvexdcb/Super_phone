@@ -1,0 +1,27 @@
+import React, {useEffect,useState} from 'react';
+import {Image,Pressable,ScrollView,StyleSheet,Text,TextInput,View,ActivityIndicator} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {StatusBar} from 'expo-status-bar';
+import {COLORS,GOVERNORATES} from '../lib/constants';
+const KEY='superphone:first-run:v1';
+const T={
+ar:{language:'اختر اللغة',place:'حدد مكان السكن',governorate:'المحافظة',area:'المنطقة / القضاء',gps:'طلب تحديد الموقع',next:'التالي',skip:'تخطي',start:'ابدأ الاستخدام',intro:['زر بيع هاتفك يتيح لك عرض جهازك للبيع مع الصور والسعر.','زر البحث يساعدك في العثور على الجهاز الذي تريده.','المفضلة تحفظ الأجهزة التي تريد العودة إليها.','الأزرار الرئيسية موجودة في الشريط السفلي.'],hint:'يمكنك إكمال تحديد المكان يدوياً.'},
+en:{language:'Choose your language',place:'Set your location',governorate:'Governorate',area:'Area / District',gps:'Request location',next:'Next',skip:'Skip',start:'Start using the app',intro:['Sell your phone lets you publish your device with photos and a price.','Search helps you find the device you need.','Favorites saves devices for later.','Main actions are available in the bottom navigation.'],hint:'You can complete location selection manually.'},
+ku:{language:'زمان هەڵبژێرە',place:'شوێنی نیشتەجێبوون دیاری بکە',governorate:'پارێزگا',area:'ناوچە / قەزا',gps:'داوای شوێن',next:'دواتر',skip:'تێپەڕاندن',start:'دەستپێبکە',intro:['فرۆشتنی مۆبایل بۆ بڵاوکردنەوەی ئامێرەکەتە.','گەڕان بۆ دۆزینەوەی ئامێری دڵخوازە.','دڵخوازەکان ئامێرەکانت دەپارێزێت.','دوگمە سەرەکییەکان لە خوارەوەی شاشەکەن.'],hint:'دەتوانیت شوێنەکە بە دەستی دیاری بکەیت.'}
+};
+export default function FirstRunFlow({children}){
+ const [loading,setLoading]=useState(true),[done,setDone]=useState(false),[step,setStep]=useState(0),[lang,setLang]=useState('ar'),[gov,setGov]=useState(''),[area,setArea]=useState(''),[gps,setGps]=useState('');
+ useEffect(()=>{AsyncStorage.getItem(KEY).then(raw=>{if(raw){try{const saved=JSON.parse(raw);setLang(saved.lang||'ar');setDone(true)}catch{}}}).finally(()=>setLoading(false))},[]);
+ if(loading)return <View style={s.splash}><StatusBar style="light"/><ActivityIndicator color={COLORS.gold}/></View>;
+ if(done)return children;
+ const t=T[lang];
+ const finish=async()=>{await AsyncStorage.setItem(KEY,JSON.stringify({lang,governorate:gov,area,completed:true}));setDone(true)};
+ const requestLocation=()=>setGps(t.hint);
+ return <View style={s.root}><StatusBar style="light"/>
+ {step===0?<View style={s.splash}><Image source={require('../assets/icon.png')} style={s.logo} resizeMode="contain"/><Text style={s.brand}>SUPER PHONE</Text><Pressable onPress={()=>setStep(1)} style={s.btn}><Text style={s.btnText}>{t.next}</Text></Pressable></View>:
+ step===1?<View style={s.panel}><Text style={s.title}>{t.language}</Text>{[['ar','العربية'],['en','English'],['ku','کوردی']].map(([v,label])=><Pressable key={v} onPress={()=>setLang(v)} style={[s.option,lang===v&&s.selected]}><Text style={s.optionText}>{label}</Text></Pressable>)}<Pressable style={s.btn} onPress={()=>setStep(2)}><Text style={s.btnText}>{t.next}</Text></Pressable></View>:
+ step===2?<ScrollView contentContainerStyle={s.panel}><Text style={s.title}>{t.place}</Text><Text style={s.label}>{t.governorate}</Text><ScrollView style={{maxHeight:190}}>{GOVERNORATES.map(g=><Pressable key={g} onPress={()=>setGov(g)} style={[s.option,gov===g&&s.selected]}><Text style={s.optionText}>{g}</Text></Pressable>)}</ScrollView><Text style={s.label}>{t.area}</Text><TextInput value={area} onChangeText={setArea} placeholder="..." placeholderTextColor={COLORS.muted} style={s.input}/><Pressable style={s.option} onPress={requestLocation}><Text style={s.optionText}>{t.gps}</Text></Pressable><Text style={s.hint}>{gps}</Text><Pressable style={s.btn} disabled={!gov||!area.trim()} onPress={()=>setStep(3)}><Text style={s.btnText}>{t.next}</Text></Pressable></ScrollView>:
+ <View style={s.panel}><Text style={s.title}>SUPER PHONE</Text><Text style={s.label}>{t.intro[step-3]}</Text><View style={s.row}><Pressable onPress={finish} style={s.skip}><Text style={s.optionText}>{t.skip}</Text></Pressable><Pressable style={s.btn} onPress={()=>step===6?finish():setStep(step+1)}><Text style={s.btnText}>{step===6?t.start:t.next}</Text></Pressable></View></View>}
+ </View>;
+}
+const s=StyleSheet.create({root:{flex:1,backgroundColor:COLORS.bg,justifyContent:'center',padding:22},splash:{flex:1,backgroundColor:COLORS.bg,alignItems:'center',justifyContent:'center'},logo:{width:160,height:160,marginBottom:18},brand:{color:COLORS.goldLight,fontSize:27,fontWeight:'900',letterSpacing:3},btn:{backgroundColor:COLORS.gold,borderRadius:13,padding:14,alignItems:'center',flex:1,marginTop:16},btnText:{color:COLORS.bg,fontWeight:'900',fontSize:15},panel:{backgroundColor:COLORS.panel,borderRadius:22,borderWidth:1,borderColor:COLORS.border,padding:20,gap:11},title:{color:COLORS.goldLight,fontWeight:'900',fontSize:23,textAlign:'center',marginBottom:10},label:{color:COLORS.text,textAlign:'right',fontSize:15},option:{padding:13,borderRadius:12,borderWidth:1,borderColor:COLORS.border,backgroundColor:COLORS.panelAlt},selected:{borderColor:COLORS.gold},optionText:{color:COLORS.text,textAlign:'center'},input:{padding:13,borderRadius:12,backgroundColor:COLORS.panelAlt,color:COLORS.text,textAlign:'right',borderWidth:1,borderColor:COLORS.border},hint:{color:COLORS.muted,textAlign:'right'},row:{flexDirection:'row',gap:10},skip:{padding:14,justifyContent:'center'}});
