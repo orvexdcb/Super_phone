@@ -4,7 +4,7 @@ import { GOVERNORATES } from "@super-phone/shared";
 import { createServerSupabase } from "../../lib/supabase-server";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
-import { t } from "../../lib/i18n";
+import { t, governorateName } from "../../lib/i18n";
 
 async function saveProfile(formData: FormData) {
   "use server";
@@ -18,6 +18,7 @@ async function saveProfile(formData: FormData) {
       full_name: String(formData.get("full_name") ?? "").trim().slice(0, 80),
       phone: String(formData.get("phone") ?? "").trim().slice(0, 20),
       governorate: (GOVERNORATES as readonly string[]).includes(gov) ? gov : null,
+      city: String(formData.get("city") ?? "").trim().slice(0, 60) || null,
     })
     .eq("id", user.id);
   revalidatePath("/account");
@@ -31,7 +32,7 @@ export default async function AccountPage() {
   if (!user) redirect("/login?next=/account");
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, phone, governorate")
+    .select("full_name, phone, governorate, city")
     .eq("id", user.id)
     .single();
 
@@ -42,9 +43,10 @@ export default async function AccountPage() {
       <form action={saveProfile} className="auth-form">
         <input name="full_name" defaultValue={profile?.full_name ?? ""} placeholder={t(lang, "name")} maxLength={80} />
         <input name="phone" defaultValue={profile?.phone ?? ""} placeholder={t(lang, "phone")} maxLength={20} dir="ltr" />
+        <input name="city" defaultValue={profile?.city ?? ""} placeholder={lang === "en" ? "City / area" : lang === "ku" ? "شار / ناوچە" : "المدينة / المنطقة"} maxLength={60} />
         <select name="governorate" defaultValue={profile?.governorate ?? ""}>
           <option value="">{t(lang, "governorate")}</option>
-          {GOVERNORATES.map((g) => <option key={g} value={g}>{g}</option>)}
+          {GOVERNORATES.map((g) => <option key={g} value={g}>{governorateName(lang, g)}</option>)}
         </select>
         <button type="submit">{t(lang, "save")}</button>
       </form>
