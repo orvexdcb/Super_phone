@@ -127,6 +127,11 @@ export default function BrowseScreen({ onOpen }) {
         </ScrollView>
       )}
 
+      <View style={styles.homeActions}>
+        <Pressable style={styles.homeAction} onPress={() => onOpen('new')}><Text style={styles.homeActionText}>بيع هاتفك</Text></Pressable>
+        <Pressable style={styles.homeAction} onPress={() => setShowFilters(true)}><Text style={styles.homeActionText}>بحث</Text></Pressable>
+        <Pressable style={styles.homeAction} onPress={() => {}}><Text style={styles.homeActionText}>المفضلة</Text></Pressable>
+      </View>
       <View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
           {[{ slug: '', name_ar: 'الكل' }, ...categories].map((c) => (
@@ -158,6 +163,9 @@ export default function BrowseScreen({ onOpen }) {
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
+  homeActions: { flexDirection: 'row-reverse', gap: 8, paddingHorizontal: 16, paddingTop: 8 },
+  homeAction: { flex: 1, backgroundColor: COLORS.gold, borderRadius: 12, paddingVertical: 12, alignItems: 'center' },
+  homeActionText: { color: COLORS.bg, fontWeight: '900', fontSize: 13 },
   search: { flexDirection: 'row-reverse', gap: 8, padding: 16, paddingBottom: 8 },
   input: { backgroundColor: COLORS.panel, borderWidth: 1, borderColor: COLORS.border, borderRadius: 10, padding: 12, fontSize: 16, color: COLORS.text },
   filterBtn: { justifyContent: 'center', paddingHorizontal: 14, borderRadius: 10, borderWidth: 1, borderColor: COLORS.gold, backgroundColor: COLORS.panel },
