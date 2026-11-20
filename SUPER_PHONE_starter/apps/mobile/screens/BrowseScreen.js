@@ -10,7 +10,7 @@ const SELECT =
   'id,title,price,currency,condition,governorate,city,created_at,categories!inner(slug,name_ar),listing_images(storage_path,sort_order)';
 const EMPTY = { q: '', category: '', condition: '', governorate: '', min: '', max: '' };
 
-export default function BrowseScreen({ onOpen }) {
+export default function BrowseScreen({ onOpen, onSell, onFavorites }) {
   const [categories, setCategories] = useState([]);
   const [draft, setDraft] = useState(EMPTY);     // ما يكتبه المستخدم
   const [applied, setApplied] = useState(EMPTY); // ما يُطبَّق على الاستعلام
@@ -128,9 +128,9 @@ export default function BrowseScreen({ onOpen }) {
       )}
 
       <View style={styles.homeActions}>
-        <Pressable style={styles.homeAction} onPress={() => onOpen('new')}><Text style={styles.homeActionText}>بيع هاتفك</Text></Pressable>
+        <Pressable style={styles.homeAction} onPress={onSell}><Text style={styles.homeActionText}>بيع هاتفك</Text></Pressable>
         <Pressable style={styles.homeAction} onPress={() => setShowFilters(true)}><Text style={styles.homeActionText}>بحث</Text></Pressable>
-        <Pressable style={styles.homeAction} onPress={() => {}}><Text style={styles.homeActionText}>المفضلة</Text></Pressable>
+        <Pressable style={styles.homeAction} onPress={onFavorites}><Text style={styles.homeActionText}>المفضلة</Text></Pressable>
       </View>
       <View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
