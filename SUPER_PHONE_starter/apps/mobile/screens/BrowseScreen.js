@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase';
 import { COLORS, CONDITION_LABELS, GOVERNORATES } from '../lib/constants';
 import ListingCard from '../components/ListingCard';
 import Chip from '../components/Chip';
+import { conditionLabel, governorateLabel, categoryLabel } from '../lib/i18n';
 
 const PAGE = 20;
 const SELECT =
@@ -101,13 +102,13 @@ export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar' 
           <Text style={styles.label}>{t.condition}</Text>
           <View style={styles.wrap}>
             {Object.entries(CONDITION_LABELS).map(([k, v]) => (
-              <Chip key={k} label={v} on={draft.condition === k} onPress={() => toggle('condition', k)} />
+              <Chip key={k} label={conditionLabel(lang, k, v)} on={draft.condition === k} onPress={() => toggle('condition', k)} />
             ))}
           </View>
           <Text style={styles.label}>{t.governorate}</Text>
           <View style={styles.wrap}>
             {GOVERNORATES.map((g) => (
-              <Chip key={g} label={g} on={draft.governorate === g} onPress={() => toggle('governorate', g)} />
+              <Chip key={g} label={governorateLabel(lang, g)} on={draft.governorate === g} onPress={() => toggle('governorate', g)} />
             ))}
           </View>
           <Text style={styles.label}>{t.price}</Text>
@@ -137,7 +138,7 @@ export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar' 
       <View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
           {[{ slug: '', name_ar: t.all }, ...categories].map((c) => (
-            <Chip key={c.slug || 'all'} label={c.name_ar} on={applied.category === c.slug}
+            <Chip key={c.slug || 'all'} label={categoryLabel(lang, c.name_ar)} on={applied.category === c.slug}
               onPress={() => { const n = { ...draft, category: c.slug }; setDraft(n); apply(n); }} />
           ))}
         </ScrollView>
@@ -156,7 +157,7 @@ export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar' 
           onEndReachedThreshold={0.4}
           ListFooterComponent={loadingMore ? <ActivityIndicator color={COLORS.green} /> : null}
           ListEmptyComponent={<Text style={styles.empty}>{error || t.empty}</Text>}
-          renderItem={({ item }) => <ListingCard listing={item} onPress={() => onOpen(item.id)} />}
+          renderItem={({ item }) => <ListingCard lang={lang} listing={item} onPress={() => onOpen(item.id)} />}
         />
       )}
     </View>
