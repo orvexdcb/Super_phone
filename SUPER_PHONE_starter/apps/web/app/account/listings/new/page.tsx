@@ -1,8 +1,12 @@
 import { redirect } from "next/navigation";
 import ListingForm from "../../../../components/ListingForm";
 import { createServerSupabase } from "../../../../lib/supabase-server";
+import { cookies } from "next/headers";
+import { t } from "../../../../lib/i18n";
 
 export default async function NewListingPage() {
+  const cookieStore = await cookies();
+  const lang = (cookieStore.get("sp_lang")?.value || "ar") as "ar" | "en" | "ku";
   const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/account/listings/new");
@@ -13,15 +17,16 @@ export default async function NewListingPage() {
   ]);
 
   if (profile?.is_banned) {
-    return <main className="auth"><p className="notice err">حسابك موقوف عن نشر الإعلانات.</p></main>;
+    return <main className="auth"><p className="notice err">{t(lang, "actionError")}</p></main>;
   }
 
   return (
     <main className="auth wide">
-      <h1>نشر إعلان</h1>
+      <h1>{t(lang, "post")}</h1>
       <ListingForm
         categories={categories ?? []}
         defaults={{ phone: profile?.phone ?? "", governorate: profile?.governorate ?? "" }}
+        lang={lang}
       />
     </main>
   );
