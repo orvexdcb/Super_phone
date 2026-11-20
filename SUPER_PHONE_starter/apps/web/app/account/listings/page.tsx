@@ -4,6 +4,8 @@ import { STATUS_LABELS, formatPrice, type ListingStatus } from "@super-phone/sha
 import { createServerSupabase } from "../../../lib/supabase-server";
 import { listingImageUrl } from "../../../lib/supabase";
 import ListingRowActions from "../../../components/ListingRowActions";
+import { cookies } from "next/headers";
+import { t } from "../../../lib/i18n";
 
 export const dynamic = "force-dynamic";
 
@@ -11,6 +13,8 @@ export default async function MyListingsPage({
   searchParams,
 }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const sp = await searchParams;
+  const cookieStore = await cookies();
+  const lang = (cookieStore.get("sp_lang")?.value || "ar") as "ar" | "en" | "ku";
   const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/account/listings");
@@ -24,12 +28,12 @@ export default async function MyListingsPage({
   return (
     <main>
       <div className="page-head">
-        <h1>إعلاناتي</h1>
-        <Link href="/account/listings/new" className="cta-link">+ إعلان جديد</Link>
+        <h1>{t(lang, "myListings")}</h1>
+        <Link href="/account/listings/new" className="cta-link">+ {t(lang, "newPost")}</Link>
       </div>
-      {sp.edited && <p className="notice ok">تم حفظ التعديلات.</p>}
-      {sp.posted && <p className="notice ok">تم إرسال إعلانك للمراجعة، وسيظهر بعد الموافقة.</p>}
-      {(!listings || listings.length === 0) && <p className="notice">لم تنشر أي إعلان بعد.</p>}
+      {sp.edited && <p className="notice ok">{t(lang, "edited")}</p>}
+      {sp.posted && <p className="notice ok">{t(lang, "posted")}</p>}
+      {(!listings || listings.length === 0) && <p className="notice">{t(lang, "noListings")}</p>}
       <section className="grid">
         {(listings ?? []).map((l) => {
           const first = [...l.listing_images].sort((a, b) => a.sort_order - b.sort_order)[0];
@@ -39,16 +43,16 @@ export default async function MyListingsPage({
                 {first ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={listingImageUrl(first.storage_path)} alt={l.title} loading="lazy" />
-                ) : <span>بدون صورة</span>}
+                ) : <span>{t(lang, "noImage")}</span>}
               </div>
               <div className="body">
                 <h3>{l.title}</h3>
                 <p className="price">{formatPrice(Number(l.price), l.currency)}</p>
-                <p className={`badge s-${l.status}`}>{STATUS_LABELS[l.status as ListingStatus]}</p>
+                <p className={`badge s-${l.status}`}>{t(lang, l.status === "active" ? "published" : l.status === "pending_review" ? "pending" : l.status === "rejected" ? "rejected" : l.status === "paused" ? "paused" : "sold")}</p>
                 {l.status === "rejected" && l.rejection_reason && (
-                  <p className="meta">السبب: {l.rejection_reason}</p>
+                  <p className="meta">{t(lang, "reason")}: {l.rejection_reason}</p>
                 )}
-                <ListingRowActions id={l.id} status={l.status} />
+                <ListingRowActions id={l.id} status={l.status} lang={lang} />
               </div>
             </article>
           );

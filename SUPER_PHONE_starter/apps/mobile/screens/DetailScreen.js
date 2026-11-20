@@ -3,8 +3,10 @@ import { ActivityIndicator, Image, Linking, Pressable, ScrollView, StyleSheet, T
 import { supabase, imageUrl } from '../lib/supabase';
 import { useAuth } from '../lib/AuthContext';
 import { CONDITION_LABELS, COLORS, SPEC_LABELS, formatPrice, toWhatsApp } from '../lib/constants';
+import { tr, conditionLabel, governorateLabel, categoryLabel } from '../lib/i18n';
 
-export default function DetailScreen({ id, onNeedLogin }) {
+export default function DetailScreen({ id, onNeedLogin, lang = 'ar' }) {
+  const t = (key) => tr(lang, key);
   const { user } = useAuth();
   const { width } = useWindowDimensions();
   const [l, setL] = useState(null);
@@ -41,24 +43,24 @@ export default function DetailScreen({ id, onNeedLogin }) {
 
   async function sendReport() {
     if (!user) return onNeedLogin();
-    if (reason.trim().length < 3) return setReportMsg('اكتب سبب البلاغ.');
+    if (reason.trim().length < 3) return setReportMsg(t('reportReason'));
     const { error } = await supabase.from('reports').insert({ listing_id: id, reporter_id: user.id, reason: reason.trim() });
     setReporting(false);
     setReason('');
-    setReportMsg(error?.code === '23505' ? 'سبق أن أبلغت عن هذا الإعلان.' : error ? 'تعذّر إرسال البلاغ.' : 'شكراً، وصل بلاغك للإدارة.');
+    setReportMsg(error?.code === '23505' ? t('reportDuplicate') : error ? t('reportError') : t('reportSent'));
   }
 
   if (state === 'loading') return <ActivityIndicator style={{ marginTop: 40 }} color={COLORS.gold} />;
-  if (state === 'missing') return <Text style={styles.center}>الإعلان غير موجود.</Text>;
+  if (state === 'missing') return <Text style={styles.center}>{t('notFound')}</Text>;
 
   const images = [...l.listing_images].sort((a, b) => a.sort_order - b.sort_order);
   const wa = l.contact_phone ? toWhatsApp(l.contact_phone) : null;
 
   return (
     <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
-      {l.status !== 'active' && <Text style={styles.warn}>هذا الإعلان غير منشور حالياً (معاينة لك فقط).</Text>}
+      {l.status !== 'active' && <Text style={styles.warn}>{t('notPublished')}</Text>}
       <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}>
-        {images.length === 0 && <View style={[styles.noimg, { width }]}><Text style={styles.muted}>بدون صورة</Text></View>}
+        {images.length === 0 && <View style={[styles.noimg, { width }]}><Text style={styles.muted}>{t('noImage')}</Text></View>}
         {images.map((im) => (
           <Image key={im.storage_path} source={{ uri: imageUrl(im.storage_path) }} style={{ width, height: width * 0.75 }} resizeMode="cover" />
         ))}
@@ -67,7 +69,7 @@ export default function DetailScreen({ id, onNeedLogin }) {
         <Text style={styles.title}>{l.title}</Text>
         <Text style={styles.price}>{formatPrice(l.price, l.currency)}</Text>
         <Text style={styles.muted}>
-          {CONDITION_LABELS[l.condition]} · {l.categories?.name_ar} · {l.governorate}{l.city ? ` — ${l.city}` : ''}
+          {conditionLabel(lang, l.condition, CONDITION_LABELS[l.condition])} · {categoryLabel(lang, l.categories?.name_ar || '')} · {governorateLabel(lang, l.governorate)}{l.city ? ` — ${l.city}` : ''}
         </Text>
         {(l.brand || l.model) && <Text style={styles.muted}>{[l.brand, l.model].filter(Boolean).join(' ')}</Text>}
 
@@ -76,7 +78,7 @@ export default function DetailScreen({ id, onNeedLogin }) {
             {l.listing_specs.map((s) => (
               <View key={s.spec_key} style={styles.specRow}>
                 <Text style={styles.specVal}>{s.spec_value}</Text>
-                <Text style={styles.muted}>{SPEC_LABELS[s.spec_key] || s.spec_key}</Text>
+                <Text style={styles.muted}>{(lang === 'en' ? ({storage:'Storage',ram:'RAM',battery_health:'Battery health',color:'Color'}[s.spec_key] || s.spec_key) : lang === 'ku' ? ({storage:'بیرگە',ram:'ڕام',battery_health:'تەندروستی باتری',color:'ڕەنگ'}[s.spec_key] || s.spec_key) : SPEC_LABELS[s.spec_key] || s.spec_key)}</Text>
               </View>
             ))}
           </View>
@@ -84,20 +86,20 @@ export default function DetailScreen({ id, onNeedLogin }) {
         {!!l.description && <Text style={styles.desc}>{l.description}</Text>}
 
         <Pressable style={styles.ghost} onPress={toggleFav}>
-          <Text>{fav ? '★ في المفضلة' : '☆ أضف للمفضلة'}</Text>
+          <Text>{fav ? t('favorited') : t('addFavorite')}</Text>
         </Pressable>
 
         {l.status === 'active' && user?.id !== l.seller_id && (
           <Pressable style={[styles.ghost, { marginTop: 8 }]} onPress={() => (user ? setReporting(!reporting) : onNeedLogin())}>
-            <Text>⚑ إبلاغ عن الإعلان</Text>
+            <Text>⚑ {t('report')}</Text>
           </Pressable>
         )}
         {reporting && (
           <View style={{ gap: 8, marginTop: 8 }}>
-            <TextInput style={styles.reportInput} placeholder="سبب البلاغ (احتيال، سعر وهمي، محتوى مخالف...)"
+            <TextInput style={styles.reportInput} placeholder={t('reportPlaceholder')}
               value={reason} onChangeText={setReason} maxLength={500} textAlign="right" multiline />
             <Pressable style={[styles.btn, { backgroundColor: '#b42318' }]} onPress={sendReport}>
-              <Text style={styles.btnText}>إرسال البلاغ</Text>
+              <Text style={styles.btnText}>{t('sendReport')}</Text>
             </Pressable>
           </View>
         )}
@@ -106,16 +108,16 @@ export default function DetailScreen({ id, onNeedLogin }) {
         {!!l.contact_phone && (
           <View style={styles.contact}>
             <Pressable style={styles.btn} onPress={() => Linking.openURL(`tel:${l.contact_phone.replace(/[^\d+]/g, '')}`)}>
-              <Text style={styles.btnText}>اتصال</Text>
+              <Text style={styles.btnText}>{t('call')}</Text>
             </Pressable>
             {wa && (
               <Pressable style={[styles.btn, { backgroundColor: '#1faa59' }]} onPress={() => Linking.openURL(`https://wa.me/${wa}`)}>
-                <Text style={styles.btnText}>واتساب</Text>
+                <Text style={styles.btnText}>{t('whatsapp')}</Text>
               </Pressable>
             )}
           </View>
         )}
-        <Text style={styles.safety}>نصيحة: افحص الجهاز بنفسك قبل الدفع، وقابل البائع في مكان عام، ولا تحوّل مبالغ مقدماً.</Text>
+        <Text style={styles.safety}>{t('safety')}</Text>
       </View>
     </ScrollView>
   );

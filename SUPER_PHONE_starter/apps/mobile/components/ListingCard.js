@@ -2,24 +2,26 @@ import React from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { CONDITION_LABELS, COLORS, formatPrice } from '../lib/constants';
 import { imageUrl } from '../lib/supabase';
+import { tr, conditionLabel, governorateLabel, categoryLabel } from '../lib/i18n';
 
-export default function ListingCard({ listing, onPress }) {
+export default function ListingCard({ listing, onPress, lang = 'ar' }) {
+  const t = (key) => tr(lang, key);
   const first = [...(listing.listing_images || [])].sort((a, b) => a.sort_order - b.sort_order)[0];
   return (
     <Pressable onPress={onPress} style={styles.card}>
       {first ? (
         <Image source={{ uri: imageUrl(first.storage_path) }} style={styles.img} />
       ) : (
-        <View style={[styles.img, styles.noimg]}><Text style={styles.muted}>بدون صورة</Text></View>
+        <View style={[styles.img, styles.noimg]}><Text style={styles.muted}>{t('noImage')}</Text></View>
       )}
       <View style={styles.body}>
         <Text style={styles.title} numberOfLines={2}>{listing.title}</Text>
         <Text style={styles.price}>{formatPrice(listing.price, listing.currency)}</Text>
         <Text style={styles.muted}>
-          {CONDITION_LABELS[listing.condition]} · {listing.categories?.name_ar}
+          {conditionLabel(lang, listing.condition, CONDITION_LABELS[listing.condition])} · {categoryLabel(lang, listing.categories?.name_ar || '')}
         </Text>
         <Text style={styles.muted}>
-          {listing.governorate}{listing.city ? ` — ${listing.city}` : ''}
+          {governorateLabel(lang, listing.governorate)}{listing.city ? ` — ${listing.city}` : ''}
         </Text>
       </View>
     </Pressable>

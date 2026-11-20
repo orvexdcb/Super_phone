@@ -3,6 +3,7 @@ import "./globals.css";
 import "./superphone-theme.css";
 import Header from "../components/Header";
 import PWARegister from "../components/PWARegister";
+import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
   title: "SUPER PHONE",
@@ -15,9 +16,11 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = { themeColor: "#0b1728", colorScheme: "dark" };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const cookieStore = await cookies();
+  const lang = (cookieStore.get("sp_lang")?.value || "ar") as "ar" | "en" | "ku";
   return (
-    <html lang="ar" dir="rtl">
+    <html lang={lang} dir={lang === "en" ? "ltr" : "rtl"}>
       <body>
         <Header />
         <PWARegister />

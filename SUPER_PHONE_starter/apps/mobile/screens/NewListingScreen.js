@@ -9,15 +9,12 @@ import {
   COLORS, CONDITION_LABELS, GOVERNORATES, IMAGE_EXT, MAX_IMAGES, MAX_IMAGE_BYTES,
 } from '../lib/constants';
 import Chip from '../components/Chip';
+import { tr, conditionLabel, governorateLabel, categoryLabel } from '../lib/i18n';
 
-const SPECS = [
-  ['storage', 'التخزين (مثال: 128GB)'],
-  ['ram', 'الذاكرة (مثال: 8GB)'],
-  ['battery_health', 'صحة البطارية (مثال: 90%)'],
-  ['color', 'اللون'],
-];
+const SPEC_KEYS = ['storage', 'ram', 'battery_health', 'color'];
 
-export default function NewListingScreen({ onDone }) {
+export default function NewListingScreen({ onDone, lang = 'ar' }) {
+  const tx = (key) => tr(lang, key);
   const { user } = useAuth();
   const [categories, setCategories] = useState([]);
   const [f, setF] = useState({
@@ -34,9 +31,9 @@ export default function NewListingScreen({ onDone }) {
   useEffect(() => {
     supabase.from('categories').select('id,name_ar').eq('is_active', true).order('sort_order')
       .then(({ data }) => setCategories(data || []));
-    supabase.from('profiles').select('phone,governorate').eq('id', user.id).single()
+    supabase.from('profiles').select('phone,governorate,city').eq('id', user.id).single()
       .then(({ data }) => data && setF((p) => ({
-        ...p, contact_phone: p.contact_phone || data.phone || '', governorate: p.governorate || data.governorate || '',
+        ...p, contact_phone: p.contact_phone || data.phone || '', governorate: p.governorate || data.governorate || '', city: p.city || data.city || '',
       })));
   }, [user.id]);
 
@@ -53,8 +50,8 @@ export default function NewListingScreen({ onDone }) {
     const next = [];
     for (const a of res.assets) {
       const type = a.mimeType || 'image/jpeg';
-      if (!IMAGE_EXT[type]) return setError('الصور يجب أن تكون JPG أو PNG أو WebP.');
-      if (a.fileSize && a.fileSize > MAX_IMAGE_BYTES) return setError('حجم الصورة يجب ألا يتجاوز 5 ميغابايت.');
+      if (!IMAGE_EXT[type]) return setError(tx('imageTypeError'));
+      if (a.fileSize && a.fileSize > MAX_IMAGE_BYTES) return setError(tx('imageSizeError'));
       next.push({ uri: a.uri, type });
     }
     setError('');
@@ -64,11 +61,11 @@ export default function NewListingScreen({ onDone }) {
   async function submit() {
     setError('');
     const price = Number(f.price);
-    if (!f.category_id || !f.condition || !f.governorate) return setError('اختر التصنيف والحالة والمحافظة.');
-    if (f.title.trim().length < 3) return setError('اكتب عنواناً واضحاً للإعلان.');
-    if (!f.price || !Number.isFinite(price) || price < 0) return setError('أدخل سعراً صحيحاً.');
-    if (!f.contact_phone.trim()) return setError('أدخل رقم التواصل.');
-    if (images.length === 0) return setError('أضف صورة واحدة على الأقل.');
+    if (!f.category_id || !f.condition || !f.governorate) return setError(tx('chooseRequired'));
+    if (f.title.trim().length < 3) return setError(tx('titleRequired'));
+    if (!f.price || !Number.isFinite(price) || price < 0) return setError(tx('priceRequired'));
+    if (!f.contact_phone.trim()) return setError(tx('phoneRequired'));
+    if (images.length === 0) return setError(tx('imageRequired'));
 
     setBusy(true);
     const uploaded = [];
@@ -85,32 +82,32 @@ export default function NewListingScreen({ onDone }) {
       } catch {
         await cleanup();
         setBusy(false);
-        return setError('تعذّر رفع الصور. حاول مرة أخرى.');
+        return setError(tx('uploadError'));
       }
     }
 
-    const t = (v) => (v || '').trim();
+    const trim = (v) => (v || '').trim();
     const { data: listing, error: insErr } = await supabase.from('listings').insert({
-      seller_id: user.id, category_id: f.category_id, title: t(f.title), description: t(f.description) || null,
-      price, currency: f.currency, condition: f.condition, brand: t(f.brand) || null, model: t(f.model) || null,
-      governorate: f.governorate, city: t(f.city) || null, contact_phone: t(f.contact_phone), status: 'pending_review',
+      seller_id: user.id, category_id: f.category_id, title: trim(f.title), description: trim(f.description) || null,
+      price, currency: f.currency, condition: f.condition, brand: trim(f.brand) || null, model: trim(f.model) || null,
+      governorate: f.governorate, city: trim(f.city) || null, contact_phone: trim(f.contact_phone), status: 'pending_review',
     }).select('id').single();
 
     if (insErr || !listing) {
       await cleanup();
       setBusy(false);
-      return setError('تعذّر نشر الإعلان. تحقق من الحقول وحاول مرة أخرى.');
+      return setError(tx('submitError'));
     }
 
     const { error: imgErr } = await supabase.from('listing_images').insert(
       uploaded.map((storage_path, i) => ({ listing_id: listing.id, storage_path, sort_order: i })));
-    const specRows = SPECS.map(([k]) => ({ listing_id: listing.id, spec_key: k, spec_value: t(f[`spec_${k}`]) }))
+    const specRows = SPEC_KEYS.map((k) => ({ listing_id: listing.id, spec_key: k, spec_value: trim(f[`spec_${k}`]) }))
       .filter((s) => s.spec_value);
     const { error: specErr } = specRows.length
       ? await supabase.from('listing_specs').insert(specRows) : { error: null };
 
     setBusy(false);
-    if (imgErr || specErr) return setError('أُنشئ الإعلان لكن حدث خطأ في حفظ الصور أو المواصفات. راجع إعلاناتي.');
+    if (imgErr || specErr) return setError(tx('partialError'));
     onDone();
   }
 
@@ -119,49 +116,49 @@ export default function NewListingScreen({ onDone }) {
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView contentContainerStyle={styles.form} keyboardShouldPersistTaps="handled">
-        <Text style={styles.h1}>نشر إعلان</Text>
+        <Text style={styles.h1}>{tx('post')}</Text>
 
-        <Text style={styles.label}>التصنيف</Text>
+        <Text style={styles.label}>{tx('category')}</Text>
         <Row>{categories.map((c) => (
-          <Chip key={c.id} label={c.name_ar} on={f.category_id === c.id} onPress={() => set('category_id')(c.id)} />
+          <Chip key={c.id} label={categoryLabel(lang, c.name_ar)} on={f.category_id === c.id} onPress={() => set('category_id')(c.id)} />
         ))}</Row>
 
-        <TextInput style={styles.input} placeholder="عنوان الإعلان (مثال: آيفون 13 برو 256GB)" value={f.title}
+        <TextInput style={styles.input} placeholder={tx('titlePlaceholder')} value={f.title}
           onChangeText={set('title')} maxLength={120} textAlign="right" />
-        <TextInput style={styles.input} placeholder="السعر" value={f.price} onChangeText={set('price')}
+        <TextInput style={styles.input} placeholder={tx('price')} value={f.price} onChangeText={set('price')}
           keyboardType="numeric" textAlign="right" />
         <Row>
-          <Chip label="دينار عراقي" on={f.currency === 'IQD'} onPress={() => set('currency')('IQD')} />
-          <Chip label="دولار" on={f.currency === 'USD'} onPress={() => set('currency')('USD')} />
+          <Chip label={tx('currencyIQD')} on={f.currency === 'IQD'} onPress={() => set('currency')('IQD')} />
+          <Chip label={tx('currencyUSD')} on={f.currency === 'USD'} onPress={() => set('currency')('USD')} />
         </Row>
 
-        <Text style={styles.label}>الحالة</Text>
+        <Text style={styles.label}>{tx('condition')}</Text>
         <Row>{Object.entries(CONDITION_LABELS).map(([k, v]) => (
-          <Chip key={k} label={v} on={f.condition === k} onPress={() => set('condition')(k)} />
+          <Chip key={k} label={conditionLabel(lang, k, v)} on={f.condition === k} onPress={() => set('condition')(k)} />
         ))}</Row>
 
-        <TextInput style={styles.input} placeholder="الماركة (اختياري)" value={f.brand} onChangeText={set('brand')} maxLength={60} textAlign="right" />
-        <TextInput style={styles.input} placeholder="الموديل (اختياري)" value={f.model} onChangeText={set('model')} maxLength={60} textAlign="right" />
+        <TextInput style={styles.input} placeholder={tx('brand')} value={f.brand} onChangeText={set('brand')} maxLength={60} textAlign="right" />
+        <TextInput style={styles.input} placeholder={tx('model')} value={f.model} onChangeText={set('model')} maxLength={60} textAlign="right" />
 
-        <Text style={styles.label}>المحافظة</Text>
+        <Text style={styles.label}>{tx('governorate')}</Text>
         <Row>{GOVERNORATES.map((g) => (
-          <Chip key={g} label={g} on={f.governorate === g} onPress={() => set('governorate')(g)} />
+          <Chip key={g} label={governorateLabel(lang, g)} on={f.governorate === g} onPress={() => set('governorate')(g)} />
         ))}</Row>
-        <TextInput style={styles.input} placeholder="المدينة / المنطقة" value={f.city} onChangeText={set('city')} maxLength={60} textAlign="right" />
-        <TextInput style={styles.input} placeholder="رقم التواصل" value={f.contact_phone} onChangeText={set('contact_phone')}
+        <TextInput style={styles.input} placeholder={tx('area')} value={f.city} onChangeText={set('city')} maxLength={60} textAlign="right" />
+        <TextInput style={styles.input} placeholder={tx('phone')} value={f.contact_phone} onChangeText={set('contact_phone')}
           keyboardType="phone-pad" maxLength={20} />
 
-        <Text style={styles.label}>المواصفات (اختياري)</Text>
-        {SPECS.map(([k, label]) => (
-          <TextInput key={k} style={styles.input} placeholder={label} value={f[`spec_${k}`]}
+        <Text style={styles.label}>{tx('specs')}</Text>
+        {SPEC_KEYS.map((k) => (
+          <TextInput key={k} style={styles.input} placeholder={tx(k === 'storage' ? 'storage' : k === 'ram' ? 'ram' : k === 'battery_health' ? 'battery' : 'color')} value={f[`spec_${k}`]}
             onChangeText={set(`spec_${k}`)} maxLength={60} textAlign="right" />
         ))}
 
-        <TextInput style={[styles.input, { height: 110, textAlignVertical: 'top' }]} placeholder="وصف الجهاز وحالته (اختياري)"
+        <TextInput style={[styles.input, { height: 110, textAlignVertical: 'top' }]} placeholder={tx('description')}
           value={f.description} onChangeText={set('description')} multiline maxLength={4000} textAlign="right" />
 
         <Pressable style={styles.pick} onPress={pick}>
-          <Text style={{ color: COLORS.gold }}>إضافة صور ({images.length}/{MAX_IMAGES})</Text>
+          <Text style={{ color: COLORS.gold }}>{tx('addImages')} ({images.length}/{MAX_IMAGES})</Text>
         </Pressable>
         <Row>{images.map((img, i) => (
           <View key={img.uri} style={styles.thumbWrap}>
@@ -172,10 +169,10 @@ export default function NewListingScreen({ onDone }) {
           </View>
         ))}</Row>
 
-        <Text style={styles.note}>الإعلان يُراجَع من الإدارة قبل ظهوره. المنصة وسيط للتواصل فقط، والبيع والتسليم شخصياً بين الطرفين.</Text>
+        <Text style={styles.note}>{tx('reviewNote')}</Text>
         {!!error && <Text style={styles.err}>{error}</Text>}
         <Pressable style={[styles.btn, busy && { opacity: 0.6 }]} onPress={submit} disabled={busy}>
-          {busy ? <ActivityIndicator color={COLORS.bg} /> : <Text style={styles.btnText}>نشر الإعلان</Text>}
+          {busy ? <ActivityIndicator color={COLORS.bg} /> : <Text style={styles.btnText}>{tx('publish')}</Text>}
         </Pressable>
       </ScrollView>
     </KeyboardAvoidingView>

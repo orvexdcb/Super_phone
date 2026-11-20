@@ -4,8 +4,9 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createBrowserSupabase } from "../lib/supabase-browser";
 import { safeNext } from "../lib/safe-next";
+import { t } from "../lib/i18n";
 
-export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
+export default function AuthForm({ mode, lang = "ar" }: { mode: "login" | "signup"; lang?: "ar" | "en" | "ku" }) {
   const router = useRouter();
   const next = safeNext(useSearchParams().get("next"));
   const [loading, setLoading] = useState(false);
@@ -21,7 +22,7 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
     const fullName = String(form.get("full_name") ?? "").trim();
 
     if (mode === "signup" && password.length < 8) {
-      setError("كلمة المرور يجب ألا تقل عن 8 أحرف.");
+      setError(t(lang, "passwordLength"));
       return;
     }
     setLoading(true);
@@ -30,7 +31,7 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
     if (mode === "login") {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       setLoading(false);
-      if (error) return setError("البريد أو كلمة المرور غير صحيحة.");
+      if (error) return setError(t(lang, "loginError"));
       router.replace(next);
       router.refresh();
     } else {
@@ -43,43 +44,43 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
         },
       });
       setLoading(false);
-      if (error) return setError("تعذّر إنشاء الحساب. تحقق من البيانات أو جرّب بريداً آخر.");
+      if (error) return setError(t(lang, "signupError"));
       if (data.session) {
         router.replace(next);
         router.refresh();
       } else {
-        setInfo("أرسلنا رابط تأكيد إلى بريدك. افتحه لإكمال التسجيل.");
+        setInfo(t(lang, "confirmEmail"));
       }
     }
   }
 
   return (
     <main className="auth">
-      <h1>{mode === "login" ? "تسجيل الدخول" : "إنشاء حساب"}</h1>
+      <h1>{mode === "login" ? t(lang, "login") : t(lang, "signup")}</h1>
       <form onSubmit={onSubmit} className="auth-form">
         {mode === "signup" && (
-          <input name="full_name" placeholder="الاسم" required maxLength={80} autoComplete="name" />
+          <input name="full_name" placeholder={t(lang, "name")} required maxLength={80} autoComplete="name" />
         )}
-        <input name="email" type="email" placeholder="البريد الإلكتروني" required autoComplete="email" dir="ltr" />
+        <input name="email" type="email" placeholder={t(lang, "email")} required autoComplete="email" dir="ltr" />
         <input
           name="password"
           type="password"
-          placeholder="كلمة المرور"
+          placeholder={t(lang, "password")}
           required
           autoComplete={mode === "login" ? "current-password" : "new-password"}
           dir="ltr"
         />
         <button type="submit" disabled={loading}>
-          {loading ? "..." : mode === "login" ? "دخول" : "إنشاء الحساب"}
+          {loading ? "..." : mode === "login" ? t(lang, "enter") : t(lang, "create")}
         </button>
       </form>
       {error && <p className="notice err">{error}</p>}
       {info && <p className="notice ok">{info}</p>}
       <p className="alt">
         {mode === "login" ? (
-          <>ليس لديك حساب؟ <Link href="/signup">أنشئ حساباً</Link></>
+          <>{t(lang, "noAccount")} <Link href="/signup">{t(lang, "createLink")}</Link></>
         ) : (
-          <>لديك حساب؟ <Link href="/login">سجّل الدخول</Link></>
+          <>{t(lang, "haveAccount")} <Link href="/login">{t(lang, "loginLink")}</Link></>
         )}
       </p>
     </main>

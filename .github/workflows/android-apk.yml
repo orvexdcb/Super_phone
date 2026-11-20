@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - feature/first-run-redesign
     paths:
       - "SUPER_PHONE_starter/apps/mobile/**"
       - ".github/workflows/android-apk.yml"
@@ -32,7 +33,6 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
-          cache: gradle
       - name: Enable pnpm
         run: |
           corepack enable
