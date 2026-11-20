@@ -59,7 +59,7 @@ export default async function EditListing({
     <main className="auth wide">
       <h1>{lang === "en" ? "Edit listing" : lang === "ku" ? "دەستکاری ڕیکلام" : "تعديل الإعلان"}</h1>
       {l.status === "active" && (
-        <p className="notice">{lang === "en" ? "Editing a published listing sends it back for review." : lang === "ku" ? "دەستکاری ڕیکلامی بڵاوکراوە دەینێرێتەوە بۆ پشکنین." : "{lang === "en" ? "Editing a published listing sends it back for review." : lang === "ku" ? "دەستکاری ڕیکلامی بڵاوکراوە دەینێرێتەوە بۆ پشکنین." : "تنبيه: تعديل إعلان منشور يعيده للمراجعة، وسيختفي حتى تتم الموافقة."}"}</p>
+        <p className="notice">{lang === "en" ? "Editing a published listing sends it back for review." : lang === "ku" ? "دەستکاری ڕیکلامی بڵاوکراوە دەینێرێتەوە بۆ پشکنین." : "تنبيه: تعديل إعلان منشور يعيده للمراجعة، وسيختفي حتى تتم الموافقة."}</p>
       )}
       <form action={save} className="auth-form wide">
         <input type="hidden" name="id" value={l.id} />
