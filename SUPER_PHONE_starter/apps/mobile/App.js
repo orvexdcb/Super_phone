@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BackHandler, Platform, Pressable, SafeAreaView, StatusBar as RNStatusBar, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { AuthProvider, useAuth } from './lib/AuthContext';
@@ -11,18 +12,16 @@ import NewListingScreen from './screens/NewListingScreen';
 import MyListingsScreen from './screens/MyListingsScreen';
 import FirstRunFlow from './components/FirstRunFlow';
 
-const TABS = [
-  { key: 'home', icon: '⌂', label: 'الرئيسية' },
-  { key: 'favorites', icon: '♡', label: 'المفضلة' },
-  { key: 'new', icon: '+', label: 'إعلان' },
-  { key: 'mine', icon: '▤', label: 'إعلاناتي' },
-  { key: 'account', icon: '○', label: 'حسابي' },
-];
+const TAB_LABELS = { ar: ['الرئيسية','المفضلة','إعلان','إعلاناتي','حسابي'], en: ['Home','Favorites','Post','My listings','Account'], ku: ['سەرەکی','دڵخوازەکان','بڵاوکردنەوە','بڵاوکراوەکانم','هەژمار'] };
+const TAB_KEYS = ['home','favorites','new','mine','account'];
+const TAB_ICONS = ['⌂','♡','+','▤','○'];
 
 function Shell() {
   const { user } = useAuth();
   const [tab, setTab] = useState('home');
   const [route, setRoute] = useState(null);
+  const [lang, setLang] = useState('ar');
+  useEffect(() => { AsyncStorage.getItem('superphone:first-run:v1').then(raw => { if (raw) { try { setLang(JSON.parse(raw).lang || 'ar'); } catch {} } }); }, []);
 
   const openDetail = (id) => setRoute({ name: 'detail', id });
   const goLogin = () => { setRoute(null); setTab('account'); };
@@ -39,7 +38,7 @@ function Shell() {
   if (route?.name === 'detail') body = <DetailScreen id={route.id} onNeedLogin={goLogin} />;
   else if (route?.name === 'new' && user) body = <NewListingScreen onDone={() => { setRoute({ name: 'mine', posted: true }); setTab('mine'); }} />;
   else if (route?.name === 'mine' && user) body = <MyListingsScreen onOpen={openDetail} posted={route.posted} />;
-  else if (tab === 'home') body = <BrowseScreen onOpen={openDetail}
+  else if (tab === 'home') body = <BrowseScreen lang={lang} onOpen={openDetail}
     onSell={() => { if (user) { setTab('new'); setRoute({ name: 'new' }); } else { setRoute(null); setTab('account'); } }}
     onFavorites={() => setTab('favorites')} />;
   else if (tab === 'favorites') {
@@ -65,7 +64,7 @@ function Shell() {
       <View style={{ flex: 1 }}>{body}</View>
       {!route && (
         <View style={styles.tabs}>
-          {TABS.map((t) => (
+          {TAB_KEYS.map((key, index) => ({ key, icon: TAB_ICONS[index], label: (TAB_LABELS[lang] || TAB_LABELS.ar)[index] })).map((t) => (
             <Pressable key={t.key} style={styles.tab} onPress={() => {
               if (t.key === 'new' || t.key === 'mine') {
                 if (!user) { setRoute(null); setTab('account'); return; }
