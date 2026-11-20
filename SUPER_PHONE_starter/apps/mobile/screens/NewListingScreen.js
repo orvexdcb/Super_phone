@@ -9,7 +9,7 @@ import {
   COLORS, CONDITION_LABELS, GOVERNORATES, IMAGE_EXT, MAX_IMAGES, MAX_IMAGE_BYTES,
 } from '../lib/constants';
 import Chip from '../components/Chip';
-import { tr } from '../lib/i18n';
+import { tr, conditionLabel, governorateLabel, categoryLabel } from '../lib/i18n';
 
 const SPEC_KEYS = ['storage', 'ram', 'battery_health', 'color'];
 
@@ -120,7 +120,7 @@ export default function NewListingScreen({ onDone, lang = 'ar' }) {
 
         <Text style={styles.label}>{tx('category')}</Text>
         <Row>{categories.map((c) => (
-          <Chip key={c.id} label={c.name_ar} on={f.category_id === c.id} onPress={() => set('category_id')(c.id)} />
+          <Chip key={c.id} label={categoryLabel(lang, c.name_ar)} on={f.category_id === c.id} onPress={() => set('category_id')(c.id)} />
         ))}</Row>
 
         <TextInput style={styles.input} placeholder={tx('titlePlaceholder')} value={f.title}
@@ -134,7 +134,7 @@ export default function NewListingScreen({ onDone, lang = 'ar' }) {
 
         <Text style={styles.label}>{tx('condition')}</Text>
         <Row>{Object.entries(CONDITION_LABELS).map(([k, v]) => (
-          <Chip key={k} label={v} on={f.condition === k} onPress={() => set('condition')(k)} />
+          <Chip key={k} label={conditionLabel(lang, k, v)} on={f.condition === k} onPress={() => set('condition')(k)} />
         ))}</Row>
 
         <TextInput style={styles.input} placeholder={tx('brand')} value={f.brand} onChangeText={set('brand')} maxLength={60} textAlign="right" />
@@ -142,7 +142,7 @@ export default function NewListingScreen({ onDone, lang = 'ar' }) {
 
         <Text style={styles.label}>{tx('governorate')}</Text>
         <Row>{GOVERNORATES.map((g) => (
-          <Chip key={g} label={g} on={f.governorate === g} onPress={() => set('governorate')(g)} />
+          <Chip key={g} label={governorateLabel(lang, g)} on={f.governorate === g} onPress={() => set('governorate')(g)} />
         ))}</Row>
         <TextInput style={styles.input} placeholder={tx('area')} value={f.city} onChangeText={set('city')} maxLength={60} textAlign="right" />
         <TextInput style={styles.input} placeholder={tx('phone')} value={f.contact_phone} onChangeText={set('contact_phone')}
