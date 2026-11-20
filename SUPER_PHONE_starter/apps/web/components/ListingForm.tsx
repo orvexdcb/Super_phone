@@ -121,7 +121,7 @@ export default function ListingForm({ categories, defaults, lang = "ar" }: { cat
       </div>
       <select name="condition" required defaultValue="">
         <option value="" disabled>{tx("condition")}</option>
-        {Object.entries(CONDITION_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+        {Object.entries(CONDITION_LABELS).map(([k, v]) => <option key={k} value={k}>{conditionName(lang, k, v)}</option>)}
       </select>
       <div className="row">
         <input name="brand" placeholder={tx("brand")} maxLength={60} />
