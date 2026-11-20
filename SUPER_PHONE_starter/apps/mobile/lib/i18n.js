@@ -16,3 +16,19 @@ export const COPY = {
   },
 };
 export const tr = (lang, key) => (COPY[lang] || COPY.ar)[key] || COPY.ar[key] || key;
+
+const CONDITION_NAMES = {
+  en: { new: "New", used: "Used", refurbished: "Refurbished" },
+  ku: { new: "نوێ", used: "بەکارهاتوو", refurbished: "نوێکراوە" },
+};
+const GOVERNORATE_NAMES = {
+  en: { "بغداد":"Baghdad","نينوى":"Nineveh","البصرة":"Basra","أربيل":"Erbil","السليمانية":"Sulaymaniyah","دهوك":"Duhok","كركوك":"Kirkuk","الأنبار":"Anbar","النجف":"Najaf","كربلاء":"Karbala","بابل":"Babylon","ديالى":"Diyala","صلاح الدين":"Saladin","ذي قار":"Dhi Qar","واسط":"Wasit","ميسان":"Maysan","المثنى":"Muthanna","القادسية":"Qadisiyyah","حلبجة":"Halabja" },
+  ku: { "بغداد":"بەغدا","نينوى":"نەینەوا","البصرة":"بەسرە","أربيل":"هەولێر","السليمانية":"سلێمانی","دهوك":"دهۆک","كركوك":"کەرکووک","الأنبار":"ئەنبار","النجف":"نەجەف","كربلاء":"کەربەلا","بابل":"بابل","ديالى":"دیالە","صلاح الدين":"سەلاحەدین","ذي قار":"زی قار","واسط":"واسط","ميسان":"مەیسان","المثنى":"مەسنا","القادسية":"قادسیە","حلبجة":"هەڵەبجە" },
+};
+const CATEGORY_NAMES = {
+  en: { "هواتف":"Phones", "موبايلات":"Phones", "أجهزة لوحية":"Tablets", "تابلت":"Tablets", "لابتوبات":"Laptops", "أجهزة كمبيوتر":"Computers", "اكسسوارات":"Accessories", "إكسسوارات":"Accessories", "ساعات ذكية":"Smartwatches", "أجهزة ذكية":"Smart devices" },
+  ku: { "هواتف":"مۆبایل", "موبايلات":"مۆبایل", "أجهزة لوحية":"تابلێت", "تابلت":"تابلێت", "لابتوبات":"لاپتۆپ", "أجهزة كمبيوتر":"کۆمپیوتەر", "اكسسوارات":"ئاکسسوارات", "إكسسوارات":"ئاکسسوارات", "ساعات ذكية":"کاتژمێری زیرەک", "أجهزة ذكية":"ئامێری زیرەک" },
+};
+export const conditionLabel = (lang, key, fallback) => lang === "ar" ? fallback : CONDITION_NAMES[lang]?.[key] || fallback;
+export const governorateLabel = (lang, value) => lang === "ar" ? value : GOVERNORATE_NAMES[lang]?.[value] || value;
+export const categoryLabel = (lang, value) => lang === "ar" ? value : CATEGORY_NAMES[lang]?.[value] || value;
