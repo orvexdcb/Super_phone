@@ -9,15 +9,17 @@ import {
   COLORS, CONDITION_LABELS, GOVERNORATES, IMAGE_EXT, MAX_IMAGES, MAX_IMAGE_BYTES,
 } from '../lib/constants';
 import Chip from '../components/Chip';
+import { tr } from '../lib/i18n';
 
 const SPECS = [
-  ['storage', 'التخزين (مثال: 128GB)'],
-  ['ram', 'الذاكرة (مثال: 8GB)'],
-  ['battery_health', 'صحة البطارية (مثال: 90%)'],
-  ['color', 'اللون'],
+  ['storage', t('storage')],
+  ['ram', t('ram')],
+  ['battery_health', t('battery')],
+  ['color', t('color')],
 ];
 
-export default function NewListingScreen({ onDone }) {
+export default function NewListingScreen({ onDone, lang = 'ar' }) {
+  const t = (key) => tr(lang, key);
   const { user } = useAuth();
   const [categories, setCategories] = useState([]);
   const [f, setF] = useState({
@@ -53,8 +55,8 @@ export default function NewListingScreen({ onDone }) {
     const next = [];
     for (const a of res.assets) {
       const type = a.mimeType || 'image/jpeg';
-      if (!IMAGE_EXT[type]) return setError('الصور يجب أن تكون JPG أو PNG أو WebP.');
-      if (a.fileSize && a.fileSize > MAX_IMAGE_BYTES) return setError('حجم الصورة يجب ألا يتجاوز 5 ميغابايت.');
+      if (!IMAGE_EXT[type]) return setError(t('imageTypeError'));
+      if (a.fileSize && a.fileSize > MAX_IMAGE_BYTES) return setError(t('imageSizeError'));
       next.push({ uri: a.uri, type });
     }
     setError('');
@@ -64,11 +66,11 @@ export default function NewListingScreen({ onDone }) {
   async function submit() {
     setError('');
     const price = Number(f.price);
-    if (!f.category_id || !f.condition || !f.governorate) return setError('اختر التصنيف والحالة والمحافظة.');
-    if (f.title.trim().length < 3) return setError('اكتب عنواناً واضحاً للإعلان.');
-    if (!f.price || !Number.isFinite(price) || price < 0) return setError('أدخل سعراً صحيحاً.');
-    if (!f.contact_phone.trim()) return setError('أدخل رقم التواصل.');
-    if (images.length === 0) return setError('أضف صورة واحدة على الأقل.');
+    if (!f.category_id || !f.condition || !f.governorate) return setError(t('chooseRequired'));
+    if (f.title.trim().length < 3) return setError(t('titleRequired'));
+    if (!f.price || !Number.isFinite(price) || price < 0) return setError(t('priceRequired'));
+    if (!f.contact_phone.trim()) return setError(t('phoneRequired'));
+    if (images.length === 0) return setError(t('imageRequired'));
 
     setBusy(true);
     const uploaded = [];
@@ -85,7 +87,7 @@ export default function NewListingScreen({ onDone }) {
       } catch {
         await cleanup();
         setBusy(false);
-        return setError('تعذّر رفع الصور. حاول مرة أخرى.');
+        return setError(t('uploadError'));
       }
     }
 
@@ -99,7 +101,7 @@ export default function NewListingScreen({ onDone }) {
     if (insErr || !listing) {
       await cleanup();
       setBusy(false);
-      return setError('تعذّر نشر الإعلان. تحقق من الحقول وحاول مرة أخرى.');
+      return setError(t('submitError'));
     }
 
     const { error: imgErr } = await supabase.from('listing_images').insert(
@@ -110,7 +112,7 @@ export default function NewListingScreen({ onDone }) {
       ? await supabase.from('listing_specs').insert(specRows) : { error: null };
 
     setBusy(false);
-    if (imgErr || specErr) return setError('أُنشئ الإعلان لكن حدث خطأ في حفظ الصور أو المواصفات. راجع إعلاناتي.');
+    if (imgErr || specErr) return setError(t('partialError'));
     onDone();
   }
 
@@ -161,7 +163,7 @@ export default function NewListingScreen({ onDone }) {
           value={f.description} onChangeText={set('description')} multiline maxLength={4000} textAlign="right" />
 
         <Pressable style={styles.pick} onPress={pick}>
-          <Text style={{ color: COLORS.gold }}>إضافة صور ({images.length}/{MAX_IMAGES})</Text>
+          <Text style={{ color: COLORS.gold }}>{t('addImages')} ({images.length}/{MAX_IMAGES})</Text>
         </Pressable>
         <Row>{images.map((img, i) => (
           <View key={img.uri} style={styles.thumbWrap}>
@@ -172,7 +174,7 @@ export default function NewListingScreen({ onDone }) {
           </View>
         ))}</Row>
 
-        <Text style={styles.note}>الإعلان يُراجَع من الإدارة قبل ظهوره. المنصة وسيط للتواصل فقط، والبيع والتسليم شخصياً بين الطرفين.</Text>
+        <Text style={styles.note}>{t('reviewNote')}</Text>
         {!!error && <Text style={styles.err}>{error}</Text>}
         <Pressable style={[styles.btn, busy && { opacity: 0.6 }]} onPress={submit} disabled={busy}>
           {busy ? <ActivityIndicator color={COLORS.bg} /> : <Text style={styles.btnText}>نشر الإعلان</Text>}
