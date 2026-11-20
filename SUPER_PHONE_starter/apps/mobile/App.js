@@ -39,7 +39,9 @@ function Shell() {
   if (route?.name === 'detail') body = <DetailScreen id={route.id} onNeedLogin={goLogin} />;
   else if (route?.name === 'new' && user) body = <NewListingScreen onDone={() => { setRoute({ name: 'mine', posted: true }); setTab('mine'); }} />;
   else if (route?.name === 'mine' && user) body = <MyListingsScreen onOpen={openDetail} posted={route.posted} />;
-  else if (tab === 'home') body = <BrowseScreen onOpen={openDetail} />;
+  else if (tab === 'home') body = <BrowseScreen onOpen={openDetail}
+    onSell={() => { if (user) { setTab('new'); setRoute({ name: 'new' }); } else { setRoute(null); setTab('account'); } }}
+    onFavorites={() => setTab('favorites')} />;
   else if (tab === 'favorites') {
     body = user ? <FavoritesScreen onOpen={openDetail} /> : (
       <View style={styles.center}>
