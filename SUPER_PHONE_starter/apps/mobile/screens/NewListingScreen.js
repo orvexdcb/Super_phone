@@ -40,26 +40,31 @@ export default function NewListingScreen({ onDone, lang = 'ar' }) {
   async function pick() {
     const remaining = MAX_IMAGES - images.length;
     if (remaining <= 0) return;
-    const res = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsMultipleSelection: true,
-      selectionLimit: remaining,
-      quality: 0.7,
-    });
-    if (res.canceled) return;
-    const next = [];
-    for (const a of res.assets) {
-      const type = a.mimeType || 'image/jpeg';
-      if (!IMAGE_EXT[type]) return setError(tx('imageTypeError'));
-      if (a.fileSize && a.fileSize > MAX_IMAGE_BYTES) return setError(tx('imageSizeError'));
-      next.push({ uri: a.uri, type });
+    try {
+      const res = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsMultipleSelection: true,
+        selectionLimit: remaining,
+        quality: 0.7,
+      });
+      if (res.canceled) return;
+      const next = [];
+      for (const asset of res.assets) {
+        const type = asset.mimeType || 'image/jpeg';
+        if (!IMAGE_EXT[type]) return setError(tx('imageTypeError'));
+        if (asset.fileSize && asset.fileSize > MAX_IMAGE_BYTES) return setError(tx('imageSizeError'));
+        next.push({ uri: asset.uri, type });
+      }
+      setError('');
+      setImages((prev) => [...prev, ...next].slice(0, MAX_IMAGES));
+    } catch {
+      setError(tx('pickerError'));
     }
-    setError('');
-    setImages((prev) => [...prev, ...next].slice(0, MAX_IMAGES));
   }
 
   async function submit() {
     setError('');
+    if (busy) return;
     const price = Number(f.price);
     if (!f.category_id || !f.condition || !f.governorate) return setError(tx('chooseRequired'));
     if (f.title.trim().length < 3) return setError(tx('titleRequired'));
@@ -69,46 +74,91 @@ export default function NewListingScreen({ onDone, lang = 'ar' }) {
 
     setBusy(true);
     const uploaded = [];
-    const cleanup = () => uploaded.length && supabase.storage.from('listing-images').remove(uploaded);
-
-    for (const img of images) {
+    let listingCreated = false;
+    let imageRowsSaved = false;
+    const cleanup = async () => {
+      if (!uploaded.length) return;
       try {
-        const path = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2, 10)}.${IMAGE_EXT[img.type]}`;
-        const buf = await (await fetch(img.uri)).arrayBuffer();
-        const { error: upErr } = await supabase.storage.from('listing-images')
-          .upload(path, buf, { contentType: img.type, upsert: false });
-        if (upErr) throw upErr;
-        uploaded.push(path);
-      } catch {
-        await cleanup();
-        setBusy(false);
-        return setError(tx('uploadError'));
+        const { error: cleanupError } = await supabase.storage.from('listing-images').remove(uploaded);
+        if (cleanupError) console.warn('Listing image cleanup failed', cleanupError);
+      } catch (cleanupError) {
+        console.warn('Listing image cleanup failed', cleanupError);
       }
-    }
+    };
 
-    const trim = (v) => (v || '').trim();
-    const { data: listing, error: insErr } = await supabase.from('listings').insert({
-      seller_id: user.id, category_id: f.category_id, title: trim(f.title), description: trim(f.description) || null,
-      price, currency: f.currency, condition: f.condition, brand: trim(f.brand) || null, model: trim(f.model) || null,
-      governorate: f.governorate, city: trim(f.city) || null, contact_phone: trim(f.contact_phone), status: 'pending_review',
-    }).select('id').single();
+    try {
+      for (const img of images) {
+        const path = user.id + '/' + Date.now() + '-' + Math.random().toString(36).slice(2, 10) + '.' + IMAGE_EXT[img.type];
+        const response = await fetch(img.uri);
+        if (!response.ok) throw new Error('Could not read selected image');
+        const buffer = await response.arrayBuffer();
+        const { error: uploadError } = await supabase.storage.from('listing-images')
+          .upload(path, buffer, { contentType: img.type, upsert: false });
+        if (uploadError) throw uploadError;
+        uploaded.push(path);
+      }
 
-    if (insErr || !listing) {
-      await cleanup();
+      const trim = (value) => (value || '').trim();
+      const { data: createdListing, error: insertError } = await supabase.from('listings').insert({
+        seller_id: user.id,
+        category_id: f.category_id,
+        title: trim(f.title),
+        description: trim(f.description) || null,
+        price,
+        currency: f.currency,
+        condition: f.condition,
+        brand: trim(f.brand) || null,
+        model: trim(f.model) || null,
+        governorate: f.governorate,
+        city: trim(f.city) || null,
+        contact_phone: trim(f.contact_phone),
+        status: 'pending_review',
+      }).select('id').single();
+
+      if (insertError || !createdListing) {
+        await cleanup();
+        setError(tx('submitError'));
+        return;
+      }
+      listingCreated = true;
+
+      const { error: imageError } = await supabase.from('listing_images').insert(
+        uploaded.map((storage_path, index) => ({
+          listing_id: createdListing.id,
+          storage_path,
+          sort_order: index,
+        }))
+      );
+
+      if (imageError) {
+        await cleanup();
+        setError(tx('partialError'));
+        return;
+      }
+      imageRowsSaved = true;
+
+      const specRows = SPEC_KEYS.map((key) => ({
+        listing_id: createdListing.id,
+        spec_key: key,
+        spec_value: trim(f['spec_' + key]),
+      })).filter((spec) => spec.spec_value);
+
+      if (specRows.length) {
+        const { error: specError } = await supabase.from('listing_specs').insert(specRows);
+        if (specError) {
+          setError(tx('partialError'));
+          return;
+        }
+      }
+
+      onDone?.();
+    } catch (submitError) {
+      console.warn('Listing submission failed', submitError);
+      if (!imageRowsSaved) await cleanup();
+      setError(listingCreated ? tx('partialError') : tx('submitError'));
+    } finally {
       setBusy(false);
-      return setError(tx('submitError'));
     }
-
-    const { error: imgErr } = await supabase.from('listing_images').insert(
-      uploaded.map((storage_path, i) => ({ listing_id: listing.id, storage_path, sort_order: i })));
-    const specRows = SPEC_KEYS.map((k) => ({ listing_id: listing.id, spec_key: k, spec_value: trim(f[`spec_${k}`]) }))
-      .filter((s) => s.spec_value);
-    const { error: specErr } = specRows.length
-      ? await supabase.from('listing_specs').insert(specRows) : { error: null };
-
-    setBusy(false);
-    if (imgErr || specErr) return setError(tx('partialError'));
-    onDone();
   }
 
   const Row = ({ children }) => <View style={styles.wrap}>{children}</View>;

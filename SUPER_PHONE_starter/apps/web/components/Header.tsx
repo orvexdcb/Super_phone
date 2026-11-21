@@ -18,7 +18,7 @@ function Icon({ name }: { name: "home" | "search" | "heart" | "plus" | "user" })
 export default async function Header() {
   const cookieStore = await cookies();
   const lang = (cookieStore.get("sp_lang")?.value || "ar") as "ar" | "en" | "ku";
-  const words = { ar: { tagline:"سوق الهواتف والأجهزة الذكية", home:"الرئيسية", search:"البحث", sell:"＋ نشر إعلان", favorites:"المفضلة", account:"حسابي", login:"دخول", signup:"حساب جديد", post:"إعلان جديد" }, en: { tagline:"Phones and smart devices marketplace", home:"Home", search:"Search", sell:"＋ Post a listing", favorites:"Favorites", account:"Account", login:"Log in", signup:"Sign up", post:"New listing" }, ku: { tagline:"بازاڕی مۆبایل و ئامێرە زیرەکەکان", home:"سەرەکی", search:"گەڕان", sell:"＋ ڕیکلام دابنێ", favorites:"دڵخوازەکان", account:"هەژمار", login:"چوونەژوورەوە", signup:"هەژماری نوێ", post:"ڕیکلامی نوێ" } }[lang] || { tagline:"سوق الهواتف والأجهزة الذكية", home:"الرئيسية", search:"البحث", sell:"＋ نشر إعلان", favorites:"المفضلة", account:"حسابي", login:"دخول", signup:"حساب جديد", post:"إعلان جديد" };
+  const words = { ar: { tagline:"سوق الهواتف والأجهزة الذكية", home:"الرئيسية", search:"البحث", accessories:"الملحقات", guide:"دليل الشراء", sell:"＋ نشر إعلان", favorites:"المفضلة", account:"حسابي", login:"دخول", signup:"حساب جديد", post:"إعلان جديد" }, en: { tagline:"Phones and smart devices marketplace", home:"Home", search:"Search", accessories:"Accessories", guide:"Buying guide", sell:"＋ Post a listing", favorites:"Favorites", account:"Account", login:"Log in", signup:"Sign up", post:"New listing" }, ku: { tagline:"بازاڕی مۆبایل و ئامێرە زیرەکەکان", home:"سەرەکی", search:"گەڕان", accessories:"ئاکسسوارات", guide:"ڕێنمایی کڕین", sell:"＋ ڕیکلام دابنێ", favorites:"دڵخوازەکان", account:"هەژمار", login:"چوونەژوورەوە", signup:"هەژماری نوێ", post:"ڕیکلامی نوێ" } }[lang] || { tagline:"سوق الهواتف والأجهزة الذكية", home:"الرئيسية", search:"البحث", accessories:"الملحقات", guide:"دليل الشراء", sell:"＋ نشر إعلان", favorites:"المفضلة", account:"حسابي", login:"دخول", signup:"حساب جديد", post:"إعلان جديد" };
   const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   const { data: profile } = user ? await supabase.from("profiles").select("role").eq("id", user.id).single() : { data: null };
@@ -33,6 +33,8 @@ export default async function Header() {
           </Link>
           <div className="nav-actions">
             <Link href="/#search">{words.search}</Link>
+            <Link href="/accessories">{words.accessories}</Link>
+            <Link href="/buying-guide">{words.guide}</Link>
             {user ? (
               <>
                 <Link href="/account/listings/new" className="cta">{words.sell}</Link>

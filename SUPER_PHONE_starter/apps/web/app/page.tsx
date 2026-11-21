@@ -1,4 +1,5 @@
 import { CONDITION_LABELS, GOVERNORATES } from "@super-phone/shared";
+import Link from "next/link";
 import ListingCard from "../components/ListingCard";
 import { fetchCategories, fetchListings, type Filters } from "../lib/listings";
 import FirstRunFlow from "../components/FirstRunFlow";
@@ -26,6 +27,16 @@ export default async function Home({ searchParams }: { searchParams: SP }) {
       <a className="home-action" href="/account/favorites">{copy.favorites}</a>
     </div>
     <section className="marketplace-banner"><div><span className="banner-kicker">SUPER PHONE</span><h2>{lang === "en" ? "Your next phone is closer" : lang === "ku" ? "مۆبایلی داهاتووت لێرەیە" : "هاتفك القادم أقرب مما تتخيل"}</h2><p>{lang === "en" ? "Browse trusted listings and compare devices in one place." : lang === "ku" ? "ڕیکلامەکان ببینە و ئامێرەکان لە یەک شوێن بەراورد بکە." : "تصفح إعلانات الهواتف وقارن الأجهزة بسهولة من مكان واحد."}</p></div><span className="banner-device" aria-hidden="true">▯</span></section>
+    <section className="category-strip" aria-label={copy.allCategories}>
+      {categories.map((category) => (
+        <Link key={category.slug} href={"/?category=" + encodeURIComponent(category.slug) + "#search"} className="category-tile">
+          <span className="category-symbol" aria-hidden="true">
+            {category.slug === "phone" ? "▯" : category.slug === "tablet" ? "▱" : category.slug === "laptop" ? "▣" : category.slug === "desktop" ? "▤" : category.slug === "headphones" ? "♫" : category.slug === "smartwatch" ? "◷" : "▯"}
+          </span>
+          <span><strong>{categoryName(lang, category.name_ar)}</strong><small>{lang === "en" ? "Browse devices" : lang === "ku" ? "ئامێرەکان ببینە" : "تصفح الأجهزة"}</small></span>
+        </Link>
+      ))}
+    </section>
     <section className="search-panel" id="search" aria-label={copy.searchLabel}><form method="get" className="filters">
       <input name="q" defaultValue={filters.q} placeholder={copy.searchPlaceholder} />
       <select name="category" defaultValue={filters.category}><option value="">{copy.allCategories}</option>{categories.map(c=><option key={c.slug} value={c.slug}>{categoryName(lang, c.name_ar)}</option>)}</select>

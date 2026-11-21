@@ -9,9 +9,9 @@ import { useAuth } from '../lib/AuthContext';
 import * as Location from 'expo-location';
 const KEY='superphone:first-run:v1';
 const T={
-ar:{language:'اختر اللغة',place:'أين تسكن؟',governorate:'المحافظة',area:'المدينة / المنطقة',gps:'تحديد موقعي',next:'التالي',skip:'تخطي',start:'ابدأ الاستخدام',intro:['زر بيع هاتفك يتيح لك عرض جهازك للبيع مع الصور والسعر.','زر البحث يساعدك في العثور على الجهاز الذي تريده.','المفضلة تحفظ الأجهزة التي تريد العودة إليها.','الأزرار الرئيسية موجودة في الشريط السفلي.'],hint:'يمكنك السماح بالوصول للموقع أو اختيار المنطقة يدوياً.'},
-en:{language:'Choose your language',place:'Where do you live?',governorate:'Governorate',area:'City / area',gps:'Use my location',next:'Next',skip:'Skip',start:'Start using the app',intro:['Sell your phone lets you publish your device with photos and a price.','Search helps you find the device you need.','Favorites saves devices for later.','Main actions are available in the bottom navigation.'],hint:'You can allow location access or choose your area manually.'},
-ku:{language:'زمان هەڵبژێرە',place:'لە کوێ دەژیت؟',governorate:'پارێزگا',area:'شار / ناوچە',gps:'شوێنەکەم دیاری بکە',next:'دواتر',skip:'تێپەڕاندن',start:'دەستپێبکە',intro:['فرۆشتنی مۆبایل بۆ بڵاوکردنەوەی ئامێرەکەتە.','گەڕان بۆ دۆزینەوەی ئامێری دڵخوازە.','دڵخوازەکان ئامێرەکانت دەپارێزێت.','دوگمە سەرەکییەکان لە خوارەوەی شاشەکەن.'],hint:'دەتوانیت مۆڵەتی شوێن بدەیت یان ناوچەکە بە دەستی هەڵبژێریت.'}
+ar:{language:'اختر اللغة',place:'أين تسكن؟',governorate:'المحافظة',area:'المدينة / المنطقة',gps:'تحديد موقعي',next:'التالي',skip:'تخطي',start:'ابدأ الاستخدام',intro:['زر بيع هاتفك يتيح لك عرض جهازك للبيع مع الصور والسعر.','زر البحث يساعدك في العثور على الجهاز الذي تريده.','المفضلة تحفظ الأجهزة التي تريد العودة إليها.','الأزرار الرئيسية موجودة في الشريط السفلي.'],hint:'يمكنك السماح بالوصول للموقع أو اختيار المنطقة يدوياً.',located:'تم تحديد المحافظة:'},
+en:{language:'Choose your language',place:'Where do you live?',governorate:'Governorate',area:'City / area',gps:'Use my location',next:'Next',skip:'Skip',start:'Start using the app',intro:['Sell your phone lets you publish your device with photos and a price.','Search helps you find the device you need.','Favorites saves devices for later.','Main actions are available in the bottom navigation.'],hint:'You can allow location access or choose your area manually.',located:'Detected governorate:'},
+ku:{language:'زمان هەڵبژێرە',place:'لە کوێ دەژیت؟',governorate:'پارێزگا',area:'شار / ناوچە',gps:'شوێنەکەم دیاری بکە',next:'دواتر',skip:'تێپەڕاندن',start:'دەستپێبکە',intro:['فرۆشتنی مۆبایل بۆ بڵاوکردنەوەی ئامێرەکەتە.','گەڕان بۆ دۆزینەوەی ئامێری دڵخوازە.','دڵخوازەکان ئامێرەکانت دەپارێزێت.','دوگمە سەرەکییەکان لە خوارەوەی شاشەکەن.'],hint:'دەتوانیت مۆڵەتی شوێن بدەیت یان ناوچەکە بە دەستی هەڵبژێریت.',located:'پارێزگای دیاریکراو:'}
 };
 export default function FirstRunFlow({children,onComplete}){
  const {user}=useAuth();
@@ -22,7 +22,30 @@ export default function FirstRunFlow({children,onComplete}){
  if(done)return children;
  const t=T[lang];
  const finish=async()=>{await AsyncStorage.setItem(KEY,JSON.stringify({lang,governorate:gov,area,completed:true}));try{const {data:{user}}=await supabase.auth.getUser();if(user&&gov)await supabase.from('profiles').update({governorate:gov,city:area.trim()||null}).eq('id',user.id)}catch{}setDone(true);onComplete?.(lang)};
- const requestLocation=async()=>{try{const permission=await Location.requestForegroundPermissionsAsync();if(!permission.granted){setGps(t.hint);return;}await Location.getCurrentPositionAsync({accuracy:Location.Accuracy.Balanced});setGps(t.hint)}catch{setGps(t.hint)}};
+ const requestLocation=async()=>{
+  try{
+   const permission=await Location.requestForegroundPermissionsAsync();
+   if(!permission.granted){setGps(t.hint);return;}
+   const position=await Location.getCurrentPositionAsync({accuracy:Location.Accuracy.Balanced});
+   const places=await Location.reverseGeocodeAsync({latitude:position.coords.latitude,longitude:position.coords.longitude});
+   const place=places?.[0]||{};
+   const candidates=[place.region,place.subregion,place.city,place.district,place.name].filter(Boolean).map(v=>String(v).toLocaleLowerCase().trim());
+   const normalize=(value)=>String(value||'').toLocaleLowerCase().replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/\s+/g,' ').trim();
+   const gov=GOVERNORATES.find(g=>{
+    const aliases=[g,governorateLabel('en',g),governorateLabel('ku',g)].map(normalize);
+    return candidates.some(candidate=>aliases.some(alias=>alias&&normalize(candidate).includes(alias)));
+   });
+   if(!gov){setGps(t.hint);return;}
+   const districts=IRAQ_DISTRICTS[gov]||[];
+   const district=districts.find(d=>{
+    const aliases=[d,districtLabel('en',d),districtLabel('ku',d)].map(normalize);
+    return candidates.some(candidate=>aliases.some(alias=>alias&&normalize(candidate).includes(alias)));
+   });
+   setGov(gov);
+   setArea(district||'');
+   setGps(t.located+' '+governorateLabel(lang,gov)+(district?' · '+districtLabel(lang,district):''));
+  }catch{setGps(t.hint)}
+ };
  return <View style={s.root}><StatusBar style="dark"/>
  {step===0?<View style={s.splash}><Image source={require('../assets/icon.png')} style={s.logo} resizeMode="contain"/><Text style={s.brand}>SUPER PHONE</Text><Text style={s.welcome}>سوق الهواتف والأجهزة الذكية</Text><Pressable onPress={()=>setStep(1)} style={s.btn}><Text style={s.btnText}>{t.next}</Text></Pressable></View>:
  step===1?<View style={s.panel}><Text style={s.title}>{t.language}</Text>{[['en','English'],['ar','عربي'],['ku','کوردی']].map(([v,label])=><Pressable key={v} onPress={()=>setLang(v)} style={[s.option,lang===v&&s.selected]}><Text style={s.optionText}>{label}</Text></Pressable>)}<Pressable style={s.btn} onPress={()=>setStep(2)}><Text style={s.btnText}>{t.next}</Text></Pressable></View>:

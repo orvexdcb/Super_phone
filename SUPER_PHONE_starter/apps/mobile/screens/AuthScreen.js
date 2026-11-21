@@ -15,21 +15,32 @@ export default function AuthScreen({ lang = 'ar' }) {
   const [info, setInfo] = useState('');
 
   async function submit() {
-    setError(''); setInfo('');
+    setError('');
+    setInfo('');
     if (!email.trim() || !password) return setError(t('enterCredentials'));
     if (mode === 'signup' && password.length < 8) return setError(t('passwordLength'));
+
     setBusy(true);
-    if (mode === 'login') {
-      const { error: err } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
-      if (err) setError(t('loginError'));
-    } else {
-      const { data, error: err } = await supabase.auth.signUp({
-        email: email.trim(), password, options: { data: { full_name: name.trim() } },
-      });
-      if (err) setError(t('signupError'));
-      else if (!data.session) setInfo(t('confirmEmail'));
+    try {
+      if (mode === 'login') {
+        const { error: err } = await supabase.auth.signInWithPassword({
+          email: email.trim(), password,
+        });
+        if (err) setError(t('loginError'));
+      } else {
+        const { data, error: err } = await supabase.auth.signUp({
+          email: email.trim(),
+          password,
+          options: { data: { full_name: name.trim() } },
+        });
+        if (err) setError(t('signupError'));
+        else if (!data.session) setInfo(t('confirmEmail'));
+      }
+    } catch {
+      setError(mode === 'login' ? t('loginError') : t('signupError'));
+    } finally {
+      setBusy(false);
     }
-    setBusy(false);
   }
 
   return (
