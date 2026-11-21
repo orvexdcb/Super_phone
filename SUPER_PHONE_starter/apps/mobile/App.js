@@ -39,8 +39,8 @@ function Shell() {
   }, [route]);
 
   let body;
-  if (route?.name === 'founder-settings') body = user ? <FounderSettingsScreen /> : <AccountScreen lang={lang} onNavigate={setRoute} />;
-  else if (route?.name === 'favorites') body = user ? <FavoritesScreen lang={lang} onOpen={openDetail} /> : <AccountScreen lang={lang} onNavigate={setRoute} />;
+  if (route?.name === 'founder-settings') body = user ? <FounderSettingsScreen /> : <AccountScreen lang={lang} onNavigate={setRoute} onTab={setTab} />;
+  else if (route?.name === 'favorites') body = user ? <FavoritesScreen lang={lang} onOpen={openDetail} /> : <AccountScreen lang={lang} onNavigate={setRoute} onTab={setTab} />;
   else if (route?.name === 'detail') body = <DetailScreen lang={lang} id={route.id} onNeedLogin={goLogin} />;
   else if (route?.name === 'new' && user) body = <NewListingScreen lang={lang} onDone={() => { setRoute({ name: 'mine', posted: true }); setTab('mine'); }} />;
   else if (route?.name === 'mine' && user) body = <MyListingsScreen lang={lang} onOpen={openDetail} posted={route.posted} />;
@@ -57,7 +57,7 @@ function Shell() {
       </View>
     );
   } else {
-    body = <AccountScreen lang={lang} onNavigate={setRoute} />;
+    body = <AccountScreen lang={lang} onNavigate={setRoute} onTab={setTab} />;
   }
 
   return (
