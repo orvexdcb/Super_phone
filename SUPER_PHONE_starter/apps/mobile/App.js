@@ -8,6 +8,7 @@ import BrowseScreen from './screens/BrowseScreen';
 import DetailScreen from './screens/DetailScreen';
 import FavoritesScreen from './screens/FavoritesScreen';
 import AccountScreen from './screens/AccountScreen';
+import FounderSettingsScreen from './screens/FounderSettingsScreen';
 import NewListingScreen from './screens/NewListingScreen';
 import MyListingsScreen from './screens/MyListingsScreen';
 import FirstRunFlow from './components/FirstRunFlow';
@@ -36,7 +37,8 @@ function Shell() {
   }, [route]);
 
   let body;
-  if (route?.name === 'detail') body = <DetailScreen lang={lang} id={route.id} onNeedLogin={goLogin} />;
+  if (route?.name === 'founder-settings') body = user ? <FounderSettingsScreen /> : <AccountScreen lang={lang} onNavigate={setRoute} />;
+  else if (route?.name === 'detail') body = <DetailScreen lang={lang} id={route.id} onNeedLogin={goLogin} />;
   else if (route?.name === 'new' && user) body = <NewListingScreen lang={lang} onDone={() => { setRoute({ name: 'mine', posted: true }); setTab('mine'); }} />;
   else if (route?.name === 'mine' && user) body = <MyListingsScreen lang={lang} onOpen={openDetail} posted={route.posted} />;
   else if (tab === 'home') body = <BrowseScreen lang={lang} onOpen={openDetail}

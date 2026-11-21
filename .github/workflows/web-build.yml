@@ -5,6 +5,7 @@ on:
     branches:
       - feature/first-run-redesign
       - feature/phone-marketplace-visual-refresh
+      - feature/founder-full-settings
     paths:
       - "SUPER_PHONE_starter/apps/web/**"
       - "SUPER_PHONE_starter/packages/shared/**"

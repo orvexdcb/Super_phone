@@ -21,6 +21,8 @@ export default async function Header() {
   const words = { ar: { tagline:"سوق الهواتف والأجهزة الذكية", home:"الرئيسية", search:"البحث", sell:"＋ نشر إعلان", favorites:"المفضلة", account:"حسابي", login:"دخول", signup:"حساب جديد", post:"إعلان جديد" }, en: { tagline:"Phones and smart devices marketplace", home:"Home", search:"Search", sell:"＋ Post a listing", favorites:"Favorites", account:"Account", login:"Log in", signup:"Sign up", post:"New listing" }, ku: { tagline:"بازاڕی مۆبایل و ئامێرە زیرەکەکان", home:"سەرەکی", search:"گەڕان", sell:"＋ ڕیکلام دابنێ", favorites:"دڵخوازەکان", account:"هەژمار", login:"چوونەژوورەوە", signup:"هەژماری نوێ", post:"ڕیکلامی نوێ" } }[lang] || { tagline:"سوق الهواتف والأجهزة الذكية", home:"الرئيسية", search:"البحث", sell:"＋ نشر إعلان", favorites:"المفضلة", account:"حسابي", login:"دخول", signup:"حساب جديد", post:"إعلان جديد" };
   const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
+  const { data: profile } = user ? await supabase.from("profiles").select("role").eq("id", user.id).single() : { data: null };
+  const isFounder = profile?.role === "admin";
   return (
     <>
       <header className="site-header">
@@ -36,6 +38,7 @@ export default async function Header() {
                 <Link href="/account/listings/new" className="cta">{words.sell}</Link>
                 <Link href="/account/favorites">{words.favorites}</Link>
                 <Link href="/account">{words.account}</Link>
+                {isFounder && <Link href="/founder/settings" className="founder-nav-link">إعدادات البرنامج الكاملة</Link>}
                 <SignOutButton />
               </>
             ) : (
