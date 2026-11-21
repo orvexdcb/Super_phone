@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Image, Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StatusBar } from 'expo-status-bar';
-import { COLORS, GOVERNORATES, IRAQ_DISTRICTS } from '../lib/constants';
+import { GOVERNORATES, IRAQ_DISTRICTS } from '../lib/constants';
 import { governorateLabel, districtLabel } from '../lib/i18n';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../lib/AuthContext';
@@ -112,7 +112,7 @@ export default function FirstRunFlow({ children, onComplete }) {
   const requestLocation = async () => {
     try {
       const permission = await Location.requestForegroundPermissionsAsync();
-      if (!permission.granted) { setGps(t('hint')); return; }
+      if (!permission.granted) { setGps(t.hint); return; }
       const position = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
       const places = await Location.reverseGeocodeAsync({ latitude: position.coords.latitude, longitude: position.coords.longitude });
       const place = places?.[0] || {};
@@ -122,7 +122,7 @@ export default function FirstRunFlow({ children, onComplete }) {
         const aliases = [g, governorateLabel('en', g), governorateLabel('ku', g)].map(normalize);
         return candidates.some((candidate) => aliases.some((alias) => alias && normalize(candidate).includes(alias)));
       });
-      if (!matchedGov) { setGps(t('hint')); return; }
+      if (!matchedGov) { setGps(t.hint); return; }
       const districts = IRAQ_DISTRICTS[matchedGov] || [];
       const matchedArea = districts.find((d) => {
         const aliases = [d, districtLabel('en', d), districtLabel('ku', d)].map(normalize);
@@ -130,8 +130,8 @@ export default function FirstRunFlow({ children, onComplete }) {
       });
       setGov(matchedGov);
       setArea(matchedArea || '');
-      setGps(t('located') + ' ' + governorateLabel(lang, matchedGov) + (matchedArea ? ' · ' + districtLabel(lang, matchedArea) : ''));
-    } catch { setGps(t('hint')); }
+      setGps(t.located + ' ' + governorateLabel(lang, matchedGov) + (matchedArea ? ' · ' + districtLabel(lang, matchedArea) : ''));
+    } catch { setGps(t.hint); }
   };
 
   if (loading) return <View style={s.splash}><StatusBar style="dark" /><ActivityIndicator color="#e84b53" /></View>;
