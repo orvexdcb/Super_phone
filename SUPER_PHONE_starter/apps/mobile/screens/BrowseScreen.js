@@ -12,11 +12,11 @@ const SELECT =
 const EMPTY = { q: '', category: '', condition: '', governorate: '', min: '', max: '' };
 const COPY = { ar: { search:'ابحث عن جهاز...', filter:'تصفية', condition:'الحالة', governorate:'المحافظة', price:'السعر', max:'أعلى سعر', min:'أدنى سعر', clear:'مسح', apply:'تطبيق', sell:'بيع هاتفك', find:'بحث', favorites:'المفضلة', all:'الكل', headline:'كل الهواتف التي تبحث عنها في مكان واحد', intro:'اكتشف أحدث الأجهزة المعروضة وقارن الأسعار بسهولة.', banner:'اعثر على هاتفك القادم', bannerText:'تصفح الإعلانات واختر الجهاز الأنسب لك.', empty:'لا توجد إعلانات مطابقة حالياً.', error:'تعذّر تحميل الإعلانات.' }, en: { search:'Search devices...', filter:'Filters', condition:'Condition', governorate:'Governorate', price:'Price', max:'Max price', min:'Min price', clear:'Clear', apply:'Apply', sell:'Sell your phone', find:'Search', favorites:'Favorites', all:'All', headline:'Every phone you are looking for, in one place', intro:'Discover new listings and compare prices with ease.', banner:'Find your next phone', bannerText:'Browse listings and choose the right device.', empty:'No matching listings right now.', error:'Could not load listings.' }, ku: { search:'بگەڕێ بۆ ئامێر...', filter:'پاڵاوتن', condition:'دۆخ', governorate:'پارێزگا', price:'نرخ', max:'زۆرترین نرخ', min:'کەمترین نرخ', clear:'پاککردنەوە', apply:'جێبەجێکردن', sell:'مۆبایلەکەت بفرۆشە', find:'گەڕان', favorites:'دڵخوازەکان', all:'هەموو', headline:'هەموو مۆبایلەکان لە یەک شوێن', intro:'ئامێرە نوێیەکان ببینە و نرخەکان بە ئاسانی بەراورد بکە.', banner:'مۆبایلی داهاتووت بدۆزەرەوە', bannerText:'ڕیکلامەکان ببینە و ئامێری گونجاو هەڵبژێرە.', empty:'هیچ ڕیکلامێکی گونجاو نییە.', error:'بارکردنی ڕیکلامەکان سەرکەوتوو نەبوو.' } };
 
-export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar' }) {
+export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar', fixedCategorySlug = '' }) {
   const t = COPY[lang] || COPY.ar;
   const [categories, setCategories] = useState([]);
-  const [draft, setDraft] = useState(EMPTY);     // ما يكتبه المستخدم
-  const [applied, setApplied] = useState(EMPTY); // ما يُطبَّق على الاستعلام
+  const [draft, setDraft] = useState({ ...EMPTY, category: fixedCategorySlug });     // ما يكتبه المستخدم
+  const [applied, setApplied] = useState({ ...EMPTY, category: fixedCategorySlug }); // ما يُطبَّق على الاستعلام
   const [showFilters, setShowFilters] = useState(false);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -75,7 +75,7 @@ export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar' 
 
   useEffect(() => { loadFirst(applied); }, [applied, loadFirst]);
 
-  const apply = (next) => { setApplied(next); setShowFilters(false); };
+  const apply = (next) => { setApplied({ ...next, category: fixedCategorySlug || next.category }); setShowFilters(false); };
   const set = (k) => (v) => setDraft((p) => ({ ...p, [k]: v }));
   const toggle = (k, v) => setDraft((p) => ({ ...p, [k]: p[k] === v ? '' : v }));
   const activeCount = ['condition', 'governorate', 'min', 'max'].filter((k) => applied[k]).length;
