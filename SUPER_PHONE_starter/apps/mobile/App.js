@@ -25,7 +25,14 @@ function Shell() {
   const [tab, setTab] = useState('home');
   const [route, setRoute] = useState(null);
   const [lang, setLang] = useState('ar');
-  useEffect(() => { AsyncStorage.getItem('superphone:first-run:v1').then(raw => { if (raw) { try { setLang(JSON.parse(raw).lang || 'ar'); } catch {} } }); }, []);
+
+  useEffect(() => {
+    AsyncStorage.getItem('superphone:first-run:v1').then((raw) => {
+      if (raw) {
+        try { setLang(JSON.parse(raw).lang || 'ar'); } catch {}
+      }
+    });
+  }, []);
 
   const openDetail = (id) => setRoute({ name: 'detail', id });
   const goLogin = () => { setRoute(null); setTab('account'); };
@@ -42,78 +49,55 @@ function Shell() {
   if (route?.name === 'founder-settings') body = user ? <FounderSettingsScreen /> : <AccountScreen lang={lang} onNavigate={setRoute} onTab={setTab} />;
   else if (route?.name === 'favorites') body = user ? <FavoritesScreen lang={lang} onOpen={openDetail} /> : <AccountScreen lang={lang} onNavigate={setRoute} onTab={setTab} />;
   else if (route?.name === 'detail') body = <DetailScreen lang={lang} id={route.id} onNeedLogin={goLogin} />;
-  else if (route?.name === 'new' && user) body = <NewListingScreen lang={lang} onDone={() => { setRoute({ name: 'mine', posted: true }); setTab('mine'); }} />;
+  else if (route?.name === 'new' && user) body = <NewListingScreen lang={lang} onDone={() => { setRoute({ name: 'mine', posted: true }); setTab('account'); }} />;
   else if (route?.name === 'mine' && user) body = <MyListingsScreen lang={lang} onOpen={openDetail} posted={route.posted} />;
-  else if (tab === 'guide') body = <GuidanceScreen />;
-  else if (tab === 'store') body = <StoreScreen lang={lang} onOpen={openDetail} onSell={() => { if (user) { setTab('new'); setRoute({ name: 'new' }); } else setTab('account'); }} onFavorites={() => setRoute({ name: 'favorites' })} />;
+  else if (tab === 'guide') body = <GuidanceScreen onBrowse={() => setTab('home')} />;
+  else if (tab === 'store') body = <StoreScreen lang={lang} onOpen={openDetail}
+    onSell={() => { if (user) { setTab('account'); setRoute({ name: 'new' }); } else setTab('account'); }}
+    onFavorites={() => setRoute({ name: 'favorites' })} />;
   else if (tab === 'home') body = <BrowseScreen lang={lang} onOpen={openDetail}
-    onSell={() => { if (user) { setTab('new'); setRoute({ name: 'new' }); } else { setRoute(null); setTab('account'); } }}
-    onFavorites={() => setTab('favorites')} />;
-  else if (tab === 'favorites') {
-    body = user ? <FavoritesScreen lang={lang} onOpen={openDetail} /> : (
-      <View style={styles.center}>
-        <Text style={styles.muted}>{tr(lang,'signInToFavorites')}</Text>
-        <Pressable onPress={() => setTab('account')}><Text style={styles.link}>{tr(lang,'loginNow')}</Text></Pressable>
-      </View>
-    );
-  } else {
-    body = <AccountScreen lang={lang} onNavigate={setRoute} onTab={setTab} />;
-  }
+    onSell={() => { if (user) { setTab('account'); setRoute({ name: 'new' }); } else { setRoute(null); setTab('account'); } }}
+    onFavorites={() => setRoute({ name: 'favorites' })} />;
+  else body = <AccountScreen lang={lang} onNavigate={setRoute} onTab={setTab} />;
 
   return (
     <FirstRunFlow onComplete={setLang}>
-    <SafeAreaView style={[styles.container, { direction: lang === "en" ? "ltr" : "rtl" }]}>
-      <View style={styles.header}>
+      <SafeAreaView style={[styles.container, { direction: lang === 'en' ? 'ltr' : 'rtl' }]}>
         {route ? (
-          <Pressable onPress={() => setRoute(null)}><Text style={styles.back}>{tr(lang,'back')} ›</Text></Pressable>
-        ) : <View />}
-        <Text style={styles.brand}>SUPER PHONE</Text>
-      </View>
-      <View style={{ flex: 1 }}>{body}</View>
-      {!route && (
-        <View style={styles.tabs}>
-          {TAB_KEYS.map((key, index) => ({ key, icon: TAB_ICONS[index], label: (TAB_LABELS[lang] || TAB_LABELS.ar)[index] })).map((t) => (
-            <Pressable key={t.key} style={styles.tab} onPress={() => {
-              if (t.key === 'new') {
-                if (!user) { setRoute(null); setTab('account'); return; }
-                setTab(t.key);
-                setRoute({ name: 'new' });
-                return;
-              }
-              setRoute(null);
-              setTab(t.key);
-            }}>
-              <Text style={[styles.tabIcon, (tab === t.key || route?.name === t.key) && styles.tabOn]}>{t.icon}</Text>
-              <Text style={[styles.tabText, tab === t.key && styles.tabOn]}>{t.label}</Text>
-            </Pressable>
-          ))}
-        </View>
-      )}
-      <StatusBar style="dark" />
-    </SafeAreaView>
+          <View style={styles.header}>
+            <Pressable onPress={() => setRoute(null)}><Text style={styles.back}>{tr(lang, 'back')} ›</Text></Pressable>
+            <Text style={styles.brand}>SUPER PHONE</Text>
+          </View>
+        ) : null}
+        <View style={{ flex: 1 }}>{body}</View>
+        {!route && (
+          <View style={styles.tabs}>
+            {TAB_KEYS.map((key, index) => ({ key, icon: TAB_ICONS[index], label: (TAB_LABELS[lang] || TAB_LABELS.ar)[index] })).map((item) => (
+              <Pressable key={item.key} style={styles.tab} onPress={() => { setRoute(null); setTab(item.key); }}>
+                <Text style={[styles.tabIcon, tab === item.key && styles.tabOn]}>{item.icon}</Text>
+                <Text style={[styles.tabText, tab === item.key && styles.tabOn]}>{item.label}</Text>
+              </Pressable>
+            ))}
+          </View>
+        )}
+        <StatusBar style="dark" />
+      </SafeAreaView>
     </FirstRunFlow>
   );
 }
 
 export default function App() {
-  return (
-    <AuthProvider>
-      <Shell />
-    </AuthProvider>
-  );
+  return <AuthProvider><Shell /></AuthProvider>;
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.bg, paddingTop: Platform.OS === 'android' ? (RNStatusBar.currentHeight || 0) : 0 },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 18, paddingVertical: 13, backgroundColor: COLORS.bg, borderBottomWidth: 1, borderBottomColor: COLORS.border },
-  brand: { fontSize: 19, fontWeight: '800', letterSpacing: 2, color: COLORS.goldLight },
-  back: { color: COLORS.gold, fontSize: 16 },
-  tabs: { flexDirection: 'row-reverse', borderTopWidth: 1, borderTopColor: COLORS.border, backgroundColor: COLORS.panel, paddingBottom: Platform.OS === 'ios' ? 8 : 2 },
+  container: { flex: 1, backgroundColor: '#ffffff', paddingTop: Platform.OS === 'android' ? (RNStatusBar.currentHeight || 0) : 0 },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 18, paddingVertical: 13, backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#eeeeee' },
+  brand: { fontSize: 17, fontWeight: '900', letterSpacing: 1.4, color: '#e84b53' },
+  back: { color: '#e84b53', fontSize: 16 },
+  tabs: { flexDirection: 'row-reverse', borderTopWidth: 1, borderTopColor: '#e9e9e9', backgroundColor: '#ffffff', paddingBottom: Platform.OS === 'ios' ? 8 : 2 },
   tab: { flex: 1, paddingVertical: 9, alignItems: 'center', gap: 3 },
-  tabIcon: { color: COLORS.muted, fontSize: 20, lineHeight: 23 },
-  tabText: { color: COLORS.muted, fontSize: 10 },
-  tabOn: { color: COLORS.gold, fontWeight: '800' },
-  center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 8 },
-  muted: { color: COLORS.muted },
-  link: { color: COLORS.gold, fontWeight: '700' },
+  tabIcon: { color: '#555555', fontSize: 23, lineHeight: 25 },
+  tabText: { color: '#555555', fontSize: 11 },
+  tabOn: { color: '#e84b53', fontWeight: '900' }
 });

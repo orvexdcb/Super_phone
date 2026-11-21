@@ -1,22 +1,29 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, FlatList, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
-import { supabase } from '../lib/supabase';
-import { COLORS, CONDITION_LABELS, GOVERNORATES } from '../lib/constants';
+import { ActivityIndicator, FlatList, Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { supabase, imageUrl } from '../lib/supabase';
+import { COLORS, CONDITION_LABELS, GOVERNORATES, formatPrice } from '../lib/constants';
 import ListingCard from '../components/ListingCard';
 import Chip from '../components/Chip';
 import { conditionLabel, governorateLabel, categoryLabel } from '../lib/i18n';
 
 const PAGE = 20;
-const SELECT =
-  'id,title,price,currency,condition,governorate,city,created_at,categories!inner(slug,name_ar),listing_images(storage_path,sort_order)';
+const SELECT = 'id,title,price,currency,condition,governorate,city,created_at,brand,model,categories!inner(slug,name_ar),listing_images(storage_path,sort_order),listing_specs(spec_key,spec_value)';
 const EMPTY = { q: '', category: '', condition: '', governorate: '', min: '', max: '' };
-const COPY = { ar: { search:'ابحث عن جهاز...', filter:'تصفية', condition:'الحالة', governorate:'المحافظة', price:'السعر', max:'أعلى سعر', min:'أدنى سعر', clear:'مسح', apply:'تطبيق', sell:'بيع هاتفك', find:'بحث', favorites:'المفضلة', all:'الكل', headline:'كل الهواتف التي تبحث عنها في مكان واحد', intro:'اكتشف أحدث الأجهزة المعروضة وقارن الأسعار بسهولة.', banner:'اعثر على هاتفك القادم', bannerText:'تصفح الإعلانات واختر الجهاز الأنسب لك.', empty:'لا توجد إعلانات مطابقة حالياً.', error:'تعذّر تحميل الإعلانات.' }, en: { search:'Search devices...', filter:'Filters', condition:'Condition', governorate:'Governorate', price:'Price', max:'Max price', min:'Min price', clear:'Clear', apply:'Apply', sell:'Sell your phone', find:'Search', favorites:'Favorites', all:'All', headline:'Every phone you are looking for, in one place', intro:'Discover new listings and compare prices with ease.', banner:'Find your next phone', bannerText:'Browse listings and choose the right device.', empty:'No matching listings right now.', error:'Could not load listings.' }, ku: { search:'بگەڕێ بۆ ئامێر...', filter:'پاڵاوتن', condition:'دۆخ', governorate:'پارێزگا', price:'نرخ', max:'زۆرترین نرخ', min:'کەمترین نرخ', clear:'پاککردنەوە', apply:'جێبەجێکردن', sell:'مۆبایلەکەت بفرۆشە', find:'گەڕان', favorites:'دڵخوازەکان', all:'هەموو', headline:'هەموو مۆبایلەکان لە یەک شوێن', intro:'ئامێرە نوێیەکان ببینە و نرخەکان بە ئاسانی بەراورد بکە.', banner:'مۆبایلی داهاتووت بدۆزەرەوە', bannerText:'ڕیکلامەکان ببینە و ئامێری گونجاو هەڵبژێرە.', empty:'هیچ ڕیکلامێکی گونجاو نییە.', error:'بارکردنی ڕیکلامەکان سەرکەوتوو نەبوو.' } };
+const COPY = {
+  ar: { city:'كل المدن', sell:'بيعها', search:'بحث', filter:'فلتر البحث', query:'ابحث عن هاتف أو جهاز...', condition:'حالة الجهاز', governorate:'المحافظة', price:'السعر', min:'أقل سعر', max:'أعلى سعر', clear:'مسح', apply:'تطبيق', all:'الكل', featured:'أجهزة مميزة', latest:'أحدث الأجهزة المعروضة', banner:'بع هاتفك بسهولة', bannerText:'اعرض جهازك بالصور والسعر وتواصل مباشرة مع المشتري.', empty:'لا توجد إعلانات مطابقة حالياً.', error:'تعذّر تحميل الإعلانات. حاول مرة أخرى.', recently:'أضيف حديثاً', choose:'تصفح حسب الفئة' },
+  en: { city:'All cities', sell:'Sell', search:'Search', filter:'Search filters', query:'Search phones or devices...', condition:'Device condition', governorate:'Governorate', price:'Price', min:'Min price', max:'Max price', clear:'Clear', apply:'Apply', all:'All', featured:'Featured devices', latest:'Latest listings', banner:'Sell your phone easily', bannerText:'Show your device with photos and a price, and contact buyers directly.', empty:'No matching listings right now.', error:'Could not load listings. Please try again.', recently:'Recently added', choose:'Browse by category' },
+  ku: { city:'هەموو شارەکان', sell:'بفرۆشە', search:'گەڕان', filter:'پاڵاوتنی گەڕان', query:'بگەڕێ بۆ مۆبایل یان ئامێر...', condition:'دۆخی ئامێر', governorate:'پارێزگا', price:'نرخ', min:'کەمترین نرخ', max:'زۆرترین نرخ', clear:'پاککردنەوە', apply:'جێبەجێکردن', all:'هەموو', featured:'ئامێرە دیارەکان', latest:'نوێترین ڕیکلامەکان', banner:'مۆبایلەکەت بە ئاسانی بفرۆشە', bannerText:'ئامێرەکەت بە وێنە و نرخ پیشان بدە و ڕاستەوخۆ پەیوەندی بکە.', empty:'هیچ ڕیکلامێکی گونجاو نییە.', error:'بارکردنی ڕیکلامەکان سەرکەوتوو نەبوو.', recently:'تازە زیادکراوە', choose:'بەپێی پۆل بگەڕێ' }
+};
+
+function firstImage(listing) {
+  return [...(listing?.listing_images || [])].sort((a, b) => a.sort_order - b.sort_order)[0];
+}
 
 export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar', fixedCategorySlug = '' }) {
   const t = COPY[lang] || COPY.ar;
   const [categories, setCategories] = useState([]);
-  const [draft, setDraft] = useState({ ...EMPTY, category: fixedCategorySlug });     // ما يكتبه المستخدم
-  const [applied, setApplied] = useState({ ...EMPTY, category: fixedCategorySlug }); // ما يُطبَّق على الاستعلام
+  const [draft, setDraft] = useState({ ...EMPTY, category: fixedCategorySlug });
+  const [applied, setApplied] = useState({ ...EMPTY, category: fixedCategorySlug });
   const [showFilters, setShowFilters] = useState(false);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -33,9 +40,9 @@ export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar',
 
   const fetchPage = useCallback(async (page, f) => {
     let query = supabase.from('listings').select(SELECT).eq('status', 'active')
-      .order('created_at', { ascending: false }).range(page * PAGE, page * PAGE + PAGE); // عنصر زائد لمعرفة التالي
+      .order('created_at', { ascending: false }).range(page * PAGE, page * PAGE + PAGE);
     const term = f.q.replace(/[%_,]/g, ' ').trim();
-    if (term) query = query.ilike('title', `%${term}%`);
+    if (term) query = query.ilike('title', '%' + term + '%');
     if (f.category) query = query.eq('categories.slug', f.category);
     if (f.condition) query = query.eq('condition', f.condition);
     if (f.governorate) query = query.eq('governorate', f.governorate);
@@ -50,7 +57,7 @@ export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar',
     setLoading(true);
     setError('');
     const { data, error: err } = await fetchPage(0, f);
-    if (req !== reqRef.current) return; // تجاهل ردّاً قديماً
+    if (req !== reqRef.current) return;
     pageRef.current = 0;
     if (err) setError(t.error);
     const rows = data || [];
@@ -65,7 +72,7 @@ export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar',
     setLoadingMore(true);
     const next = pageRef.current + 1;
     const { data } = await fetchPage(next, applied);
-    if (req !== reqRef.current) return setLoadingMore(false);
+    if (req !== reqRef.current) { setLoadingMore(false); return; }
     const rows = data || [];
     pageRef.current = next;
     setItems((prev) => [...prev, ...rows.slice(0, PAGE)]);
@@ -75,118 +82,169 @@ export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar',
 
   useEffect(() => { loadFirst(applied); }, [applied, loadFirst]);
 
-  const apply = (next) => { setApplied({ ...next, category: fixedCategorySlug || next.category }); setShowFilters(false); };
-  const set = (k) => (v) => setDraft((p) => ({ ...p, [k]: v }));
-  const toggle = (k, v) => setDraft((p) => ({ ...p, [k]: p[k] === v ? '' : v }));
-  const activeCount = ['condition', 'governorate', 'min', 'max'].filter((k) => applied[k]).length;
+  const set = (key) => (value) => setDraft((p) => ({ ...p, [key]: value }));
+  const toggle = (key, value) => setDraft((p) => ({ ...p, [key]: p[key] === value ? '' : value }));
+  const apply = (next) => {
+    setApplied({ ...next, category: fixedCategorySlug || next.category });
+    setShowFilters(false);
+  };
+  const activeCount = ['condition', 'governorate', 'min', 'max'].filter((key) => applied[key]).length;
+  const featured = fixedCategorySlug ? null : items[0];
+  const rows = featured ? items.slice(1) : items;
 
-  return (
-    <View style={styles.flex}>
-      <View style={styles.intro}><Text style={styles.eyebrow}>SUPER PHONE</Text><Text style={styles.headline}>{t.headline}</Text><Text style={styles.introText}>{t.intro}</Text></View>
-      <View style={styles.search}>
-        <TextInput
-          style={[styles.input, { flex: 1 }]}
-          value={draft.q}
-          onChangeText={set('q')}
-          placeholder={t.search}
-          textAlign="right"
-          returnKeyType="search"
-          onSubmitEditing={() => apply(draft)}
-        />
-        <Pressable style={styles.filterBtn} onPress={() => setShowFilters(!showFilters)}>
-          <Text style={{ color: '#e84b53' }}>{t.filter}{activeCount ? ` (${activeCount})` : ''}</Text>
+  const header = (
+    <View>
+      <View style={styles.topBar}>
+        <Pressable style={styles.cityButton} onPress={() => setShowFilters((v) => !v)}>
+          <Text style={styles.pin}>⌖</Text>
+          <Text style={styles.cityText}>{applied.governorate ? governorateLabel(lang, applied.governorate) : t.city}</Text>
         </Pressable>
+        <View style={styles.topActions}>
+          <Pressable style={styles.outlineButton} onPress={onSell}><Text style={styles.outlineButtonText}>▱  {t.sell}</Text></Pressable>
+          <Pressable style={styles.outlineButton} onPress={() => setShowFilters((v) => !v)}><Text style={styles.outlineButtonText}>☷  {t.search}</Text></Pressable>
+        </View>
       </View>
 
       {showFilters && (
-        <ScrollView style={styles.panel} keyboardShouldPersistTaps="handled">
+        <View style={styles.filterPanel}>
+          <TextInput style={styles.input} value={draft.q} onChangeText={set('q')} placeholder={t.query}
+            placeholderTextColor={COLORS.muted} textAlign="right" returnKeyType="search" onSubmitEditing={() => apply(draft)} />
           <Text style={styles.label}>{t.condition}</Text>
           <View style={styles.wrap}>
-            {Object.entries(CONDITION_LABELS).map(([k, v]) => (
-              <Chip key={k} label={conditionLabel(lang, k, v)} on={draft.condition === k} onPress={() => toggle('condition', k)} />
+            {Object.entries(CONDITION_LABELS).map(([key, value]) => (
+              <Chip key={key} label={conditionLabel(lang, key, value)} on={draft.condition === key} onPress={() => toggle('condition', key)} />
             ))}
           </View>
           <Text style={styles.label}>{t.governorate}</Text>
           <View style={styles.wrap}>
-            {GOVERNORATES.map((g) => (
-              <Chip key={g} label={governorateLabel(lang, g)} on={draft.governorate === g} onPress={() => toggle('governorate', g)} />
-            ))}
+            {GOVERNORATES.map((g) => <Chip key={g} label={governorateLabel(lang, g)} on={draft.governorate === g} onPress={() => toggle('governorate', g)} />)}
           </View>
           <Text style={styles.label}>{t.price}</Text>
           <View style={styles.priceRow}>
-            <TextInput style={[styles.input, { flex: 1 }]} placeholder={t.max} value={draft.max}
-              onChangeText={set('max')} keyboardType="numeric" textAlign="right" />
-            <TextInput style={[styles.input, { flex: 1 }]} placeholder={t.min} value={draft.min}
-              onChangeText={set('min')} keyboardType="numeric" textAlign="right" />
+            <TextInput style={[styles.input, styles.priceInput]} placeholder={t.min} placeholderTextColor={COLORS.muted}
+              value={draft.min} onChangeText={set('min')} keyboardType="numeric" textAlign="right" />
+            <TextInput style={[styles.input, styles.priceInput]} placeholder={t.max} placeholderTextColor={COLORS.muted}
+              value={draft.max} onChangeText={set('max')} keyboardType="numeric" textAlign="right" />
           </View>
           <View style={styles.priceRow}>
-            <Pressable style={[styles.apply, { backgroundColor: COLORS.panel, borderColor: COLORS.border, borderWidth: 1 }]}
-              onPress={() => { const cleared = { ...EMPTY, q: draft.q, category: draft.category }; setDraft(cleared); apply(cleared); }}>
-              <Text style={{ color: COLORS.text }}>{t.clear}</Text>
+            <Pressable style={[styles.filterAction, styles.clearAction]} onPress={() => { const cleared = { ...EMPTY, category: fixedCategorySlug }; setDraft(cleared); apply(cleared); }}>
+              <Text style={styles.clearText}>{t.clear}</Text>
             </Pressable>
-            <Pressable style={styles.apply} onPress={() => apply(draft)}>
-              <Text style={{ color: '#ffffff', fontWeight: '800' }}>{t.apply}</Text>
-            </Pressable>
+            <Pressable style={styles.filterAction} onPress={() => apply(draft)}><Text style={styles.filterActionText}>{t.apply}</Text></Pressable>
           </View>
-        </ScrollView>
+        </View>
       )}
 
-      <View style={styles.promo}><View style={{ flex: 1 }}><Text style={styles.promoTitle}>{t.banner}</Text><Text style={styles.promoText}>{t.bannerText}</Text></View><Text style={styles.promoIcon}>▯</Text></View>
-      <View style={styles.homeActions}>
-        <Pressable style={styles.homeAction} onPress={onSell}><Text style={styles.homeActionText}>{t.sell}</Text></Pressable>
-        <Pressable style={styles.homeAction} onPress={() => setShowFilters(true)}><Text style={styles.homeActionText}>{t.find}</Text></Pressable>
-        <Pressable style={styles.homeAction} onPress={onFavorites}><Text style={styles.homeActionText}>{t.favorites}</Text></Pressable>
-      </View>
-      <View>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
-          {[{ slug: '', name_ar: t.all }, ...categories].map((c) => (
-            <Chip key={c.slug || 'all'} label={categoryLabel(lang, c.name_ar)} on={applied.category === c.slug}
-              onPress={() => { const n = { ...draft, category: c.slug }; setDraft(n); apply(n); }} />
-          ))}
-        </ScrollView>
-      </View>
-
-      {loading ? (
-        <ActivityIndicator style={{ marginTop: 40 }} color={COLORS.gold} />
-      ) : (
-        <FlatList
-          data={items}
-          keyExtractor={(i) => i.id}
-          contentContainerStyle={{ padding: 16 }}
-          refreshing={loading}
-          onRefresh={() => loadFirst(applied)}
-          onEndReached={loadMore}
-          onEndReachedThreshold={0.4}
-          ListFooterComponent={loadingMore ? <ActivityIndicator color={COLORS.green} /> : null}
-          ListEmptyComponent={<Text style={styles.empty}>{error || t.empty}</Text>}
-          renderItem={({ item }) => <ListingCard lang={lang} listing={item} onPress={() => onOpen(item.id)} />}
-        />
+      {categories.length > 0 && !fixedCategorySlug && (
+        <View style={styles.categoriesBlock}>
+          <Text style={styles.sectionTitle}>{t.choose}</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
+            <Chip label={t.all} on={!applied.category} onPress={() => apply({ ...draft, category: '' })} />
+            {categories.map((c) => (
+              <Chip key={c.slug} label={categoryLabel(lang, c.name_ar)} on={applied.category === c.slug}
+                onPress={() => { const next = { ...draft, category: c.slug }; setDraft(next); apply(next); }} />
+            ))}
+          </ScrollView>
+        </View>
       )}
+
+      {featured && (
+        <View style={styles.featuredSection}>
+          <Text style={styles.sectionTitle}>{t.featured}</Text>
+          <Pressable style={styles.featuredCard} onPress={() => onOpen(featured.id)}>
+            {firstImage(featured) ? (
+              <Image source={{ uri: imageUrl(firstImage(featured).storage_path) }} style={styles.featuredImage} resizeMode="cover" />
+            ) : <View style={[styles.featuredImage, styles.noImage]}><Text style={styles.noImageText}>SUPER PHONE</Text></View>}
+            <View style={styles.featuredShade} />
+            <View style={styles.featuredPrice}>
+              <Text style={styles.featuredCurrency}>{featured.currency === 'USD' ? 'دولار' : 'دينار عراقي'}</Text>
+              <Text style={styles.featuredPriceText}>{formatPrice(featured.price, featured.currency)}</Text>
+            </View>
+            <View style={styles.featuredTitleWrap}>
+              <Text style={styles.featuredTitle} numberOfLines={1}>{featured.title}</Text>
+              <Text style={styles.featuredLocation}>{governorateLabel(lang, featured.governorate)}{featured.city ? ' · ' + featured.city : ''}</Text>
+            </View>
+          </Pressable>
+        </View>
+      )}
+
+      <Pressable style={styles.promo} onPress={onSell}>
+        <View style={styles.promoCopy}>
+          <Text style={styles.promoTitle}>{t.banner}</Text>
+          <Text style={styles.promoText}>{t.bannerText}</Text>
+        </View>
+        <Text style={styles.promoIcon}>▯</Text>
+      </Pressable>
+
+      <View style={styles.sectionHeading}>
+        <Text style={styles.sectionTitle}>{t.latest}</Text>
+        <Text style={styles.recent}>● {t.recently}</Text>
+      </View>
     </View>
+  );
+
+  return (
+    <FlatList
+      style={styles.flex}
+      data={rows}
+      keyExtractor={(item) => item.id}
+      ListHeaderComponent={header}
+      contentContainerStyle={styles.listContent}
+      refreshing={loading}
+      onRefresh={() => loadFirst(applied)}
+      onEndReached={loadMore}
+      onEndReachedThreshold={0.4}
+      ListFooterComponent={loadingMore ? <ActivityIndicator color={COLORS.danger} style={{ margin: 18 }} /> : null}
+      ListEmptyComponent={
+        loading ? <ActivityIndicator color={COLORS.danger} style={{ margin: 36 }} /> :
+        <Text style={styles.empty}>{error || (featured ? '' : t.empty)}</Text>
+      }
+      renderItem={({ item }) => <ListingCard lang={lang} listing={item} onPress={() => onOpen(item.id)} />}
+    />
   );
 }
 
 const styles = StyleSheet.create({
-  flex: { flex: 1 },
-  intro: { paddingHorizontal: 18, paddingTop: 14, paddingBottom: 8 },
-  eyebrow: { color: COLORS.text, fontSize: 11, fontWeight: '900', letterSpacing: 2, textAlign: 'right' },
-  headline: { color: COLORS.text, fontSize: 21, fontWeight: '900', textAlign: 'right', marginTop: 5 },
-  introText: { color: COLORS.muted, fontSize: 13, textAlign: 'right', marginTop: 4 },
-  promo: { marginHorizontal: 16, marginTop: 14, marginBottom: 8, borderRadius: 16, padding: 18, minHeight: 112, backgroundColor: '#e84b53', flexDirection: 'row-reverse', alignItems: 'center', overflow: 'hidden' },
+  flex: { flex: 1, backgroundColor: '#ffffff' },
+  listContent: { paddingBottom: 20 },
+  topBar: { minHeight: 66, paddingHorizontal: 14, paddingVertical: 9, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8, backgroundColor: '#ffffff' },
+  cityButton: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingVertical: 8, flexShrink: 1 },
+  pin: { color: '#e84b53', fontSize: 25, fontWeight: '700' },
+  cityText: { color: '#3b3b3b', fontSize: 17, fontWeight: '600' },
+  topActions: { flexDirection: 'row', gap: 7 },
+  outlineButton: { borderWidth: 1.3, borderColor: '#505050', borderRadius: 9, paddingHorizontal: 11, paddingVertical: 9, backgroundColor: '#ffffff' },
+  outlineButtonText: { color: '#454545', fontSize: 14, fontWeight: '600' },
+  filterPanel: { marginHorizontal: 12, marginBottom: 10, padding: 13, gap: 9, borderRadius: 13, borderWidth: 1, borderColor: '#e4e4e4', backgroundColor: '#ffffff' },
+  input: { borderWidth: 1, borderColor: '#dedede', borderRadius: 10, paddingHorizontal: 12, paddingVertical: 11, color: '#333333', backgroundColor: '#ffffff', fontSize: 15 },
+  label: { color: '#555555', textAlign: 'right', fontSize: 14, fontWeight: '700', marginTop: 3 },
+  wrap: { flexDirection: 'row-reverse', flexWrap: 'wrap', gap: 7 },
+  priceRow: { flexDirection: 'row-reverse', gap: 8 },
+  priceInput: { flex: 1 },
+  filterAction: { flex: 1, backgroundColor: '#e84b53', borderRadius: 9, padding: 12, alignItems: 'center' },
+  filterActionText: { color: '#ffffff', fontWeight: '800' },
+  clearAction: { backgroundColor: '#ffffff', borderWidth: 1, borderColor: '#dedede' },
+  clearText: { color: '#555555', fontWeight: '700' },
+  categoriesBlock: { paddingTop: 9, paddingBottom: 5 },
+  chips: { paddingHorizontal: 13, paddingVertical: 10, gap: 7, flexDirection: 'row-reverse' },
+  featuredSection: { paddingTop: 6 },
+  sectionTitle: { color: '#424242', fontSize: 18, fontWeight: '800', textAlign: 'right', paddingHorizontal: 14, paddingBottom: 8 },
+  featuredCard: { marginHorizontal: 8, height: 238, overflow: 'hidden', backgroundColor: '#f1f1f1', position: 'relative' },
+  featuredImage: { width: '100%', height: '100%' },
+  noImage: { alignItems: 'center', justifyContent: 'center', backgroundColor: '#f2f2f2' },
+  noImageText: { color: '#e84b53', fontWeight: '900', fontSize: 22, letterSpacing: 2 },
+  featuredShade: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.12)' },
+  featuredPrice: { position: 'absolute', left: 12, bottom: 12, backgroundColor: '#e84b53', paddingHorizontal: 13, paddingVertical: 8, minWidth: 145 },
+  featuredCurrency: { color: '#ffffff', fontSize: 12 },
+  featuredPriceText: { color: '#ffffff', fontWeight: '900', fontSize: 18 },
+  featuredTitleWrap: { position: 'absolute', right: 12, top: 12, maxWidth: '70%', padding: 8, backgroundColor: 'rgba(255,255,255,0.92)', borderRadius: 8 },
+  featuredTitle: { color: '#333333', fontWeight: '900', fontSize: 16, textAlign: 'right' },
+  featuredLocation: { color: '#666666', textAlign: 'right', fontSize: 12 },
+  promo: { marginHorizontal: 8, marginTop: 9, marginBottom: 10, padding: 16, minHeight: 108, borderRadius: 10, backgroundColor: '#e84b53', flexDirection: 'row-reverse', alignItems: 'center', gap: 12 },
+  promoCopy: { flex: 1 },
   promoTitle: { color: '#ffffff', fontSize: 19, fontWeight: '900', textAlign: 'right' },
-  promoText: { color: '#fff1f1', fontSize: 12, textAlign: 'right', marginTop: 5 },
-  promoIcon: { color: COLORS.gold, fontSize: 54, opacity: 0.85, marginLeft: 12 },
-  homeActions: { flexDirection: 'row-reverse', gap: 8, paddingHorizontal: 16, paddingTop: 8 },
-  homeAction: { flex: 1, backgroundColor: COLORS.panel, borderWidth: 1, borderColor: COLORS.border, borderRadius: 12, paddingVertical: 12, alignItems: 'center' },
-  homeActionText: { color: COLORS.text, fontWeight: '900', fontSize: 13 },
-  search: { flexDirection: 'row-reverse', gap: 8, padding: 16, paddingBottom: 8 },
-  input: { backgroundColor: COLORS.panel, borderWidth: 1, borderColor: COLORS.border, borderRadius: 10, padding: 12, fontSize: 16, color: COLORS.text },
-  filterBtn: { justifyContent: 'center', paddingHorizontal: 14, borderRadius: 10, borderWidth: 1, borderColor: COLORS.border, backgroundColor: COLORS.panel },
-  panel: { maxHeight: 360, paddingHorizontal: 16, paddingBottom: 8, backgroundColor: COLORS.bg },
-  label: { color: COLORS.muted, textAlign: 'right', marginTop: 8, marginBottom: 6 },
-  wrap: { flexDirection: 'row-reverse', flexWrap: 'wrap', gap: 8 },
-  priceRow: { flexDirection: 'row-reverse', gap: 8, marginTop: 8 },
-  apply: { flex: 1, backgroundColor: '#e84b53', borderRadius: 10, padding: 12, alignItems: 'center' },
-  chips: { paddingHorizontal: 16, gap: 8, paddingBottom: 4, flexDirection: 'row-reverse' },
-  empty: { textAlign: 'center', color: COLORS.muted, marginTop: 40 },
+  promoText: { color: '#fff4f4', fontSize: 13, lineHeight: 20, textAlign: 'right', marginTop: 4 },
+  promoIcon: { color: '#ffffff', fontSize: 56, opacity: 0.9 },
+  sectionHeading: { paddingTop: 5, flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center' },
+  recent: { color: '#888888', fontSize: 11, paddingHorizontal: 14 },
+  empty: { color: '#777777', textAlign: 'center', padding: 25, fontSize: 14 },
 });
