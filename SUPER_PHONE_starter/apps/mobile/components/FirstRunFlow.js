@@ -273,7 +273,7 @@ const s = StyleSheet.create({
   locationScroll: { flex: 1 },
   locationContent: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 28, gap: 10 },
   locationLabel: { color: '#555555', fontSize: 19, fontWeight: '700', textAlign: 'right', marginTop: 3 },
-  dropdown: { minHeight: 58, borderWidth: 1.3, borderColor: '#dedede', borderRadius: 13, paddingHorizontal: 17, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  dropdown: { minHeight: 58, borderWidth: 1.3, borderColor: '#dedede', borderRadius: 13, paddingHorizontal: 17, flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between' },
   dropdownValue: { color: '#454545', fontSize: 20, fontWeight: '600' },
   dropdownArrow: { color: '#555555', fontSize: 25 },
   districtList: { gap: 9 },
