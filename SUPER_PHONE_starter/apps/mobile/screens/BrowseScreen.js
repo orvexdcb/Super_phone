@@ -135,22 +135,8 @@ export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar',
         </View>
       )}
 
-      {categories.length > 0 && !fixedCategorySlug && (
-        <View style={styles.categoriesBlock}>
-          <Text style={styles.sectionTitle}>{t.choose}</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
-            <Chip label={t.all} on={!applied.category} onPress={() => apply({ ...draft, category: '' })} />
-            {categories.map((c) => (
-              <Chip key={c.slug} label={categoryLabel(lang, c.name_ar)} on={applied.category === c.slug}
-                onPress={() => { const next = { ...draft, category: c.slug }; setDraft(next); apply(next); }} />
-            ))}
-          </ScrollView>
-        </View>
-      )}
-
       {featured && (
         <View style={styles.featuredSection}>
-          <Text style={styles.sectionTitle}>{t.featured}</Text>
           <Pressable style={styles.featuredCard} onPress={() => onOpen(featured.id)}>
             {firstImage(featured) ? (
               <Image source={{ uri: imageUrl(firstImage(featured).storage_path) }} style={styles.featuredImage} resizeMode="cover" />
@@ -160,20 +146,21 @@ export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar',
               <Text style={styles.featuredCurrency}>{featured.currency === 'USD' ? 'دولار' : 'دينار عراقي'}</Text>
               <Text style={styles.featuredPriceText}>{formatPrice(featured.price, featured.currency)}</Text>
             </View>
-            <View style={styles.featuredTitleWrap}>
-              <Text style={styles.featuredTitle} numberOfLines={1}>{featured.title}</Text>
-              <Text style={styles.featuredLocation}>{governorateLabel(lang, featured.governorate)}{featured.city ? ' · ' + featured.city : ''}</Text>
-            </View>
           </Pressable>
         </View>
       )}
 
       <Pressable style={styles.promo} onPress={onSell}>
+        {firstImage(items[1] || featured || items[0]) ? (
+          <Image source={{ uri: imageUrl(firstImage(items[1] || featured || items[0]).storage_path) }} style={styles.promoImage} resizeMode="cover" />
+        ) : null}
+        <View style={styles.promoShade} />
         <View style={styles.promoCopy}>
+          <Text style={styles.promoBrand}>SUPER PHONE</Text>
           <Text style={styles.promoTitle}>{t.banner}</Text>
           <Text style={styles.promoText}>{t.bannerText}</Text>
+          <View style={styles.promoCta}><Text style={styles.promoCtaText}>{lang === 'en' ? 'Post a listing  ←' : lang === 'ku' ? 'دانانی ڕیکلام ←' : 'أضف إعلانك  ←'}</Text></View>
         </View>
-        <Text style={styles.promoIcon}>▯</Text>
       </Pressable>
 
       <View style={styles.sectionHeading}>
@@ -228,7 +215,7 @@ const styles = StyleSheet.create({
   chips: { paddingHorizontal: 13, paddingVertical: 10, gap: 7, flexDirection: 'row-reverse' },
   featuredSection: { paddingTop: 6 },
   sectionTitle: { color: '#424242', fontSize: 18, fontWeight: '800', textAlign: 'right', paddingHorizontal: 14, paddingBottom: 8 },
-  featuredCard: { marginHorizontal: 8, height: 238, overflow: 'hidden', backgroundColor: '#f1f1f1', position: 'relative' },
+  featuredCard: { marginHorizontal: 0, height: 270, overflow: 'hidden', backgroundColor: '#f1f1f1', position: 'relative' },
   featuredImage: { width: '100%', height: '100%' },
   noImage: { alignItems: 'center', justifyContent: 'center', backgroundColor: '#f2f2f2' },
   noImageText: { color: '#e84b53', fontWeight: '900', fontSize: 22, letterSpacing: 2 },
@@ -239,12 +226,16 @@ const styles = StyleSheet.create({
   featuredTitleWrap: { position: 'absolute', right: 12, top: 12, maxWidth: '70%', padding: 8, backgroundColor: 'rgba(255,255,255,0.92)', borderRadius: 8 },
   featuredTitle: { color: '#333333', fontWeight: '900', fontSize: 16, textAlign: 'right' },
   featuredLocation: { color: '#666666', textAlign: 'right', fontSize: 12 },
-  promo: { marginHorizontal: 8, marginTop: 9, marginBottom: 10, padding: 16, minHeight: 108, borderRadius: 10, backgroundColor: '#e84b53', flexDirection: 'row-reverse', alignItems: 'center', gap: 12 },
-  promoCopy: { flex: 1 },
-  promoTitle: { color: '#ffffff', fontSize: 19, fontWeight: '900', textAlign: 'right' },
-  promoText: { color: '#fff4f4', fontSize: 13, lineHeight: 20, textAlign: 'right', marginTop: 4 },
-  promoIcon: { color: '#ffffff', fontSize: 56, opacity: 0.9 },
-  sectionHeading: { paddingTop: 5, flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center' },
+  promo: { marginHorizontal: 8, marginTop: 9, marginBottom: 10, padding: 15, minHeight: 126, borderRadius: 9, backgroundColor: '#16578d', flexDirection: 'row-reverse', alignItems: 'center', overflow: 'hidden', position: 'relative' },
+  promoImage: { ...StyleSheet.absoluteFillObject, width: '100%', height: '100%' },
+  promoShade: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(4,28,53,0.72)' },
+  promoCopy: { flex: 1, zIndex: 1, alignItems: 'flex-end' },
+  promoBrand: { color: '#d4e8fa', fontSize: 10, fontWeight: '900', letterSpacing: 2 },
+  promoTitle: { color: '#ffffff', fontSize: 19, fontWeight: '900', textAlign: 'right', marginTop: 5 },
+  promoText: { color: '#edf5fc', fontSize: 12, lineHeight: 18, textAlign: 'right', marginTop: 3 },
+  promoCta: { backgroundColor: '#ffffff', borderRadius: 7, paddingHorizontal: 12, paddingVertical: 7, marginTop: 8, alignSelf: 'flex-start' },
+  promoCtaText: { color: '#16578d', fontWeight: '900', fontSize: 12 },
+  sectionHeading: { paddingTop: 9, paddingBottom: 7, flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center' },
   recent: { color: '#888888', fontSize: 11, paddingHorizontal: 14 },
   empty: { color: '#777777', textAlign: 'center', padding: 25, fontSize: 14 },
 });
