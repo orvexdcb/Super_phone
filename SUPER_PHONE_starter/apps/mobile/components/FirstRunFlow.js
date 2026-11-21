@@ -1,82 +1,302 @@
-import React, {useEffect,useState} from 'react';
-import {Image,Pressable,ScrollView,StyleSheet,Text,View,ActivityIndicator} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Image, Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {StatusBar} from 'expo-status-bar';
-import {COLORS,GOVERNORATES,IRAQ_DISTRICTS} from '../lib/constants';
+import { StatusBar } from 'expo-status-bar';
+import { COLORS, GOVERNORATES, IRAQ_DISTRICTS } from '../lib/constants';
 import { governorateLabel, districtLabel } from '../lib/i18n';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../lib/AuthContext';
 import * as Location from 'expo-location';
-const KEY='superphone:first-run:v1';
-const T={
-ar:{language:'اختر اللغة',place:'أين تسكن؟',governorate:'المحافظة',area:'المدينة / المنطقة',gps:'تحديد موقعي',next:'التالي',skip:'تخطي',start:'ابدأ الاستخدام',intro:['زر بيع هاتفك يتيح لك عرض جهازك للبيع مع الصور والسعر.','زر البحث يساعدك في العثور على الجهاز الذي تريده.','المفضلة تحفظ الأجهزة التي تريد العودة إليها.','الأزرار الرئيسية موجودة في الشريط السفلي.'],hint:'يمكنك السماح بالوصول للموقع أو اختيار المنطقة يدوياً.',located:'تم تحديد المحافظة:'},
-en:{language:'Choose your language',place:'Where do you live?',governorate:'Governorate',area:'City / area',gps:'Use my location',next:'Next',skip:'Skip',start:'Start using the app',intro:['Sell your phone lets you publish your device with photos and a price.','Search helps you find the device you need.','Favorites saves devices for later.','Main actions are available in the bottom navigation.'],hint:'You can allow location access or choose your area manually.',located:'Detected governorate:'},
-ku:{language:'زمان هەڵبژێرە',place:'لە کوێ دەژیت؟',governorate:'پارێزگا',area:'شار / ناوچە',gps:'شوێنەکەم دیاری بکە',next:'دواتر',skip:'تێپەڕاندن',start:'دەستپێبکە',intro:['فرۆشتنی مۆبایل بۆ بڵاوکردنەوەی ئامێرەکەتە.','گەڕان بۆ دۆزینەوەی ئامێری دڵخوازە.','دڵخوازەکان ئامێرەکانت دەپارێزێت.','دوگمە سەرەکییەکان لە خوارەوەی شاشەکەن.'],hint:'دەتوانیت مۆڵەتی شوێن بدەیت یان ناوچەکە بە دەستی هەڵبژێریت.',located:'پارێزگای دیاریکراو:'}
+
+const KEY = 'superphone:first-run:v1';
+const TIPS_KEY = 'superphone:reference-tour:v1';
+const T = {
+  ar: {
+    language: 'اختر اللغة', place: 'أين تسكن؟', governorate: 'المحافظة', area: 'المدينة / المنطقة',
+    gps: 'تحديد موقعي', next: 'التالي', start: 'ابدأ الاستخدام', terms: 'Terms & Conditions',
+    tipTitle: ['بيع جهازك', 'بحث سهل ودقيق'],
+    tipBody: ['قم بعرض هاتفك بسهولة في تطبيق SUPER PHONE مع الصور والسعر والمواصفات.', 'حدد نوع الجهاز والعلامة التجارية والحالة والسعر والمزيد للعثور على ما تريد.'],
+    skip: 'تخطي', finish: 'ابدأ الاستخدام', hint: 'اختر المحافظة والمدينة أو حدد موقعك للمساعدة في الاختيار.',
+    located: 'تم تحديد المحافظة:'
+  },
+  en: {
+    language: 'Choose your language', place: 'Where do you live?', governorate: 'Governorate', area: 'City / area',
+    gps: 'Use my location', next: 'Next', start: 'Start using the app', terms: 'Terms & Conditions',
+    tipTitle: ['Sell your device', 'Easy and accurate search'],
+    tipBody: ['List your phone easily on SUPER PHONE with photos, price and specifications.', 'Choose a device type, brand, condition, price and more to find what you need.'],
+    skip: 'Skip', finish: 'Start using the app', hint: 'Choose your governorate and city, or use your location to help select them.',
+    located: 'Detected governorate:'
+  },
+  ku: {
+    language: 'زمان هەڵبژێرە', place: 'لە کوێ دەژیت؟', governorate: 'پارێزگا', area: 'شار / ناوچە',
+    gps: 'شوێنەکەم دیاری بکە', next: 'دواتر', start: 'دەستپێبکە', terms: 'Terms & Conditions',
+    tipTitle: ['ئامێرەکەت بفرۆشە', 'گەڕانی ئاسان و ورد'],
+    tipBody: ['مۆبایلەکەت بە وێنە و نرخ و تایبەتمەندییەکان لە SUPER PHONE بڵاو بکەرەوە.', 'جۆری ئامێر و براند و دۆخ و نرخ هەڵبژێرە بۆ دۆزینەوەی داواکراو.'],
+    skip: 'تێپەڕاندن', finish: 'دەستپێبکە', hint: 'پارێزگا و شار هەڵبژێرە یان شوێنی خۆت دیاری بکە.',
+    located: 'پارێزگای دیاریکراو:'
+  }
 };
-export default function FirstRunFlow({children,onComplete}){
- const {user}=useAuth();
- const [loading,setLoading]=useState(true),[done,setDone]=useState(false),[step,setStep]=useState(0),[lang,setLang]=useState('ar'),[gov,setGov]=useState(''),[area,setArea]=useState(''),[gps,setGps]=useState('');
- useEffect(()=>{AsyncStorage.getItem(KEY).then(raw=>{if(raw){try{const saved=JSON.parse(raw);setLang(['ar','en','ku'].includes(saved.lang)?saved.lang:'ar');setDone(true)}catch{}}}).finally(()=>setLoading(false))},[]);
- useEffect(()=>{if(!done||!user?.id)return;AsyncStorage.getItem(KEY).then(async raw=>{if(!raw)return;try{const saved=JSON.parse(raw);if(!saved.governorate)return;const {data:profile}=await supabase.from('profiles').select('governorate').eq('id',user.id).maybeSingle();if(profile&&!profile.governorate)await supabase.from('profiles').update({governorate:saved.governorate,city:saved.area||null}).eq('id',user.id)}catch{}})},[done,user?.id]);
- if(loading)return <View style={s.splash}><StatusBar style="dark"/><ActivityIndicator color="#e84b53"/></View>;
- if(done)return children;
- const t=T[lang];
- const finish=async()=>{await AsyncStorage.setItem(KEY,JSON.stringify({lang,governorate:gov,area,completed:true}));try{const {data:{user}}=await supabase.auth.getUser();if(user&&gov)await supabase.from('profiles').update({governorate:gov,city:area.trim()||null}).eq('id',user.id)}catch{}setDone(true);onComplete?.(lang)};
- const requestLocation=async()=>{
-  try{
-   const permission=await Location.requestForegroundPermissionsAsync();
-   if(!permission.granted){setGps(t.hint);return;}
-   const position=await Location.getCurrentPositionAsync({accuracy:Location.Accuracy.Balanced});
-   const places=await Location.reverseGeocodeAsync({latitude:position.coords.latitude,longitude:position.coords.longitude});
-   const place=places?.[0]||{};
-   const candidates=[place.region,place.subregion,place.city,place.district,place.name].filter(Boolean).map(v=>String(v).toLocaleLowerCase().trim());
-   const normalize=(value)=>String(value||'').toLocaleLowerCase().replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/\s+/g,' ').trim();
-   const gov=GOVERNORATES.find(g=>{
-    const aliases=[g,governorateLabel('en',g),governorateLabel('ku',g)].map(normalize);
-    return candidates.some(candidate=>aliases.some(alias=>alias&&normalize(candidate).includes(alias)));
-   });
-   if(!gov){setGps(t.hint);return;}
-   const districts=IRAQ_DISTRICTS[gov]||[];
-   const district=districts.find(d=>{
-    const aliases=[d,districtLabel('en',d),districtLabel('ku',d)].map(normalize);
-    return candidates.some(candidate=>aliases.some(alias=>alias&&normalize(candidate).includes(alias)));
-   });
-   setGov(gov);
-   setArea(district||'');
-   setGps(t.located+' '+governorateLabel(lang,gov)+(district?' · '+districtLabel(lang,district):''));
-  }catch{setGps(t.hint)}
- };
- return <View style={s.root}><StatusBar style="dark"/>
- {step===0?<View style={s.splash}><Image source={require('../assets/icon.png')} style={s.logo} resizeMode="contain"/><Text style={s.brand}>SUPER PHONE</Text><Text style={s.welcome}>سوق الهواتف والأجهزة الذكية</Text><Pressable onPress={()=>setStep(1)} style={s.btn}><Text style={s.btnText}>{t.next}</Text></Pressable></View>:
- step===1?<View style={s.panel}><Text style={s.title}>{t.language}</Text>{[['en','English'],['ar','عربي'],['ku','کوردی']].map(([v,label])=><Pressable key={v} onPress={()=>setLang(v)} style={[s.option,lang===v&&s.selected]}><Text style={s.optionText}>{label}</Text></Pressable>)}<Pressable style={s.btn} onPress={()=>setStep(2)}><Text style={s.btnText}>{t.next}</Text></Pressable></View>:
- step===2?<ScrollView contentContainerStyle={s.locationPanel}><Text style={s.title}>{t.place}</Text><Text style={s.label}>{t.governorate}</Text><ScrollView style={s.govList}>{GOVERNORATES.map(g=><Pressable key={g} onPress={()=>{setGov(g);setArea('')}} style={[s.option,s.govOption,gov===g&&s.selected]}><Text style={s.optionText}>{governorateLabel(lang,g)}</Text></Pressable>)}</ScrollView><Text style={s.label}>{t.area}</Text><View style={s.areaList}>{(IRAQ_DISTRICTS[gov]||[]).map(d=><Pressable key={d} onPress={()=>setArea(d)} style={[s.option,s.areaOption,area===d&&s.selected]}><Text style={s.optionText}>{districtLabel(lang,d)}</Text></Pressable>)}</View><Pressable style={s.locationButton} onPress={requestLocation}><Text style={s.locationButtonText}>⌖  {t.gps}</Text></Pressable><Text style={s.hint}>{gps}</Text><Pressable style={[s.btn,(!gov||!area.trim())&&s.disabled]} disabled={!gov||!area.trim()} onPress={()=>setStep(3)}><Text style={s.btnText}>{t.next}</Text></Pressable></ScrollView>:
- <View style={s.panel}><Text style={s.title}>SUPER PHONE</Text><Text style={s.label}>{t.intro[step-3]}</Text><View style={s.row}><Pressable onPress={finish} style={s.skip}><Text style={s.skipText}>{t.skip}</Text></Pressable><Pressable style={s.btn} onPress={()=>step===6?finish():setStep(step+1)}><Text style={s.btnText}>{step===6?t.start:t.next}</Text></Pressable></View></View>}
- </View>;
+
+export default function FirstRunFlow({ children, onComplete }) {
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [done, setDone] = useState(false);
+  const [step, setStep] = useState(0);
+  const [lang, setLang] = useState('ar');
+  const [accepted, setAccepted] = useState(true);
+  const [gov, setGov] = useState('بغداد');
+  const [area, setArea] = useState('بغداد');
+  const [showGovernorates, setShowGovernorates] = useState(false);
+  const [gps, setGps] = useState('');
+  const [tutorialStep, setTutorialStep] = useState(-1);
+
+  useEffect(() => {
+    AsyncStorage.getItem(KEY).then((raw) => {
+      if (!raw) return;
+      try {
+        const saved = JSON.parse(raw);
+        setLang(['ar', 'en', 'ku'].includes(saved.lang) ? saved.lang : 'ar');
+        setGov(saved.governorate || 'بغداد');
+        setArea(saved.area || 'بغداد');
+        setDone(true);
+      } catch {}
+    }).finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    if (!done) return;
+    AsyncStorage.getItem(TIPS_KEY).then((raw) => {
+      if (!raw) setTutorialStep(0);
+    }).catch(() => setTutorialStep(0));
+  }, [done]);
+
+  useEffect(() => {
+    if (!done || !user?.id) return;
+    AsyncStorage.getItem(KEY).then(async (raw) => {
+      if (!raw) return;
+      try {
+        const saved = JSON.parse(raw);
+        if (!saved.governorate) return;
+        const { data: profile } = await supabase.from('profiles').select('governorate').eq('id', user.id).maybeSingle();
+        if (profile && !profile.governorate) {
+          await supabase.from('profiles').update({ governorate: saved.governorate, city: saved.area || null }).eq('id', user.id);
+        }
+      } catch {}
+    });
+  }, [done, user?.id]);
+
+  const finish = async () => {
+    const saved = { lang, governorate: gov, area, completed: true };
+    await AsyncStorage.setItem(KEY, JSON.stringify(saved));
+    try {
+      const { data: authData } = await supabase.auth.getUser();
+      if (authData?.user && gov) {
+        await supabase.from('profiles').update({ governorate: gov, city: area || null }).eq('id', authData.user.id);
+      }
+    } catch {}
+    setDone(true);
+    setTutorialStep(0);
+    onComplete?.(lang);
+  };
+
+  const finishTutorial = async () => {
+    await AsyncStorage.setItem(TIPS_KEY, 'completed');
+    setTutorialStep(-1);
+  };
+
+  const nextTutorial = () => {
+    if (tutorialStep === 0) setTutorialStep(1);
+    else finishTutorial();
+  };
+
+  const requestLocation = async () => {
+    try {
+      const permission = await Location.requestForegroundPermissionsAsync();
+      if (!permission.granted) { setGps(t('hint')); return; }
+      const position = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
+      const places = await Location.reverseGeocodeAsync({ latitude: position.coords.latitude, longitude: position.coords.longitude });
+      const place = places?.[0] || {};
+      const candidates = [place.region, place.subregion, place.city, place.district, place.name].filter(Boolean).map((v) => String(v).toLocaleLowerCase().trim());
+      const normalize = (value) => String(value || '').toLocaleLowerCase().replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/\s+/g, ' ').trim();
+      const matchedGov = GOVERNORATES.find((g) => {
+        const aliases = [g, governorateLabel('en', g), governorateLabel('ku', g)].map(normalize);
+        return candidates.some((candidate) => aliases.some((alias) => alias && normalize(candidate).includes(alias)));
+      });
+      if (!matchedGov) { setGps(t('hint')); return; }
+      const districts = IRAQ_DISTRICTS[matchedGov] || [];
+      const matchedArea = districts.find((d) => {
+        const aliases = [d, districtLabel('en', d), districtLabel('ku', d)].map(normalize);
+        return candidates.some((candidate) => aliases.some((alias) => alias && normalize(candidate).includes(alias)));
+      });
+      setGov(matchedGov);
+      setArea(matchedArea || '');
+      setGps(t('located') + ' ' + governorateLabel(lang, matchedGov) + (matchedArea ? ' · ' + districtLabel(lang, matchedArea) : ''));
+    } catch { setGps(t('hint')); }
+  };
+
+  if (loading) return <View style={s.splash}><StatusBar style="dark" /><ActivityIndicator color="#e84b53" /></View>;
+  if (done) {
+    return (
+      <View style={s.appRoot}>
+        {children}
+        {tutorialStep >= 0 ? (
+          <View style={s.tourRoot}>
+            <View style={s.tourShade} />
+            <View style={[s.tourFocus, tutorialStep === 0 ? s.tourSellFocus : s.tourSearchFocus]} />
+            <View style={s.tourBubble}>
+              <View style={[s.tourPointer, tutorialStep === 0 ? s.pointerSell : s.pointerSearch]} />
+              <Text style={s.tourTitle}>{T[lang].tipTitle[tutorialStep]}</Text>
+              <Text style={s.tourText}>{T[lang].tipBody[tutorialStep]}</Text>
+              <View style={s.tourActions}>
+                <Pressable onPress={finishTutorial} style={s.tourSkip}><Text style={s.tourSkipText}>{T[lang].skip}</Text></Pressable>
+                <Pressable onPress={nextTutorial} style={s.tourNext}><Text style={s.tourNextText}>{tutorialStep === 0 ? T[lang].next : T[lang].finish}</Text></Pressable>
+              </View>
+            </View>
+          </View>
+        ) : null}
+      </View>
+    );
+  }
+
+  const t = T[lang];
+  const districts = IRAQ_DISTRICTS[gov] || [];
+
+  return (
+    <View style={s.root}>
+      <StatusBar style="dark" />
+      {step === 0 ? (
+        <View style={s.splash}>
+          <Image source={require('../assets/icon.png')} style={s.logo} resizeMode="contain" />
+          <Text style={s.brand}>SUPER PHONE</Text>
+          <Text style={s.welcome}>سوق الهواتف والأجهزة الذكية</Text>
+          <View style={s.splashDots}><View style={s.dotActive} /><View style={s.dot} /><View style={s.dot} /></View>
+          <Pressable onPress={() => setStep(1)} style={s.startButton}><Text style={s.startText}>{t.start}  →</Text></Pressable>
+        </View>
+      ) : step === 1 ? (
+        <View style={s.languagePage}>
+          <View style={s.languageSpacer} />
+          {[
+            ['en', 'English'],
+            ['ar', 'عربي'],
+            ['ku', 'کوردی']
+          ].map(([value, label]) => (
+            <Pressable key={value} onPress={() => { if (accepted) { setLang(value); setStep(2); } else setLang(value); }}
+              style={[s.languageOption, lang === value && s.languageSelected]}>
+              <Text style={s.languageText}>{label}</Text>
+            </Pressable>
+          ))}
+          <View style={s.languageSpacer} />
+          <Pressable style={s.termsRow} onPress={() => setAccepted((v) => !v)}>
+            <Text style={s.termsText}>{t.terms}</Text>
+            <View style={[s.checkbox, accepted && s.checkboxOn]}>{accepted ? <Text style={s.checkmark}>✓</Text> : null}</View>
+          </Pressable>
+        </View>
+      ) : (
+        <View style={s.locationPage}>
+          <Text style={s.locationTitle}>{t.place}</Text>
+          <ScrollView style={s.locationScroll} contentContainerStyle={s.locationContent} showsVerticalScrollIndicator={false}>
+            <Text style={s.locationLabel}>{t.governorate}</Text>
+            <Pressable style={s.dropdown} onPress={() => setShowGovernorates(true)}>
+              <Text style={s.dropdownValue}>{governorateLabel(lang, gov)}</Text>
+              <Text style={s.dropdownArrow}>⌄</Text>
+            </Pressable>
+            <Text style={s.locationLabel}>{t.area}</Text>
+            <View style={s.districtList}>
+              {districts.map((district) => (
+                <Pressable key={district} onPress={() => setArea(district)} style={[s.districtButton, area === district && s.districtSelected]}>
+                  <Text style={s.districtText}>{districtLabel(lang, district)}</Text>
+                </Pressable>
+              ))}
+            </View>
+            <Pressable style={s.gpsButton} onPress={requestLocation}><Text style={s.gpsText}>⌖  {t.gps}</Text></Pressable>
+            <Text style={s.gpsHint}>{gps || t.hint}</Text>
+            <Pressable style={[s.continueButton, (!gov || !area) && s.continueDisabled]} disabled={!gov || !area} onPress={finish}>
+              <Text style={s.continueText}>{t.next}</Text>
+            </Pressable>
+          </ScrollView>
+          <Modal visible={showGovernorates} transparent animationType="fade" onRequestClose={() => setShowGovernorates(false)}>
+            <View style={s.modalShade}>
+              <View style={s.modalCard}>
+                <Text style={s.modalTitle}>{t.governorate}</Text>
+                <ScrollView style={s.modalList}>
+                  {GOVERNORATES.map((item) => (
+                    <Pressable key={item} style={s.modalOption} onPress={() => { setGov(item); setArea(''); setShowGovernorates(false); }}>
+                      <Text style={s.modalOptionText}>{governorateLabel(lang, item)}</Text>
+                    </Pressable>
+                  ))}
+                </ScrollView>
+                <Pressable onPress={() => setShowGovernorates(false)} style={s.modalClose}><Text style={s.modalCloseText}>{t.next}</Text></Pressable>
+              </View>
+            </View>
+          </Modal>
+        </View>
+      )}
+    </View>
+  );
 }
-const s=StyleSheet.create({
- root:{flex:1,backgroundColor:'#ffffff',justifyContent:'center',padding:22},
- splash:{flex:1,backgroundColor:'#ffffff',alignItems:'center',justifyContent:'center'},
- logo:{width:170,height:170,marginBottom:14},
- brand:{color:'#303b54',fontSize:27,fontWeight:'900',letterSpacing:2},
- welcome:{color:'#777777',fontSize:13,marginTop:7},
- btn:{backgroundColor:'#e84b53',borderRadius:11,padding:14,alignItems:'center',flex:1,marginTop:16,minHeight:50,justifyContent:'center'},
- btnText:{color:'#ffffff',fontWeight:'900',fontSize:16},
- panel:{backgroundColor:'#ffffff',borderRadius:18,borderWidth:1,borderColor:'#e4e4e4',padding:20,gap:12},
- locationPanel:{backgroundColor:'#ffffff',padding:5,paddingBottom:28,gap:10},
- title:{color:'#303030',fontWeight:'900',fontSize:23,textAlign:'center',marginBottom:8},
- label:{color:'#555555',textAlign:'right',fontSize:17,fontWeight:'700',marginTop:3},
- option:{padding:14,borderRadius:12,borderWidth:1,borderColor:'#e0e0e0',backgroundColor:'#ffffff',alignItems:'center',justifyContent:'center'},
- selected:{borderColor:'#e84b53',backgroundColor:'#fff7f7'},
- optionText:{color:'#444444',textAlign:'center',fontSize:17,fontWeight:'600'},
- govList:{maxHeight:165},
- govOption:{marginBottom:7},
- areaList:{flexDirection:'column',gap:7},
- areaOption:{width:'100%',minHeight:54},
- locationButton:{borderWidth:1,borderColor:'#e84b53',padding:12,borderRadius:10,alignItems:'center',marginTop:5},
- locationButtonText:{color:'#e84b53',fontWeight:'800',fontSize:15},
- hint:{color:'#888888',textAlign:'right',fontSize:12},
- disabled:{opacity:0.45},
- row:{flexDirection:'row',gap:10,alignItems:'stretch'},
- skip:{padding:14,justifyContent:'center'},
- skipText:{color:'#e84b53',fontWeight:'800'}
+
+const s = StyleSheet.create({
+  appRoot: { flex: 1, backgroundColor: '#ffffff' },
+  root: { flex: 1, backgroundColor: '#ffffff' },
+  splash: { flex: 1, backgroundColor: '#ffffff', alignItems: 'center', justifyContent: 'center' },
+  logo: { width: 174, height: 174, marginBottom: 10 },
+  brand: { color: '#303b54', fontSize: 27, fontWeight: '900', letterSpacing: 2 },
+  welcome: { color: '#888888', fontSize: 13, marginTop: 7 },
+  splashDots: { flexDirection: 'row', gap: 6, marginTop: 38 },
+  dotActive: { width: 24, height: 3, borderRadius: 2, backgroundColor: '#e84b53' },
+  dot: { width: 6, height: 3, borderRadius: 2, backgroundColor: '#d5d5d5' },
+  startButton: { marginTop: 30, paddingHorizontal: 25, paddingVertical: 13, backgroundColor: '#e84b53', borderRadius: 9 },
+  startText: { color: '#ffffff', fontSize: 15, fontWeight: '900' },
+  languagePage: { flex: 1, backgroundColor: '#ffffff', paddingHorizontal: 38, paddingTop: 90, paddingBottom: 90 },
+  languageSpacer: { flex: 1 },
+  languageOption: { height: 72, borderWidth: 1.4, borderColor: '#dddddd', borderRadius: 16, alignItems: 'center', justifyContent: 'center', marginBottom: 12, backgroundColor: '#ffffff' },
+  languageSelected: { borderColor: '#dddddd' },
+  languageText: { color: '#444444', fontSize: 21, fontWeight: '600' },
+  termsRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 24, minHeight: 42 },
+  termsText: { color: '#399ad5', fontSize: 15 },
+  checkbox: { width: 20, height: 20, borderWidth: 1.5, borderColor: '#399ad5', alignItems: 'center', justifyContent: 'center' },
+  checkboxOn: { backgroundColor: '#399ad5' },
+  checkmark: { color: '#ffffff', fontSize: 14, fontWeight: '900', lineHeight: 17 },
+  locationPage: { flex: 1, backgroundColor: '#ffffff' },
+  locationTitle: { color: '#111111', fontSize: 23, fontWeight: '900', textAlign: 'center', paddingTop: 26, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: '#ededed' },
+  locationScroll: { flex: 1 },
+  locationContent: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 28, gap: 10 },
+  locationLabel: { color: '#555555', fontSize: 19, fontWeight: '700', textAlign: 'right', marginTop: 3 },
+  dropdown: { minHeight: 58, borderWidth: 1.3, borderColor: '#dedede', borderRadius: 13, paddingHorizontal: 17, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  dropdownValue: { color: '#454545', fontSize: 20, fontWeight: '600' },
+  dropdownArrow: { color: '#555555', fontSize: 25 },
+  districtList: { gap: 9 },
+  districtButton: { minHeight: 58, borderWidth: 1.3, borderColor: '#dedede', borderRadius: 13, backgroundColor: '#ffffff', alignItems: 'center', justifyContent: 'center' },
+  districtSelected: { borderColor: '#e84b53', backgroundColor: '#fff8f8' },
+  districtText: { color: '#444444', fontSize: 19, fontWeight: '600' },
+  gpsButton: { marginTop: 8, minHeight: 48, borderWidth: 1.2, borderColor: '#e84b53', borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+  gpsText: { color: '#e84b53', fontSize: 14, fontWeight: '800' },
+  gpsHint: { color: '#888888', fontSize: 12, textAlign: 'right' },
+  continueButton: { backgroundColor: '#e84b53', borderRadius: 10, minHeight: 52, alignItems: 'center', justifyContent: 'center', marginTop: 7 },
+  continueDisabled: { opacity: 0.45 },
+  continueText: { color: '#ffffff', fontSize: 16, fontWeight: '900' },
+  modalShade: { flex: 1, backgroundColor: 'rgba(0,0,0,0.45)', justifyContent: 'center', padding: 22 },
+  modalCard: { maxHeight: '82%', backgroundColor: '#ffffff', borderRadius: 16, padding: 16 },
+  modalTitle: { color: '#333333', fontSize: 20, fontWeight: '900', textAlign: 'center', marginBottom: 12 },
+  modalList: { maxHeight: 500 },
+  modalOption: { minHeight: 50, borderBottomWidth: 1, borderBottomColor: '#eeeeee', justifyContent: 'center', alignItems: 'center' },
+  modalOptionText: { color: '#444444', fontSize: 17, fontWeight: '600' },
+  modalClose: { backgroundColor: '#e84b53', borderRadius: 9, alignItems: 'center', paddingVertical: 11, marginTop: 12 },
+  modalCloseText: { color: '#ffffff', fontWeight: '900' },
+  tourRoot: { ...StyleSheet.absoluteFillObject, zIndex: 1000, justifyContent: 'flex-start' },
+  tourShade: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.58)' },
+  tourFocus: { position: 'absolute', top: 73, height: 48, width: 126, backgroundColor: '#ffffff', borderWidth: 2, borderColor: '#ffffff', borderRadius: 8 },
+  tourSellFocus: { right: '27%' },
+  tourSearchFocus: { left: '4%' },
+  tourBubble: { position: 'absolute', top: 132, left: 16, right: 16, minHeight: 104, paddingHorizontal: 15, paddingVertical: 13, borderRadius: 12, backgroundColor: '#e8757b' },
+  tourPointer: { position: 'absolute', top: -10, width: 0, height: 0, borderLeftWidth: 11, borderRightWidth: 11, borderBottomWidth: 11, borderLeftColor: 'transparent', borderRightColor: 'transparent', borderBottomColor: '#e8757b' },
+  pointerSell: { right: '30%' },
+  pointerSearch: { left: '13%' },
+  tourTitle: { color: '#ffffff', textAlign: 'center', fontSize: 18, fontWeight: '900' },
+  tourText: { color: '#ffffff', textAlign: 'center', fontSize: 14, lineHeight: 21, marginTop: 4 },
+  tourActions: { flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center', marginTop: 9 },
+  tourSkip: { padding: 7 },
+  tourSkipText: { color: '#ffffff', fontWeight: '700' },
+  tourNext: { backgroundColor: '#ffffff', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 7 },
+  tourNextText: { color: '#e84b53', fontWeight: '900' }
 });
