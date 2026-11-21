@@ -18,7 +18,20 @@ import { tr } from './lib/i18n';
 
 const TAB_LABELS = { ar: ['حسابي','المتجر','إرشاد','البداية'], en: ['Account','Store','Guide','Home'], ku: ['هەژمار','فرۆشگا','ڕێنمایی','سەرەکی'] };
 const TAB_KEYS = ['account','store','guide','home'];
-const TAB_ICONS = ['○','▣','◎','⌂'];
+function TabIcon({ name, active }) {
+  const color = active ? '#e84b53' : '#555555';
+  if (name === 'account') {
+    return <View style={iconStyles.frame}><View style={[iconStyles.personHead,{borderColor:color}]} /><View style={[iconStyles.personBody,{borderColor:color}]} /></View>;
+  }
+  if (name === 'store') {
+    return <View style={iconStyles.frame}><View style={[iconStyles.bagHandle,{borderColor:color}]} /><View style={[iconStyles.bagBody,{borderColor:color}]} /></View>;
+  }
+  if (name === 'guide') {
+    return <View style={iconStyles.frame}><View style={[iconStyles.guideRing,{borderColor:color,transform:[{rotate:'-42deg'}]}]} /><View style={[iconStyles.guideRing,{borderColor:color,transform:[{rotate:'42deg'}]}]} /></View>;
+  }
+  return <View style={iconStyles.frame}><Text style={{color,fontSize:28,lineHeight:29}}>⌂</Text></View>;
+}
+
 
 function Shell() {
   const { user } = useAuth();
@@ -72,9 +85,9 @@ function Shell() {
         <View style={{ flex: 1 }}>{body}</View>
         {!route && (
           <View style={styles.tabs}>
-            {TAB_KEYS.map((key, index) => ({ key, icon: TAB_ICONS[index], label: (TAB_LABELS[lang] || TAB_LABELS.ar)[index] })).map((item) => (
+            {TAB_KEYS.map((key, index) => ({ key, label: (TAB_LABELS[lang] || TAB_LABELS.ar)[index] })).map((item) => (
               <Pressable key={item.key} style={styles.tab} onPress={() => { setRoute(null); setTab(item.key); }}>
-                <Text style={[styles.tabIcon, tab === item.key && styles.tabOn]}>{item.icon}</Text>
+                <TabIcon name={item.key} active={tab === item.key} />
                 <Text style={[styles.tabText, tab === item.key && styles.tabOn]}>{item.label}</Text>
               </Pressable>
             ))}
@@ -90,14 +103,23 @@ export default function App() {
   return <AuthProvider><Shell /></AuthProvider>;
 }
 
+const iconStyles = StyleSheet.create({
+  frame: { width: 30, height: 29, alignItems: 'center', justifyContent: 'center', position: 'relative' },
+  personHead: { width: 10, height: 10, borderRadius: 6, borderWidth: 1.5, position: 'absolute', top: 1 },
+  personBody: { width: 21, height: 12, borderWidth: 1.5, borderBottomWidth: 0, borderTopLeftRadius: 12, borderTopRightRadius: 12, position: 'absolute', bottom: 1 },
+  bagHandle: { width: 10, height: 7, borderWidth: 1.5, borderBottomWidth: 0, borderTopLeftRadius: 6, borderTopRightRadius: 6, position: 'absolute', top: 1 },
+  bagBody: { width: 22, height: 17, borderWidth: 1.5, borderRadius: 4, position: 'absolute', bottom: 0 },
+  guideRing: { width: 24, height: 12, borderWidth: 1.5, borderRadius: 12, position: 'absolute' }
+});
+
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#ffffff', paddingTop: Platform.OS === 'android' ? (RNStatusBar.currentHeight || 0) : 0 },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 18, paddingVertical: 13, backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#eeeeee' },
   brand: { fontSize: 17, fontWeight: '900', letterSpacing: 1.4, color: '#e84b53' },
   back: { color: '#e84b53', fontSize: 16 },
-  tabs: { flexDirection: 'row-reverse', borderTopWidth: 1, borderTopColor: '#e9e9e9', backgroundColor: '#ffffff', paddingBottom: Platform.OS === 'ios' ? 8 : 2 },
-  tab: { flex: 1, paddingVertical: 9, alignItems: 'center', gap: 3 },
+  tabs: { flexDirection: 'row-reverse', borderTopWidth: 1, borderTopColor: '#e9e9e9', backgroundColor: '#ffffff', paddingTop: 5, paddingBottom: Platform.OS === 'ios' ? 8 : 3 },
+  tab: { flex: 1, paddingVertical: 5, alignItems: 'center', gap: 2 },
   tabIcon: { color: '#555555', fontSize: 23, lineHeight: 25 },
-  tabText: { color: '#555555', fontSize: 11 },
+  tabText: { color: '#555555', fontSize: 12 },
   tabOn: { color: '#e84b53', fontWeight: '900' }
 });
