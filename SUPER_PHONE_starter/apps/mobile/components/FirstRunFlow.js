@@ -44,6 +44,7 @@ export default function FirstRunFlow({ children, onComplete }) {
   const [step, setStep] = useState(0);
   const [lang, setLang] = useState('ar');
   const [accepted, setAccepted] = useState(true);
+  const [permissionPrompted, setPermissionPrompted] = useState(false);
   const [gov, setGov] = useState('بغداد');
   const [area, setArea] = useState('بغداد');
   const [showGovernorates, setShowGovernorates] = useState(false);
@@ -68,6 +69,12 @@ export default function FirstRunFlow({ children, onComplete }) {
     const splashTimer = setTimeout(() => setStep(1), 900);
     return () => clearTimeout(splashTimer);
   }, [loading, done, step]);
+
+  useEffect(() => {
+    if (loading || done || step !== 1 || permissionPrompted) return;
+    setPermissionPrompted(true);
+    Location.requestForegroundPermissionsAsync().catch(() => {});
+  }, [loading, done, step, permissionPrompted]);
 
   useEffect(() => {
     if (!done) return;
