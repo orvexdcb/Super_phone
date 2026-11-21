@@ -64,6 +64,12 @@ export default function FirstRunFlow({ children, onComplete }) {
   }, []);
 
   useEffect(() => {
+    if (loading || done || step !== 0) return;
+    const splashTimer = setTimeout(() => setStep(1), 900);
+    return () => clearTimeout(splashTimer);
+  }, [loading, done, step]);
+
+  useEffect(() => {
     if (!done) return;
     AsyncStorage.getItem(TIPS_KEY).then((raw) => {
       if (!raw) setTutorialStep(0);
@@ -169,8 +175,6 @@ export default function FirstRunFlow({ children, onComplete }) {
           <Image source={require('../assets/icon.png')} style={s.logo} resizeMode="contain" />
           <Text style={s.brand}>SUPER PHONE</Text>
           <Text style={s.welcome}>سوق الهواتف والأجهزة الذكية</Text>
-          <View style={s.splashDots}><View style={s.dotActive} /><View style={s.dot} /><View style={s.dot} /></View>
-          <Pressable onPress={() => setStep(1)} style={s.startButton}><Text style={s.startText}>{t.start}  →</Text></Pressable>
         </View>
       ) : step === 1 ? (
         <View style={s.languagePage}>
@@ -186,7 +190,7 @@ export default function FirstRunFlow({ children, onComplete }) {
             </Pressable>
           ))}
           <View style={s.languageSpacer} />
-          <Pressable style={s.termsRow} onPress={() => setAccepted((v) => !v)}>
+          <Pressable style={s.termsRow} onPress={() => setAccepted((v) => { const next = !v; if (next) setStep(2); return next; })}>
             <Text style={s.termsText}>{t.terms}</Text>
             <View style={[s.checkbox, accepted && s.checkboxOn]}>{accepted ? <Text style={s.checkmark}>✓</Text> : null}</View>
           </Pressable>
@@ -285,7 +289,7 @@ const s = StyleSheet.create({
   modalCloseText: { color: '#ffffff', fontWeight: '900' },
   tourRoot: { ...StyleSheet.absoluteFillObject, zIndex: 1000, justifyContent: 'flex-start' },
   tourShade: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.58)' },
-  tourFocus: { position: 'absolute', top: 73, height: 48, width: 126, backgroundColor: '#ffffff', borderWidth: 2, borderColor: '#ffffff', borderRadius: 8 },
+  tourFocus: { position: 'absolute', top: 73, height: 48, width: 126, backgroundColor: 'transparent', borderWidth: 3, borderColor: '#ffffff', borderRadius: 8 },
   tourSellFocus: { right: '27%' },
   tourSearchFocus: { left: '4%' },
   tourBubble: { position: 'absolute', top: 132, left: 16, right: 16, minHeight: 104, paddingHorizontal: 15, paddingVertical: 13, borderRadius: 12, backgroundColor: '#e8757b' },
