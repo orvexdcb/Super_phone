@@ -64,7 +64,7 @@ function Shell() {
   else if (route?.name === 'detail') body = <DetailScreen lang={lang} id={route.id} onNeedLogin={goLogin} />;
   else if (route?.name === 'new' && user) body = <NewListingScreen lang={lang} onDone={() => { setRoute({ name: 'mine', posted: true }); setTab('account'); }} />;
   else if (route?.name === 'mine' && user) body = <MyListingsScreen lang={lang} onOpen={openDetail} posted={route.posted} />;
-  else if (tab === 'guide') body = <GuidanceScreen lang={lang} onBrowse={() => setTab('home')} />;
+  else if (tab === 'guide') body = <GuidanceScreen lang={lang} onBrowse={() => setTab('home')} onOpen={openDetail} />;
   else if (tab === 'store') body = <StoreScreen lang={lang} onOpen={openDetail}
     onSell={() => { if (user) { setTab('account'); setRoute({ name: 'new' }); } else setTab('account'); }}
     onFavorites={() => setRoute({ name: 'favorites' })} />;
