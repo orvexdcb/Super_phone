@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, FlatList, Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, FlatList, Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { supabase, imageUrl } from '../lib/supabase';
 import { COLORS, CONDITION_LABELS, GOVERNORATES, formatPrice } from '../lib/constants';
 import ListingCard from '../components/ListingCard';
 import Chip from '../components/Chip';
-import { conditionLabel, governorateLabel, categoryLabel } from '../lib/i18n';
+import { conditionLabel, governorateLabel } from '../lib/i18n';
 
 const PAGE = 20;
 const SELECT = 'id,title,price,currency,condition,governorate,city,created_at,brand,model,categories!inner(slug,name_ar),listing_images(storage_path,sort_order),listing_specs(spec_key,spec_value)';
@@ -21,7 +21,6 @@ function firstImage(listing) {
 
 export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar', fixedCategorySlug = '' }) {
   const t = COPY[lang] || COPY.ar;
-  const [categories, setCategories] = useState([]);
   const [draft, setDraft] = useState({ ...EMPTY, category: fixedCategorySlug });
   const [applied, setApplied] = useState({ ...EMPTY, category: fixedCategorySlug });
   const [showFilters, setShowFilters] = useState(false);
@@ -32,11 +31,6 @@ export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar',
   const [error, setError] = useState('');
   const pageRef = useRef(0);
   const reqRef = useRef(0);
-
-  useEffect(() => {
-    supabase.from('categories').select('slug,name_ar').eq('is_active', true).order('sort_order')
-      .then(({ data }) => setCategories(data || []));
-  }, []);
 
   const fetchPage = useCallback(async (page, f) => {
     let query = supabase.from('listings').select(SELECT).eq('status', 'active')
