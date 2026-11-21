@@ -14,7 +14,7 @@
       "package": "com.superphone.app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#0b1728"
+        "backgroundColor": "#ffffff"
       }
     },
     "plugins": [
@@ -40,14 +40,14 @@
       ]
     ],
     "splash": {
-      "backgroundColor": "#0b1728"
+      "backgroundColor": "#ffffff"
     },
     "androidStatusBar": {
-      "backgroundColor": "#0b1728",
+      "backgroundColor": "#ffffff",
       "barStyle": "light-content"
     },
     "androidNavigationBar": {
-      "backgroundColor": "#0b1728",
+      "backgroundColor": "#ffffff",
       "barStyle": "light-content"
     }
   }

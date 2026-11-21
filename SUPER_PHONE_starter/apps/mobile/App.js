@@ -16,9 +16,9 @@ import MyListingsScreen from './screens/MyListingsScreen';
 import FirstRunFlow from './components/FirstRunFlow';
 import { tr } from './lib/i18n';
 
-const TAB_LABELS = { ar: ['حسابي','المتجر','إرشاد','البداية'], en: ['Account','Store','Guide','Home'], ku: ['هەژمار','فرۆشگا','ڕێنمایی','سەرەکی'] };
-const TAB_KEYS = ['account','store','guide','home'];
-const TAB_ICONS = ['○','▣','◎','⌂'];
+const TAB_LABELS = { ar: ['الرئيسية','إرشاد','المتجر','إعلان','حسابي'], en: ['Home','Guide','Store','Post','Account'], ku: ['سەرەکی','ڕێنمایی','فرۆشگا','بڵاوکردنەوە','هەژمار'] };
+const TAB_KEYS = ['home','guide','store','new','account'];
+const TAB_ICONS = ['⌂','◇','▣','+','○'];
 
 function Shell() {
   const { user } = useAuth();
@@ -89,7 +89,7 @@ function Shell() {
           ))}
         </View>
       )}
-      <StatusBar style="light" />
+      <StatusBar style="dark" />
     </SafeAreaView>
     </FirstRunFlow>
   );
