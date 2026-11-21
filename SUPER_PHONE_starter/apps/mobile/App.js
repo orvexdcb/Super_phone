@@ -5,6 +5,8 @@ import { StatusBar } from 'expo-status-bar';
 import { AuthProvider, useAuth } from './lib/AuthContext';
 import { COLORS } from './lib/constants';
 import BrowseScreen from './screens/BrowseScreen';
+import StoreScreen from './screens/StoreScreen';
+import GuidanceScreen from './screens/GuidanceScreen';
 import DetailScreen from './screens/DetailScreen';
 import FavoritesScreen from './screens/FavoritesScreen';
 import AccountScreen from './screens/AccountScreen';
@@ -14,9 +16,9 @@ import MyListingsScreen from './screens/MyListingsScreen';
 import FirstRunFlow from './components/FirstRunFlow';
 import { tr } from './lib/i18n';
 
-const TAB_LABELS = { ar: ['الرئيسية','المفضلة','إعلان','إعلاناتي','حسابي'], en: ['Home','Favorites','Post','My listings','Account'], ku: ['سەرەکی','دڵخوازەکان','بڵاوکردنەوە','بڵاوکراوەکانم','هەژمار'] };
-const TAB_KEYS = ['home','favorites','new','mine','account'];
-const TAB_ICONS = ['⌂','♡','+','▤','○'];
+const TAB_LABELS = { ar: ['الرئيسية','إرشاد','المتجر','إعلان','حسابي'], en: ['Home','Guide','Store','Post','Account'], ku: ['سەرەکی','ڕێنمایی','فرۆشگا','بڵاوکردنەوە','هەژمار'] };
+const TAB_KEYS = ['home','guide','store','new','account'];
+const TAB_ICONS = ['⌂','◇','▣','+','○'];
 
 function Shell() {
   const { user } = useAuth();
@@ -38,9 +40,12 @@ function Shell() {
 
   let body;
   if (route?.name === 'founder-settings') body = user ? <FounderSettingsScreen /> : <AccountScreen lang={lang} onNavigate={setRoute} />;
+  else if (route?.name === 'favorites') body = user ? <FavoritesScreen lang={lang} onOpen={openDetail} /> : <AccountScreen lang={lang} onNavigate={setRoute} />;
   else if (route?.name === 'detail') body = <DetailScreen lang={lang} id={route.id} onNeedLogin={goLogin} />;
   else if (route?.name === 'new' && user) body = <NewListingScreen lang={lang} onDone={() => { setRoute({ name: 'mine', posted: true }); setTab('mine'); }} />;
   else if (route?.name === 'mine' && user) body = <MyListingsScreen lang={lang} onOpen={openDetail} posted={route.posted} />;
+  else if (tab === 'guide') body = <GuidanceScreen />;
+  else if (tab === 'store') body = <StoreScreen lang={lang} onOpen={openDetail} onSell={() => { if (user) { setTab('new'); setRoute({ name: 'new' }); } else setTab('account'); }} onFavorites={() => setRoute({ name: 'favorites' })} />;
   else if (tab === 'home') body = <BrowseScreen lang={lang} onOpen={openDetail}
     onSell={() => { if (user) { setTab('new'); setRoute({ name: 'new' }); } else { setRoute(null); setTab('account'); } }}
     onFavorites={() => setTab('favorites')} />;
@@ -69,10 +74,10 @@ function Shell() {
         <View style={styles.tabs}>
           {TAB_KEYS.map((key, index) => ({ key, icon: TAB_ICONS[index], label: (TAB_LABELS[lang] || TAB_LABELS.ar)[index] })).map((t) => (
             <Pressable key={t.key} style={styles.tab} onPress={() => {
-              if (t.key === 'new' || t.key === 'mine') {
+              if (t.key === 'new') {
                 if (!user) { setRoute(null); setTab('account'); return; }
                 setTab(t.key);
-                setRoute(t.key === 'new' ? { name: 'new' } : { name: 'mine' });
+                setRoute({ name: 'new' });
                 return;
               }
               setRoute(null);
