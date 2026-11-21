@@ -22,8 +22,8 @@ const T = {
   }
 };
 
-export default function GuidanceScreen({ onBrowse }) {
-  const t = T.ar;
+export default function GuidanceScreen({ onBrowse, lang = 'ar' }) {
+  const t = T[lang] || T.ar;
   return (
     <ScrollView style={s.page} contentContainerStyle={s.content}>
       <Text style={s.heading}>{t.title}</Text>
