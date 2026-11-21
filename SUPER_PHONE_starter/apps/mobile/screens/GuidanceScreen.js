@@ -38,7 +38,7 @@ function firstImage(item) {
   return [...(item?.listing_images || [])].sort((a, b) => a.sort_order - b.sort_order)[0];
 }
 
-export default function GuidanceScreen({ onBrowse, lang = 'ar' }) {
+export default function GuidanceScreen({ onBrowse, onOpen, lang = 'ar' }) {
   const t = T[lang] || T.ar;
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -107,7 +107,7 @@ export default function GuidanceScreen({ onBrowse, lang = 'ar' }) {
           {items.slice(0, 6).map((item) => {
             const photo = firstImage(item);
             return (
-              <Pressable key={item.id} style={s.productCard} onPress={openBrowse}>
+              <Pressable key={item.id} style={s.productCard} onPress={() => onOpen?.(item.id)}>
                 {photo ? <Image source={{ uri: imageUrl(photo.storage_path) }} style={s.productImage} resizeMode="cover" /> :
                   <View style={[s.productImage, s.guideFallback]}><Text style={s.guideFallbackIcon}>▯</Text></View>}
                 <Text style={s.productTitle} numberOfLines={1}>{item.brand || item.title}</Text>
