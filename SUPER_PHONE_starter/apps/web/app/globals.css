@@ -82,3 +82,33 @@ main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; }
 .row-actions .danger { color: #b42318; border-color: #f0c5c0; }
 .pager { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; }
 .pager a { color: #16734f; text-decoration: none; padding: 8px 14px; border: 1px solid #cfd8d3; border-radius: 8px; background: #fff; }
+
+
+/* SUPER PHONE redesign v2 — navy and muted gold */
+:root { color-scheme: dark; --sp-navy:#101a2c; --sp-panel:#17243a; --sp-gold:#c6a35b; --sp-cream:#f4f0e7; }
+html, body { background:var(--sp-navy); color:var(--sp-cream); }
+.topbar { background:var(--sp-navy); color:var(--sp-cream); border-bottom:1px solid rgba(198,163,91,.24); }
+.logo, .brand, .eyebrow { color:var(--sp-gold) !important; }
+.nav-actions a { color:var(--sp-cream); }
+.nav-actions .cta, .filters button, .auth-form button, .first-run-btn, .home-action.primary { background:var(--sp-gold) !important; color:#101a2c !important; border-color:var(--sp-gold) !important; }
+main { color:var(--sp-cream); }
+.hero h1, .section-head h2, .page-head h1 { color:var(--sp-cream); }
+.hero p, .meta, .section-note, .notice, .alt { color:#c2c8d1; }
+.card, .search-panel, .marketplace-banner, .category-tile, .auth, .page-card, .panel, .first-run-panel { background:var(--sp-panel) !important; color:var(--sp-cream); border:1px solid rgba(198,163,91,.22) !important; }
+.card h3, .body h3, label, .category-tile strong { color:var(--sp-cream); }
+.price, .category-symbol, .banner-kicker { color:var(--sp-gold) !important; }
+.filters input, .filters select, .auth-form input, .auth-form select, .auth-form textarea, .first-run-field { background:#101a2c !important; color:var(--sp-cream) !important; border:1px solid rgba(198,163,91,.4) !important; }
+.filters input::placeholder { color:#9ca6b5; }
+.home-action { background:#1b2a42; color:var(--sp-cream); border:1px solid rgba(198,163,91,.35); }
+.marketplace-hero { padding-top:28px; }
+.marketplace-banner { border-radius:22px; padding:24px; }
+.category-tile { border-radius:16px; padding:14px; }
+.first-run-overlay { background:radial-gradient(ellipse at 50% 18%,#24334d 0%,#101a2c 68%); color:var(--sp-cream); }
+.first-run-panel { width:min(92vw,440px); border-radius:26px; padding:30px 24px; box-shadow:0 24px 80px rgba(0,0,0,.32); }
+.first-run-title { color:var(--sp-gold) !important; letter-spacing:.04em; }
+.first-run-option { background:#101a2c !important; color:var(--sp-cream) !important; border:1px solid rgba(198,163,91,.3) !important; }
+.first-run-option.active { border-color:var(--sp-gold) !important; background:#24334d !important; }
+.first-run-field { width:100%; min-height:48px; border-radius:12px; padding:10px; margin:6px 0 14px; }
+.first-run-btn.secondary { background:transparent !important; color:var(--sp-gold) !important; }
+.pager a, .row-actions button, .row-actions a { background:#17243a; color:var(--sp-cream); border-color:rgba(198,163,91,.35); }
+@media (max-width:640px) { main { padding:18px 13px 36px; } .home-actions { gap:8px; } .home-action { min-height:48px; } .grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; } }

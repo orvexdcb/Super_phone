@@ -8,8 +8,8 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../lib/AuthContext';
 import * as Location from 'expo-location';
 
-const KEY = 'superphone:first-run:v1';
-const TIPS_KEY = 'superphone:reference-tour:v1';
+const KEY = 'superphone:first-run:v2';
+const TIPS_KEY = 'superphone:reference-tour:v2';
 const T = {
   ar: {
     language: 'اختر اللغة', place: 'أين تسكن؟', governorate: 'المحافظة', area: 'المدينة / المنطقة',
@@ -147,7 +147,7 @@ export default function FirstRunFlow({ children, onComplete }) {
     } catch { setGps(t.hint); }
   };
 
-  if (loading) return <View style={s.splash}><StatusBar style="dark" /><ActivityIndicator color="#e84b53" /></View>;
+  if (loading) return <View style={s.splash}><StatusBar style="light" /><ActivityIndicator color="#c6a35b" /></View>;
   if (done) {
     return (
       <View style={s.appRoot}>
@@ -247,60 +247,60 @@ export default function FirstRunFlow({ children, onComplete }) {
 }
 
 const s = StyleSheet.create({
-  appRoot: { flex: 1, backgroundColor: '#ffffff' },
-  root: { flex: 1, backgroundColor: '#ffffff' },
-  splash: { flex: 1, backgroundColor: '#ffffff', alignItems: 'center', justifyContent: 'center' },
+  appRoot: { flex: 1, backgroundColor: '#101a2c' },
+  root: { flex: 1, backgroundColor: '#101a2c' },
+  splash: { flex: 1, backgroundColor: '#101a2c', alignItems: 'center', justifyContent: 'center' },
   logo: { width: 174, height: 174, marginBottom: 10 },
   brand: { color: '#303b54', fontSize: 27, fontWeight: '900', letterSpacing: 2 },
-  welcome: { color: '#888888', fontSize: 13, marginTop: 7 },
+  welcome: { color: '#aeb8c7', fontSize: 13, marginTop: 7 },
   splashDots: { flexDirection: 'row', gap: 6, marginTop: 38 },
-  dotActive: { width: 24, height: 3, borderRadius: 2, backgroundColor: '#e84b53' },
+  dotActive: { width: 24, height: 3, borderRadius: 2, backgroundColor: '#c6a35b' },
   dot: { width: 6, height: 3, borderRadius: 2, backgroundColor: '#d5d5d5' },
-  startButton: { marginTop: 30, paddingHorizontal: 25, paddingVertical: 13, backgroundColor: '#e84b53', borderRadius: 9 },
+  startButton: { marginTop: 30, paddingHorizontal: 25, paddingVertical: 13, backgroundColor: '#c6a35b', borderRadius: 9 },
   startText: { color: '#ffffff', fontSize: 15, fontWeight: '900' },
-  languagePage: { flex: 1, backgroundColor: '#ffffff', paddingHorizontal: 38, paddingTop: 90, paddingBottom: 90 },
+  languagePage: { flex: 1, backgroundColor: '#101a2c', paddingHorizontal: 38, paddingTop: 90, paddingBottom: 90 },
   languageSpacer: { flex: 1 },
-  languageOption: { height: 72, borderWidth: 1.4, borderColor: '#dddddd', borderRadius: 16, alignItems: 'center', justifyContent: 'center', marginBottom: 12, backgroundColor: '#ffffff' },
-  languageSelected: { borderColor: '#dddddd' },
-  languageText: { color: '#444444', fontSize: 21, fontWeight: '600' },
+  languageOption: { height: 72, borderWidth: 1.4, borderColor: 'rgba(198,163,91,0.35)', borderRadius: 16, alignItems: 'center', justifyContent: 'center', marginBottom: 12, backgroundColor: '#101a2c' },
+  languageSelected: { borderColor: 'rgba(198,163,91,0.35)' },
+  languageText: { color: '#f4f0e7', fontSize: 21, fontWeight: '600' },
   termsRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 24, minHeight: 42 },
   termsText: { color: '#399ad5', fontSize: 15 },
   checkbox: { width: 20, height: 20, borderWidth: 1.5, borderColor: '#399ad5', alignItems: 'center', justifyContent: 'center' },
   checkboxOn: { backgroundColor: '#399ad5' },
   checkmark: { color: '#ffffff', fontSize: 14, fontWeight: '900', lineHeight: 17 },
-  locationPage: { flex: 1, backgroundColor: '#ffffff' },
-  locationTitle: { color: '#111111', fontSize: 23, fontWeight: '900', textAlign: 'center', paddingTop: 26, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: '#ededed' },
+  locationPage: { flex: 1, backgroundColor: '#101a2c' },
+  locationTitle: { color: '#f4f0e7', fontSize: 23, fontWeight: '900', textAlign: 'center', paddingTop: 26, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: 'rgba(198,163,91,0.25)' },
   locationScroll: { flex: 1 },
   locationContent: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 28, gap: 10 },
-  locationLabel: { color: '#555555', fontSize: 19, fontWeight: '700', textAlign: 'right', marginTop: 3 },
-  dropdown: { minHeight: 58, borderWidth: 1.3, borderColor: '#dedede', borderRadius: 13, paddingHorizontal: 17, flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between' },
+  locationLabel: { color: '#d2d7df', fontSize: 19, fontWeight: '700', textAlign: 'right', marginTop: 3 },
+  dropdown: { minHeight: 58, borderWidth: 1.3, borderColor: 'rgba(198,163,91,0.35)', borderRadius: 13, paddingHorizontal: 17, flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between' },
   dropdownValue: { color: '#454545', fontSize: 20, fontWeight: '600' },
-  dropdownArrow: { color: '#555555', fontSize: 25 },
+  dropdownArrow: { color: '#d2d7df', fontSize: 25 },
   districtList: { gap: 9 },
-  districtButton: { minHeight: 58, borderWidth: 1.3, borderColor: '#dedede', borderRadius: 13, backgroundColor: '#ffffff', alignItems: 'center', justifyContent: 'center' },
-  districtSelected: { borderColor: '#e84b53', backgroundColor: '#fff8f8' },
-  districtText: { color: '#444444', fontSize: 19, fontWeight: '600' },
-  gpsButton: { marginTop: 8, minHeight: 48, borderWidth: 1.2, borderColor: '#e84b53', borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
-  gpsText: { color: '#e84b53', fontSize: 14, fontWeight: '800' },
-  gpsHint: { color: '#888888', fontSize: 12, textAlign: 'right' },
-  continueButton: { backgroundColor: '#e84b53', borderRadius: 10, minHeight: 52, alignItems: 'center', justifyContent: 'center', marginTop: 7 },
+  districtButton: { minHeight: 58, borderWidth: 1.3, borderColor: 'rgba(198,163,91,0.35)', borderRadius: 13, backgroundColor: '#101a2c', alignItems: 'center', justifyContent: 'center' },
+  districtSelected: { borderColor: '#c6a35b', backgroundColor: '#1b2a42' },
+  districtText: { color: '#f4f0e7', fontSize: 19, fontWeight: '600' },
+  gpsButton: { marginTop: 8, minHeight: 48, borderWidth: 1.2, borderColor: '#c6a35b', borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+  gpsText: { color: '#c6a35b', fontSize: 14, fontWeight: '800' },
+  gpsHint: { color: '#aeb8c7', fontSize: 12, textAlign: 'right' },
+  continueButton: { backgroundColor: '#c6a35b', borderRadius: 10, minHeight: 52, alignItems: 'center', justifyContent: 'center', marginTop: 7 },
   continueDisabled: { opacity: 0.45 },
   continueText: { color: '#ffffff', fontSize: 16, fontWeight: '900' },
   modalShade: { flex: 1, backgroundColor: 'rgba(0,0,0,0.45)', justifyContent: 'center', padding: 22 },
-  modalCard: { maxHeight: '82%', backgroundColor: '#ffffff', borderRadius: 16, padding: 16 },
+  modalCard: { maxHeight: '82%', backgroundColor: '#101a2c', borderRadius: 16, padding: 16 },
   modalTitle: { color: '#333333', fontSize: 20, fontWeight: '900', textAlign: 'center', marginBottom: 12 },
   modalList: { maxHeight: 500 },
-  modalOption: { minHeight: 50, borderBottomWidth: 1, borderBottomColor: '#eeeeee', justifyContent: 'center', alignItems: 'center' },
-  modalOptionText: { color: '#444444', fontSize: 17, fontWeight: '600' },
-  modalClose: { backgroundColor: '#e84b53', borderRadius: 9, alignItems: 'center', paddingVertical: 11, marginTop: 12 },
+  modalOption: { minHeight: 50, borderBottomWidth: 1, borderBottomColor: 'rgba(198,163,91,0.2)', justifyContent: 'center', alignItems: 'center' },
+  modalOptionText: { color: '#f4f0e7', fontSize: 17, fontWeight: '600' },
+  modalClose: { backgroundColor: '#c6a35b', borderRadius: 9, alignItems: 'center', paddingVertical: 11, marginTop: 12 },
   modalCloseText: { color: '#ffffff', fontWeight: '900' },
   tourRoot: { ...StyleSheet.absoluteFillObject, zIndex: 1000, justifyContent: 'flex-start' },
   tourShade: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.58)' },
   tourFocus: { position: 'absolute', top: 40, height: 36, width: 72, backgroundColor: 'transparent', borderWidth: 2, borderColor: '#ffffff', borderRadius: 7 },
   tourSellFocus: { left: '23%' },
   tourSearchFocus: { left: '3%' },
-  tourBubble: { position: 'absolute', top: 111, left: 14, width: '80%', minHeight: 66, paddingHorizontal: 10, paddingVertical: 8, borderRadius: 11, backgroundColor: '#e8757b' },
-  tourPointer: { position: 'absolute', top: -10, width: 0, height: 0, borderLeftWidth: 11, borderRightWidth: 11, borderBottomWidth: 11, borderLeftColor: 'transparent', borderRightColor: 'transparent', borderBottomColor: '#e8757b' },
+  tourBubble: { position: 'absolute', top: 111, left: 14, width: '80%', minHeight: 66, paddingHorizontal: 10, paddingVertical: 8, borderRadius: 11, backgroundColor: '#c6a35b' },
+  tourPointer: { position: 'absolute', top: -10, width: 0, height: 0, borderLeftWidth: 11, borderRightWidth: 11, borderBottomWidth: 11, borderLeftColor: 'transparent', borderRightColor: 'transparent', borderBottomColor: '#c6a35b' },
   pointerSell: { left: '36%' },
   pointerSearch: { left: '10%' },
   tourTitle: { color: '#ffffff', textAlign: 'center', fontSize: 17, fontWeight: '900' },
@@ -308,6 +308,6 @@ const s = StyleSheet.create({
   tourActions: { flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center', marginTop: 9 },
   tourSkip: { padding: 7 },
   tourSkipText: { color: '#ffffff', fontWeight: '700' },
-  tourNext: { backgroundColor: '#ffffff', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 7 },
-  tourNextText: { color: '#e84b53', fontWeight: '900' }
+  tourNext: { backgroundColor: '#101a2c', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 7 },
+  tourNextText: { color: '#c6a35b', fontWeight: '900' }
 });
