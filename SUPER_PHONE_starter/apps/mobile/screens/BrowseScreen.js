@@ -94,7 +94,7 @@ export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar',
           onSubmitEditing={() => apply(draft)}
         />
         <Pressable style={styles.filterBtn} onPress={() => setShowFilters(!showFilters)}>
-          <Text style={{ color: COLORS.green }}>{t.filter}{activeCount ? ` (${activeCount})` : ''}</Text>
+          <Text style={{ color: '#e84b53' }}>{t.filter}{activeCount ? ` (${activeCount})` : ''}</Text>
         </Pressable>
       </View>
 
@@ -125,7 +125,7 @@ export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar',
               <Text style={{ color: COLORS.text }}>{t.clear}</Text>
             </Pressable>
             <Pressable style={styles.apply} onPress={() => apply(draft)}>
-              <Text style={{ color: COLORS.bg, fontWeight: '800' }}>{t.apply}</Text>
+              <Text style={{ color: '#ffffff', fontWeight: '800' }}>{t.apply}</Text>
             </Pressable>
           </View>
         </ScrollView>
@@ -169,24 +169,24 @@ export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar',
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   intro: { paddingHorizontal: 18, paddingTop: 14, paddingBottom: 8 },
-  eyebrow: { color: COLORS.gold, fontSize: 11, fontWeight: '900', letterSpacing: 2, textAlign: 'right' },
+  eyebrow: { color: COLORS.text, fontSize: 11, fontWeight: '900', letterSpacing: 2, textAlign: 'right' },
   headline: { color: COLORS.text, fontSize: 21, fontWeight: '900', textAlign: 'right', marginTop: 5 },
   introText: { color: COLORS.muted, fontSize: 13, textAlign: 'right', marginTop: 4 },
-  promo: { marginHorizontal: 16, marginTop: 14, marginBottom: 8, borderRadius: 16, padding: 18, minHeight: 112, backgroundColor: '#203550', flexDirection: 'row-reverse', alignItems: 'center', overflow: 'hidden' },
-  promoTitle: { color: '#f0d39a', fontSize: 19, fontWeight: '900', textAlign: 'right' },
-  promoText: { color: '#d2dbe6', fontSize: 12, textAlign: 'right', marginTop: 5 },
+  promo: { marginHorizontal: 16, marginTop: 14, marginBottom: 8, borderRadius: 16, padding: 18, minHeight: 112, backgroundColor: '#e84b53', flexDirection: 'row-reverse', alignItems: 'center', overflow: 'hidden' },
+  promoTitle: { color: '#ffffff', fontSize: 19, fontWeight: '900', textAlign: 'right' },
+  promoText: { color: '#fff1f1', fontSize: 12, textAlign: 'right', marginTop: 5 },
   promoIcon: { color: COLORS.gold, fontSize: 54, opacity: 0.85, marginLeft: 12 },
   homeActions: { flexDirection: 'row-reverse', gap: 8, paddingHorizontal: 16, paddingTop: 8 },
   homeAction: { flex: 1, backgroundColor: COLORS.panel, borderWidth: 1, borderColor: COLORS.border, borderRadius: 12, paddingVertical: 12, alignItems: 'center' },
-  homeActionText: { color: COLORS.goldLight, fontWeight: '900', fontSize: 13 },
+  homeActionText: { color: COLORS.text, fontWeight: '900', fontSize: 13 },
   search: { flexDirection: 'row-reverse', gap: 8, padding: 16, paddingBottom: 8 },
   input: { backgroundColor: COLORS.panel, borderWidth: 1, borderColor: COLORS.border, borderRadius: 10, padding: 12, fontSize: 16, color: COLORS.text },
-  filterBtn: { justifyContent: 'center', paddingHorizontal: 14, borderRadius: 10, borderWidth: 1, borderColor: COLORS.gold, backgroundColor: COLORS.panel },
+  filterBtn: { justifyContent: 'center', paddingHorizontal: 14, borderRadius: 10, borderWidth: 1, borderColor: COLORS.border, backgroundColor: COLORS.panel },
   panel: { maxHeight: 360, paddingHorizontal: 16, paddingBottom: 8, backgroundColor: COLORS.bg },
   label: { color: COLORS.muted, textAlign: 'right', marginTop: 8, marginBottom: 6 },
   wrap: { flexDirection: 'row-reverse', flexWrap: 'wrap', gap: 8 },
   priceRow: { flexDirection: 'row-reverse', gap: 8, marginTop: 8 },
-  apply: { flex: 1, backgroundColor: COLORS.gold, borderRadius: 10, padding: 12, alignItems: 'center' },
+  apply: { flex: 1, backgroundColor: '#e84b53', borderRadius: 10, padding: 12, alignItems: 'center' },
   chips: { paddingHorizontal: 16, gap: 8, paddingBottom: 4, flexDirection: 'row-reverse' },
   empty: { textAlign: 'center', color: COLORS.muted, marginTop: 40 },
 });
