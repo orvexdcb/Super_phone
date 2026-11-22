@@ -518,3 +518,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .sp-category-icon { color:#c8102e; background:rgba(200,16,46,.07); }
 .sp-category-icon svg { display:block; width:27px; height:27px; }
 .sp-category { gap:8px; }
+
+
+/* Further reduce the device pictograms inside category cards */
+.sp-category-icon { width:30px!important; height:30px!important; border-radius:10px!important; }
+.sp-category-icon svg { width:17px!important; height:17px!important; }
+.sp-category { gap:6px!important; }
