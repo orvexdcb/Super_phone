@@ -8,8 +8,8 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../lib/AuthContext';
 import * as Location from 'expo-location';
 
-const KEY = 'superphone:first-run:v2';
-const TIPS_KEY = 'superphone:reference-tour:v2';
+const KEY = 'superphone:first-run:v3';
+const TIPS_KEY = 'superphone:reference-tour:v3';
 const T = {
   ar: {
     language: 'اختر اللغة', place: 'أين تسكن؟', governorate: 'المحافظة', area: 'المدينة / المنطقة',
