@@ -162,7 +162,7 @@ export default function FirstRunFlow({ children, onComplete }) {
               <Text style={s.tourText}>{T[lang].tipBody[tutorialStep]}</Text>
               <View style={s.tourActions}>
                 <Pressable onPress={finishTutorial} style={s.tourSkip}><Text style={s.tourSkipText}>{T[lang].skip}</Text></Pressable>
-                <Pressable onPress={nextTutorial} style={s.tourNext}><Text style={s.tourNextText}>{tutorialStep === 0 ? T[lang].next : T[lang].finish}</Text></Pressable>
+                <Pressable onPress={nextTutorial} style={s.tourNext}><Text style={s.tourNextText}>{tutorialStep < 2 ? T[lang].next : T[lang].finish}</Text></Pressable>
               </View>
             </View>
           </View>
@@ -278,7 +278,7 @@ const s = StyleSheet.create({
   dropdownArrow: { color: '#d2d7df', fontSize: 25 },
   districtList: { gap: 9 },
   districtButton: { minHeight: 58, borderWidth: 1.3, borderColor: 'rgba(200,16,46,0.25)', borderRadius: 13, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' },
-  districtSelected: { borderColor: '#C8102E', backgroundColor: '#1b2a42' },
+  districtSelected: { borderColor: '#C8102E', backgroundColor: '#C8102E' },
   districtText: { color: '#333333', fontSize: 19, fontWeight: '600' },
   gpsButton: { marginTop: 8, minHeight: 48, borderWidth: 1.2, borderColor: '#C8102E', borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
   gpsText: { color: '#C8102E', fontSize: 14, fontWeight: '800' },
