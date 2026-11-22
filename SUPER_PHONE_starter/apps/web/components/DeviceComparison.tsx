@@ -77,7 +77,6 @@ const SPEC_NAMES: Record<string, { ar: string; en: string; ku: string }> = {
   camera: { ar: "الكاميرا", en: "Camera", ku: "کامێرا" }
 };
 
-const valueOr = (value: string | null | undefined, fallback: string) => value?.trim() || fallback;
 const money = (value: number, currency: string) =>
   new Intl.NumberFormat("en-US").format(value) + " " + (currency === "IQD" ? "د.ع" : currency);
 
@@ -134,7 +133,7 @@ export default function DeviceComparison({ devices, lang }: { devices: CompareDe
           <table className="sp-compare-table">
             <thead><tr><th scope="col">{isArabic ? "المعيار" : isKurdish ? "پێوەر" : "Feature"}</th><th scope="col">{first.title}</th><th scope="col">{second.title}</th></tr></thead>
             <tbody>
-              {rows.map((row) => <tr key={row.label}><th scope="row">{row.label}</th><td>{row.a}{row.price && first.price < second.price && <small className="sp-price-winner">{t.lower}</small>}{row.price && first.price === second.price && <small className="sp-price-winner">{t.equal}</small>}</td><td>{row.b}{row.price && second.price < first.price && <small className="sp-price-winner">{t.lower}</small>}{row.price && first.price === second.price && <small className="sp-price-winner">{t.equal}</small>}</td></tr>)}
+              {rows.map((row) => <tr key={row.label}><th scope="row">{row.label}</th><td>{row.a}{row.price && first.currency === second.currency && first.price < second.price && <small className="sp-price-winner">{t.lower}</small>}{row.price && first.currency === second.currency && first.price === second.price && <small className="sp-price-winner">{t.equal}</small>}</td><td>{row.b}{row.price && first.currency === second.currency && second.price < first.price && <small className="sp-price-winner">{t.lower}</small>}{row.price && first.price === second.price && <small className="sp-price-winner">{t.equal}</small>}</td></tr>)}
               {specKeys.map((key) => <tr key={key}><th scope="row">{SPEC_NAMES[key]?.[lang] || key}</th><td>{firstSpecs.get(key) || t.missing}</td><td>{secondSpecs.get(key) || t.missing}</td></tr>)}
             </tbody>
           </table>
