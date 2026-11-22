@@ -19,7 +19,7 @@ function firstImage(listing) {
   return [...(listing?.listing_images || [])].sort((a, b) => a.sort_order - b.sort_order)[0];
 }
 
-export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar', fixedCategorySlug = '' }) {
+export default function BrowseScreen({ onOpen, onSell, onFavorites, onAccountAction, accountActionLabel, lang = 'ar', fixedCategorySlug = '' }) {
   const t = COPY[lang] || COPY.ar;
   const [draft, setDraft] = useState({ ...EMPTY, category: fixedCategorySlug });
   const [applied, setApplied] = useState({ ...EMPTY, category: fixedCategorySlug });
@@ -100,6 +100,7 @@ export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar',
           <Pressable style={styles.outlineButton} onPress={onSell}><Text style={styles.outlineButtonText}>＋ {t.sell}</Text></Pressable>
           <Pressable style={styles.outlineButton} onPress={() => setShowFilters((v) => !v)}><Text style={styles.outlineButtonText}>⌕ {t.search}</Text></Pressable>
           <Pressable style={styles.outlineButton} onPress={onFavorites}><Text style={styles.outlineButtonText}>♡ {lang === 'en' ? 'Favorites' : lang === 'ku' ? 'دڵخوازەکان' : 'المفضلة'}</Text></Pressable>
+          <Pressable style={[styles.outlineButton, styles.accountTopButton]} onPress={onAccountAction}><Text style={[styles.outlineButtonText, styles.accountTopText]}>{accountActionLabel || (lang === 'en' ? 'Account' : lang === 'ku' ? 'هەژمار' : 'حساب')}</Text></Pressable>
         </View>
       </View>
 
@@ -203,9 +204,11 @@ const styles = StyleSheet.create({
   cityButton: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingVertical: 8, flexShrink: 1 },
   pin: { color: '#C8102E', fontSize: 25, fontWeight: '700' },
   cityText: { color: '#3b3b3b', fontSize: 17, fontWeight: '600' },
-  topActions: { flexDirection: 'row', gap: 5, flex: 1, justifyContent: 'flex-end' },
-  outlineButton: { flex: 1, minWidth: 0, borderWidth: 1.2, borderColor: '#e2b7be', borderRadius: 9, paddingHorizontal: 5, paddingVertical: 8, backgroundColor: '#ffffff', alignItems: 'center' },
-  outlineButtonText: { color: '#C8102E', fontSize: 11, fontWeight: '800', textAlign: 'center' },
+  topActions: { flexDirection: 'row', gap: 4, flex: 1, justifyContent: 'flex-end' },
+  outlineButton: { flex: 1, minWidth: 0, borderWidth: 1.2, borderColor: '#e2b7be', borderRadius: 9, paddingHorizontal: 3, paddingVertical: 8, backgroundColor: '#ffffff', alignItems: 'center' },
+  outlineButtonText: { color: '#C8102E', fontSize: 10, fontWeight: '800', textAlign: 'center' },
+  accountTopButton: { backgroundColor: '#C8102E', borderColor: '#C8102E' },
+  accountTopText: { color: '#ffffff' },
   filterPanel: { marginHorizontal: 12, marginBottom: 10, padding: 13, gap: 9, borderRadius: 13, borderWidth: 1, borderColor: '#e4e4e4', backgroundColor: '#ffffff' },
   input: { borderWidth: 1, borderColor: '#dedede', borderRadius: 10, paddingHorizontal: 12, paddingVertical: 11, color: '#333333', backgroundColor: '#ffffff', fontSize: 15 },
   label: { color: '#555555', textAlign: 'right', fontSize: 14, fontWeight: '700', marginTop: 3 },
