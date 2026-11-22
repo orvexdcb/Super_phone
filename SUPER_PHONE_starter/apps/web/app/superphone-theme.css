@@ -526,37 +526,42 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .sp-category { gap:6px!important; }
 
 
-/* Compact category pictograms and their pale holders */
+/* Final compact icon override: smaller pictogram and holder */
 .sp-category-icon {
-  width:18px!important;
-  height:18px!important;
-  min-width:18px!important;
-  min-height:18px!important;
+  width:22px!important;
+  height:22px!important;
+  min-width:22px!important;
+  min-height:22px!important;
   padding:0!important;
-  border-radius:6px!important;
-  flex:0 0 18px!important;
-  font-size:11px!important;
+  border-radius:7px!important;
+  flex:0 0 22px!important;
 }
 .sp-category-icon svg {
-  width:10px!important;
-  height:10px!important;
-  max-width:10px!important;
-  max-height:10px!important;
+  width:12px!important;
+  height:12px!important;
+  max-width:12px!important;
+  max-height:12px!important;
 }
 
-/* Compact mobile header action buttons (not category icons or cards).
-   Higher specificity overrides the inherited font shorthand on link buttons. */
+/* Reduce the complete mobile header action buttons, not their pictograms.
+   Cover both header action wrappers used by the web layouts. */
 @media(max-width:760px){
   .sp-header-actions .sp-nav-action,
-  .sp-header-actions .link-btn.sp-nav-action{
+  .sp-header-actions a,
+  .sp-header-actions button,
+  .nav-actions .sp-nav-action,
+  .nav-actions a,
+  .nav-actions button,
+  .topbar .sp-nav-action{
     box-sizing:border-box!important;
-    min-height:26px!important;
-    height:26px!important;
-    padding:0 3px!important;
-    gap:1px!important;
-    border-radius:6px!important;
-    font-size:.58rem!important;
+    min-height:32px!important;
+    height:32px!important;
+    padding:0 5px!important;
+    gap:2px!important;
+    border-radius:8px!important;
+    font-size:.68rem!important;
     line-height:1!important;
   }
-  .sp-header-actions .sp-nav-action span{font-size:.65rem!important;line-height:1!important}
+  .sp-header-actions .sp-nav-action span,
+  .nav-actions .sp-nav-action span{font-size:.72rem!important;line-height:1!important}
 }
