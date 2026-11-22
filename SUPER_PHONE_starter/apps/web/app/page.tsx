@@ -66,7 +66,10 @@ export default async function Home({ searchParams }: { searchParams: SP }) {
         <div className="sp-section-heading"><div><span className="sp-kicker">{lang==="en"?"JUST LISTED":"وصلت حديثاً"}</span><h2>{copy.newest}</h2></div><span className="sp-live-dot">● {lang==="en"?"Live listings":"إعلانات متاحة"}</span></div>
         {error&&<p className="notice">{copy.error}</p>}
         {!error&&listings.length===0&&<p className="notice">{copy.empty}</p>}
-        <section className="sp-listing-grid">{listings.map(l=><ListingCard key={l.id} listing={l}/>)}</section>
+        <section className="sp-listing-grid">{listings.flatMap((l,index)=>[
+          ...(index>0&&index%5===0?[<aside className="sp-inline-ad" key={`promo-${index}`}><span>{lang==="en"?"SPONSORED SPACE":lang==="ku"?"شوێنی ڕیکلام":"مساحة إعلانية"}</span><strong>{lang==="en"?"Promote your device on SUPER PHONE":lang==="ku"?"ئامێرەکەت لە SUPER PHONE بەرز بکەرەوە":"روّج لجهازك على SUPER PHONE"}</strong><p>{lang==="en"?"Reach buyers looking for their next device.":lang==="ku"?"بگەیەنە بە کڕیارانی بەدوای ئامێری نوێدا.":"اعرض جهازك أمام الباحثين عن أجهزتهم القادمة."}</p><Link href="/account/listings/new">{lang==="en"?"Create a listing":lang==="ku"?"دانانی ڕیکلام":"أضف إعلانك"} ←</Link></aside>]:[]),
+          <ListingCard key={l.id} listing={l}/>
+        ])}</section>
         {(page>1||hasNext)&&<nav className="pager">{hasNext?<a href={pageHref(page+1)}>{lang==="en"?"Next":"التالي"} ›</a>:<span/>}<span className="meta">{page}</span>{page>1?<a href={pageHref(page-1)}>‹ {lang==="en"?"Previous":"السابق"}</a>:<span/>}</nav>}
       </section>
     </main>
