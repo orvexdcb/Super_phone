@@ -69,9 +69,9 @@ export default function AccountScreen({ onNavigate, onTab, lang = 'ar' }) {
         </Pressable>
       )}
       <Pressable style={s.row} onPress={() => supabase.auth.signOut()}>
-        <Text style={[s.rowIcon, { color: '#e84b53' }]}>⇥</Text>
+        <Text style={[s.rowIcon, { color: '#C8102E' }]}>⇥</Text>
         <View style={s.rowCopy}>
-          <Text style={[s.rowTitle, { color: '#e84b53' }]}>{t('logout')}</Text>
+          <Text style={[s.rowTitle, { color: '#C8102E' }]}>{t('logout')}</Text>
           <Text style={s.rowHint}>تسجيل الخروج من حسابك</Text>
         </View>
         <Text style={s.chevron}>‹</Text>
@@ -86,8 +86,8 @@ const s = StyleSheet.create({
   content: { paddingHorizontal: 18, paddingTop: 22, paddingBottom: 30, gap: 16 },
   heading: { fontSize: 27, fontWeight: '900', color: '#333333', textAlign: 'right', marginBottom: 4 },
   profile: { backgroundColor: '#ffffff', borderWidth: 1, borderColor: '#e4e4e4', borderRadius: 13, padding: 15, flexDirection: 'row-reverse', alignItems: 'center', gap: 12 },
-  avatar: { width: 54, height: 54, borderRadius: 27, backgroundColor: '#fff0f0', borderWidth: 1, borderColor: '#e84b53', alignItems: 'center', justifyContent: 'center' },
-  avatarText: { fontSize: 21, fontWeight: '900', color: '#e84b53' },
+  avatar: { width: 54, height: 54, borderRadius: 27, backgroundColor: '#fff0f0', borderWidth: 1, borderColor: '#C8102E', alignItems: 'center', justifyContent: 'center' },
+  avatarText: { fontSize: 21, fontWeight: '900', color: '#C8102E' },
   profileCopy: { flex: 1, alignItems: 'flex-end', gap: 4 },
   profileTitle: { fontSize: 17, fontWeight: '900', color: '#333333' },
   email: { fontSize: 12, color: '#777777' },
@@ -95,14 +95,14 @@ const s = StyleSheet.create({
   grid: { flexDirection: 'row-reverse', flexWrap: 'wrap', justifyContent: 'space-between', gap: 9 },
   tile: { width: '31.5%', minHeight: 116, paddingVertical: 13, paddingHorizontal: 5, backgroundColor: '#ffffff', borderWidth: 1, borderColor: '#e6e6e6', borderRadius: 12, alignItems: 'center', justifyContent: 'center', gap: 5 },
   pressed: { opacity: 0.72, transform: [{ scale: 0.98 }] },
-  tileIcon: { fontSize: 28, color: '#e84b53', height: 34, textAlign: 'center' },
+  tileIcon: { fontSize: 28, color: '#C8102E', height: 34, textAlign: 'center' },
   tileTitle: { fontSize: 12, fontWeight: '900', color: '#3d3d3d', textAlign: 'center' },
   tileHint: { fontSize: 9, color: '#888888', textAlign: 'center' },
   row: { minHeight: 76, flexDirection: 'row-reverse', alignItems: 'center', gap: 13, paddingHorizontal: 10, borderBottomWidth: 1, borderBottomColor: '#eeeeee' },
-  rowIcon: { fontSize: 26, color: '#e84b53', width: 35, textAlign: 'center' },
+  rowIcon: { fontSize: 26, color: '#C8102E', width: 35, textAlign: 'center' },
   rowCopy: { flex: 1, alignItems: 'flex-end', gap: 4 },
   rowTitle: { fontSize: 16, fontWeight: '800', color: '#404040', textAlign: 'right' },
   rowHint: { fontSize: 11, color: '#888888', textAlign: 'right' },
-  chevron: { fontSize: 26, color: '#e84b53' },
+  chevron: { fontSize: 26, color: '#C8102E' },
   footer: { fontSize: 11, color: '#999999', textAlign: 'center', marginTop: 8 }
 });
