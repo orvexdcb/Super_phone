@@ -32,7 +32,7 @@ export default async function Home({ searchParams }: { searchParams: SP }) {
           <h1>{copy.title}</h1>
           <p>{copy.intro}</p>
         </div>
-        <div className="sp-mark-art" aria-hidden="true"><span>SP</span><i>✦</i></div>
+        <div className="sp-mark-art" aria-hidden="true"><img src="/pwa-icon-192.png" alt="" /></div>
       </section>
 
       <section className="sp-category-section">
