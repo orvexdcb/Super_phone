@@ -70,11 +70,15 @@ const COPY = {
 const SPEC_NAMES: Record<string, { ar: string; en: string; ku: string }> = {
   ram: { ar: "الذاكرة العشوائية", en: "RAM", ku: "ڕام" },
   storage: { ar: "سعة التخزين", en: "Storage", ku: "بیرگە" },
+  battery: { ar: "البطارية", en: "Battery", ku: "باتری" },
   battery_health: { ar: "صحة البطارية", en: "Battery health", ku: "تەندروستی باتری" },
   color: { ar: "اللون", en: "Color", ku: "ڕەنگ" },
   screen: { ar: "الشاشة", en: "Display", ku: "شاشە" },
   processor: { ar: "المعالج", en: "Processor", ku: "پرۆسێسەر" },
-  camera: { ar: "الكاميرا", en: "Camera", ku: "کامێرا" }
+  cameras: { ar: "الكاميرات", en: "Cameras", ku: "کامێراکان" },
+  camera: { ar: "الكاميرا", en: "Camera", ku: "کامێرا" },
+  charging_speed: { ar: "سرعة الشحن", en: "Charging speed", ku: "خێرایی شەحن" },
+  release_year: { ar: "سنة الإصدار", en: "Release year", ku: "ساڵی بەرهەمهێنان" }
 };
 
 const money = (value: number, currency: string) =>
