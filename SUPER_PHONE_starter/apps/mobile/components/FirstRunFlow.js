@@ -140,6 +140,7 @@ export default function FirstRunFlow({ children, onComplete }) {
       setGov(matchedGov);
       setArea(matchedArea || '');
       setGps(t.located + ' ' + governorateLabel(lang, matchedGov) + (matchedArea ? ' · ' + districtLabel(lang, matchedArea) : ''));
+      if (matchedArea) finish(matchedGov, matchedArea);
     } catch { setGps(t.hint); }
   };
 
