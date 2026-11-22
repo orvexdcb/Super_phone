@@ -524,3 +524,21 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .sp-category-icon { width:30px!important; height:30px!important; border-radius:10px!important; }
 .sp-category-icon svg { width:17px!important; height:17px!important; }
 .sp-category { gap:6px!important; }
+
+
+/* Final compact icon override: smaller pictogram and holder */
+.sp-category-icon {
+  width:22px!important;
+  height:22px!important;
+  min-width:22px!important;
+  min-height:22px!important;
+  padding:0!important;
+  border-radius:7px!important;
+  flex:0 0 22px!important;
+}
+.sp-category-icon svg {
+  width:12px!important;
+  height:12px!important;
+  max-width:12px!important;
+  max-height:12px!important;
+}
