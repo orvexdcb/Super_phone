@@ -16,7 +16,7 @@ const T = {
     gps: 'تحديد موقعي', next: 'التالي', start: 'ابدأ الاستخدام', terms: 'Terms & Conditions',
     tipTitle: ['بيع جهازك', 'بحث سهل ودقيق', 'احفظ الأجهزة في المفضلة', 'حسابك'],
     tipBody: ['قم بعرض جهازك بسهولة في SUPER PHONE مع الصور والسعر والمواصفات.', 'ابحث حسب نوع الجهاز والعلامة التجارية والحالة والسعر.', 'اضغط على رمز القلب لحفظ الأجهزة والعودة إليها لاحقاً.', 'من هنا تنشئ حساباً أو تسجل الخروج عند الدخول.'],
-    skip: 'تخطي', finish: 'ابدأ الاستخدام', hint: 'اختر المحافظة والمدينة أو حدد موقعك للمساعدة في الاختيار.',
+    skip: 'تخطي', finish: 'ابدأ الاستخدام', hint: 'سيظهر طلب إذن الموقع من جهازك الآن. يمكنك رفضه واختيار المحافظة والمنطقة يدوياً.',
     located: 'تم تحديد المحافظة:'
   },
   en: {
@@ -24,7 +24,7 @@ const T = {
     gps: 'Use my location', next: 'Next', start: 'Start using the app', terms: 'Terms & Conditions',
     tipTitle: ['Sell your device', 'Easy and accurate search', 'Save devices to Favorites', 'Your account'],
     tipBody: ['List your device on SUPER PHONE with photos, price and specifications.', 'Search by device type, brand, condition and price.', 'Tap the heart to save devices and return to them later.', 'Open your account here to sign up or log out.'],
-    skip: 'Skip', finish: 'Start using the app', hint: 'Choose your governorate and city, or use your location to help select them.',
+    skip: 'Skip', finish: 'Start using the app', hint: 'Your device will ask for location permission now. You can decline and choose your governorate and area manually.',
     located: 'Detected governorate:'
   },
   ku: {
@@ -32,7 +32,7 @@ const T = {
     gps: 'شوێنەکەم دیاری بکە', next: 'دواتر', start: 'دەستپێبکە', terms: 'Terms & Conditions',
     tipTitle: ['ئامێرەکەت بفرۆشە', 'گەڕانی ئاسان و ورد', 'ئامێرەکان لە دڵخوازەکان بپارێزە', 'هەژمارەکەت'],
     tipBody: ['ئامێرەکەت بە وێنە و نرخ و تایبەتمەندییەکان لە SUPER PHONE بڵاو بکەرەوە.', 'بەپێی جۆر و براند و دۆخ و نرخ بگەڕێ.', 'نیشانی دڵ دابگرە بۆ پاراستنی ئامێرەکانت.', 'لێرە هەژمار دروست بکە یان بچۆرە دەرەوە.'],
-    skip: 'تێپەڕاندن', finish: 'دەستپێبکە', hint: 'پارێزگا و شار هەڵبژێرە یان شوێنی خۆت دیاری بکە.',
+    skip: 'تێپەڕاندن', finish: 'دەستپێبکە', hint: 'داوای مۆڵەتی شوێن لەلایەن ئامێرەکەتەوە پیشان دەدرێت؛ دەتوانیت ڕەتی بکەیتەوە و شوێنەکە بە دەست هەڵبژێریت.',
     located: 'پارێزگای دیاریکراو:'
   }
 };
@@ -73,12 +73,6 @@ export default function FirstRunFlow({ children, onComplete }) {
   }, [loading, done, step]);
 
   useEffect(() => {
-    if (loading || done || step !== 1 || permissionPrompted) return;
-    setPermissionPrompted(true);
-    Location.requestForegroundPermissionsAsync().catch(() => {});
-  }, [loading, done, step, permissionPrompted]);
-
-  useEffect(() => {
     if (!done) return;
     AsyncStorage.getItem(TIPS_KEY).then((raw) => {
       if (!raw) setTutorialStep(0);
@@ -100,13 +94,13 @@ export default function FirstRunFlow({ children, onComplete }) {
     });
   }, [done, user?.id]);
 
-  const finish = async () => {
-    const saved = { lang, governorate: gov, area, completed: true };
+  const finish = async (selectedGov = gov, selectedArea = area) => {
+    const saved = { lang, governorate: selectedGov, area: selectedArea, completed: true };
     await AsyncStorage.setItem(KEY, JSON.stringify(saved));
     try {
       const { data: authData } = await supabase.auth.getUser();
-      if (authData?.user && gov) {
-        await supabase.from('profiles').update({ governorate: gov, city: area || null }).eq('id', authData.user.id);
+      if (authData?.user && selectedGov) {
+        await supabase.from('profiles').update({ governorate: selectedGov, city: selectedArea || null }).eq('id', authData.user.id);
       }
     } catch {}
     setDone(true);
@@ -148,6 +142,12 @@ export default function FirstRunFlow({ children, onComplete }) {
       setGps(t.located + ' ' + governorateLabel(lang, matchedGov) + (matchedArea ? ' · ' + districtLabel(lang, matchedArea) : ''));
     } catch { setGps(t.hint); }
   };
+
+  useEffect(() => {
+    if (loading || done || step !== 2 || permissionPrompted) return;
+    setPermissionPrompted(true);
+    requestLocation();
+  }, [loading, done, step, permissionPrompted]);
 
   if (loading) return <View style={s.splash}><StatusBar style="light" /><ActivityIndicator color="#C8102E" /></View>;
   if (done) {
@@ -216,16 +216,12 @@ export default function FirstRunFlow({ children, onComplete }) {
             <Text style={s.locationLabel}>{t.area}</Text>
             <View style={s.districtList}>
               {districts.map((district) => (
-                <Pressable key={district} onPress={() => setArea(district)} style={[s.districtButton, area === district && s.districtSelected]}>
+                <Pressable key={district} onPress={() => { setArea(district); finish(gov, district); }} style={[s.districtButton, area === district && s.districtSelected]}>
                   <Text style={s.districtText}>{districtLabel(lang, district)}</Text>
                 </Pressable>
               ))}
             </View>
-            <Pressable style={s.gpsButton} onPress={requestLocation}><Text style={s.gpsText}>⌖  {t.gps}</Text></Pressable>
             <Text style={s.gpsHint}>{gps || t.hint}</Text>
-            <Pressable style={[s.continueButton, (!gov || !area) && s.continueDisabled]} disabled={!gov || !area} onPress={finish}>
-              <Text style={s.continueText}>{t.next}</Text>
-            </Pressable>
           </ScrollView>
           <Modal visible={showGovernorates} transparent animationType="fade" onRequestClose={() => setShowGovernorates(false)}>
             <View style={s.modalShade}>
@@ -238,7 +234,7 @@ export default function FirstRunFlow({ children, onComplete }) {
                     </Pressable>
                   ))}
                 </ScrollView>
-                <Pressable onPress={() => setShowGovernorates(false)} style={s.modalClose}><Text style={s.modalCloseText}>{t.next}</Text></Pressable>
+                <Pressable onPress={() => setShowGovernorates(false)} style={s.modalClose}><Text style={s.modalCloseText}>{lang === 'en' ? 'Done' : lang === 'ku' ? 'تەواو' : 'تم'}</Text></Pressable>
               </View>
             </View>
           </Modal>
