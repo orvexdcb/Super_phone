@@ -1,4 +1,4 @@
-const CACHE_NAME = "super-phone-static-v6";
+const CACHE_NAME = "super-phone-static-v7";
 const OFFLINE_URL = "/offline.html";
 const STATIC_URLS = [
   OFFLINE_URL,
