@@ -84,7 +84,10 @@ export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar',
   };
   const activeCount = ['condition', 'governorate', 'min', 'max'].filter((key) => applied[key]).length;
   const featured = fixedCategorySlug ? null : items[0];
-  const rows = featured ? items.slice(1) : items;
+  const rows = (featured ? items.slice(1) : items).flatMap((item, index) => {
+    const itemNumber = (featured ? 1 : 0) + index + 1;
+    return itemNumber % 5 === 0 ? [item, { id: `promo-${itemNumber}`, __type: 'promo' }] : [item];
+  });
 
   const header = (
     <View>
@@ -180,7 +183,14 @@ export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar',
         loading ? <ActivityIndicator color={COLORS.danger} style={{ margin: 36 }} /> :
         <Text style={styles.empty}>{error || (featured ? '' : t.empty)}</Text>
       }
-      renderItem={({ item }) => <ListingCard lang={lang} listing={item} onPress={() => onOpen(item.id)} />}
+      renderItem={({ item }) => item.__type === 'promo' ? (
+        <Pressable style={styles.inlineAd} onPress={onSell}>
+          <Text style={styles.inlineAdLabel}>{lang === 'en' ? 'SPONSORED SPACE' : lang === 'ku' ? 'شوێنی ڕیکلام' : 'مساحة إعلانية'}</Text>
+          <Text style={styles.inlineAdTitle}>{lang === 'en' ? 'Promote your device on SUPER PHONE' : lang === 'ku' ? 'ئامێرەکەت لە SUPER PHONE بەرز بکەرەوە' : 'روّج لجهازك على SUPER PHONE'}</Text>
+          <Text style={styles.inlineAdText}>{lang === 'en' ? 'Reach buyers looking for their next device.' : lang === 'ku' ? 'بگەیەنە بە کڕیارانی بەدوای ئامێری نوێدا.' : 'اعرض جهازك أمام الباحثين عن أجهزتهم القادمة.'}</Text>
+          <Text style={styles.inlineAdAction}>{lang === 'en' ? 'Create a listing ←' : lang === 'ku' ? 'دانانی ڕیکلام ←' : 'أضف إعلانك ←'}</Text>
+        </Pressable>
+      ) : <ListingCard lang={lang} listing={item} onPress={() => onOpen(item.id)} />}
     />
   );
 }
@@ -232,4 +242,9 @@ const styles = StyleSheet.create({
   sectionHeading: { paddingTop: 9, paddingBottom: 7, flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center' },
   recent: { color: '#888888', fontSize: 11, paddingHorizontal: 14 },
   empty: { color: '#777777', textAlign: 'center', padding: 25, fontSize: 14 },
+  inlineAd: { marginHorizontal: 12, marginVertical: 8, padding: 16, borderRadius: 12, borderWidth: 1, borderColor: '#e5b2bb', backgroundColor: '#fff7f8', gap: 6 },
+  inlineAdLabel: { color: '#C8102E', fontSize: 10, fontWeight: '900', textAlign: 'right', letterSpacing: 1 },
+  inlineAdTitle: { color: '#292929', fontSize: 16, fontWeight: '900', textAlign: 'right' },
+  inlineAdText: { color: '#666666', fontSize: 12, textAlign: 'right', lineHeight: 18 },
+  inlineAdAction: { color: '#C8102E', fontWeight: '900', textAlign: 'left', paddingTop: 4 },
 });
