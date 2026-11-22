@@ -19,7 +19,7 @@ import { tr } from './lib/i18n';
 const TAB_LABELS = { ar: ['حسابي','المتجر','إرشاد','البداية'], en: ['Account','Store','Guide','Home'], ku: ['هەژمار','فرۆشگا','ڕێنمایی','سەرەکی'] };
 const TAB_KEYS = ['account','store','guide','home'];
 function TabIcon({ name, active }) {
-  const color = active ? '#e84b53' : '#555555';
+  const color = active ? '#C8102E' : '#555555';
   if (name === 'account') {
     return <View style={iconStyles.frame}><View style={[iconStyles.personHead,{borderColor:color}]} /><View style={[iconStyles.personBody,{borderColor:color}]} /></View>;
   }
@@ -115,11 +115,11 @@ const iconStyles = StyleSheet.create({
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#ffffff', paddingTop: Platform.OS === 'android' ? (RNStatusBar.currentHeight || 0) : 0 },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 18, paddingVertical: 13, backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#eeeeee' },
-  brand: { fontSize: 17, fontWeight: '900', letterSpacing: 1.4, color: '#e84b53' },
-  back: { color: '#e84b53', fontSize: 16 },
+  brand: { fontSize: 17, fontWeight: '900', letterSpacing: 1.4, color: '#C8102E' },
+  back: { color: '#C8102E', fontSize: 16 },
   tabs: { flexDirection: 'row-reverse', borderTopWidth: 1, borderTopColor: '#e9e9e9', backgroundColor: '#ffffff', paddingTop: 5, paddingBottom: Platform.OS === 'ios' ? 8 : 3 },
   tab: { flex: 1, paddingVertical: 5, alignItems: 'center', gap: 2 },
   tabIcon: { color: '#555555', fontSize: 23, lineHeight: 25 },
   tabText: { color: '#555555', fontSize: 12 },
-  tabOn: { color: '#e84b53', fontWeight: '900' }
+  tabOn: { color: '#C8102E', fontWeight: '900' }
 });
