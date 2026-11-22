@@ -417,3 +417,30 @@ body:has(.sp-guide-step-6) [data-guide="account"]{position:relative;z-index:5;ou
 .sp-inline-ad strong{font-size:1.05rem;color:#272727}
 .sp-inline-ad p{margin:0;color:#686868;font-size:.9rem}
 .sp-inline-ad a{color:#C8102E;font-weight:900;text-decoration:none;align-self:flex-start}
+
+/* Red-white cleanup for older account, seller and founder routes */
+:root{--bg:#fff;--panel:#fff;--panel-soft:#fff;--line:#ead9dc;--text:#252525;--muted:#777;--gold:#C8102E;--gold-light:#C8102E;--ink:#fff}
+.marketplace-banner,.founder-heading{background:linear-gradient(115deg,#C8102E,#8e001a)!important;border-color:#C8102E!important;color:#fff!important}
+.marketplace-banner h2,.marketplace-banner .banner-kicker,.founder-heading h1,.founder-kicker{color:#fff!important}
+.marketplace-banner p,.founder-heading p{color:#fff!important;opacity:.9}
+.banner-device{color:#fff!important}
+.auth,.admin-item,.specs,.desc,.founder-tool,.founder-stats article{background:#fff!important;color:#252525!important;border:1px solid #efcbd1!important;box-shadow:0 5px 18px rgba(90,0,15,.05)}
+.specs th,.specs td,.desc,.admin-item,.founder-shell{color:#333!important}
+.specs th{color:#777!important}
+.admin-actions input,.report-form input,.ghost,.row-actions button,.row-actions a{background:#fff!important;color:#333!important;border-color:#efcbd1!important}
+.admin-actions button,.admin-actions .ok-btn,.admin-actions .no-btn,.report-form button{background:#C8102E!important;color:#fff!important;border-color:#C8102E!important}
+.badge{background:#fff0f2!important;color:#C8102E!important}
+.s-pending_review,.s-rejected{background:#fff0f2!important;color:#C8102E!important}
+.safety{background:#fff5f6!important;color:#8e001a!important}
+.founder-shell,.founder-stats strong,.founder-tool{color:#252525!important}
+.founder-stats .founder-admin,.founder-tool-icon,.founder-arrow,.founder-nav-link,.founder-account-link{color:#C8102E!important}
+.founder-tool-icon,.founder-account-link{background:#fff0f2!important}
+.founder-tool:hover{border-color:#C8102E!important}
+.mobile-dock{background:rgba(255,255,255,.98)!important;border-top:1px solid #efcbd1!important}
+.dock-item,.dock-add{color:#C8102E!important}
+.home-action{background:#fff!important;color:#C8102E!important;border-color:#efcbd1!important}
+.home-action.primary{background:#C8102E!important;color:#fff!important;border-color:#C8102E!important}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline-color:#C8102E!important}
+.sp-mark-art{background:#C8102E!important;border-color:#fff!important;box-shadow:0 12px 26px rgba(200,16,46,.18)!important;transform:none!important}
+.sp-mark-art img{width:100%;height:100%;object-fit:cover;border-radius:inherit}
+.sp-mark-art span,.sp-mark-art i{display:none!important}
