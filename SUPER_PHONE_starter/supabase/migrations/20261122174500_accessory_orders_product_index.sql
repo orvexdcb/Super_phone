@@ -1,0 +1,1 @@
+create index if not exists accessory_orders_product_idx on public.accessory_orders(product_id);
