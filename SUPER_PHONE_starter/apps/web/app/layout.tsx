@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "./superphone-theme.css";
 import Header from "../components/Header";
+import BottomNavigation from "../components/BottomNavigation";
 import PWARegister from "../components/PWARegister";
 import { cookies } from "next/headers";
 
@@ -25,6 +26,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <Header />
         <PWARegister />
         {children}
+        <BottomNavigation />
       </body>
     </html>
   );
