@@ -11,7 +11,7 @@ import {
 import Chip from '../components/Chip';
 import { tr, conditionLabel, governorateLabel, categoryLabel } from '../lib/i18n';
 
-const SPEC_KEYS = ['storage', 'ram', 'battery_health', 'color'];
+const SPEC_KEYS = ['screen', 'processor', 'ram', 'storage', 'cameras', 'battery', 'charging_speed', 'release_year'];
 
 export default function NewListingScreen({ onDone, lang = 'ar' }) {
   const tx = (key) => tr(lang, key);
@@ -20,7 +20,7 @@ export default function NewListingScreen({ onDone, lang = 'ar' }) {
   const [f, setF] = useState({
     category_id: '', title: '', price: '', currency: 'IQD', condition: '', brand: '', model: '',
     governorate: '', city: '', contact_phone: '', description: '',
-    spec_storage: '', spec_ram: '', spec_battery_health: '', spec_color: '',
+    spec_screen: '', spec_processor: '', spec_ram: '', spec_storage: '', spec_cameras: '', spec_battery: '', spec_charging_speed: '', spec_release_year: '',
   });
   const [images, setImages] = useState([]);
   const [busy, setBusy] = useState(false);
@@ -67,8 +67,9 @@ export default function NewListingScreen({ onDone, lang = 'ar' }) {
     if (busy) return;
     const price = Number(f.price);
     if (!f.category_id || !f.condition || !f.governorate) return setError(tx('chooseRequired'));
+    if (!f.brand.trim() || !f.model.trim() || SPEC_KEYS.some((key) => !String(f['spec_' + key] || '').trim())) return setError(tx('requiredSpecsError'));
     if (f.title.trim().length < 3) return setError(tx('titleRequired'));
-    if (!f.price || !Number.isFinite(price) || price < 0) return setError(tx('priceRequired'));
+    if (!f.price || !Number.isFinite(price) || price <= 0) return setError(tx('priceRequired'));
     if (!f.contact_phone.trim()) return setError(tx('phoneRequired'));
     if (images.length === 0) return setError(tx('imageRequired'));
 
@@ -198,10 +199,10 @@ export default function NewListingScreen({ onDone, lang = 'ar' }) {
         <TextInput style={styles.input} placeholder={tx('phone')} value={f.contact_phone} onChangeText={set('contact_phone')}
           keyboardType="phone-pad" maxLength={20} />
 
-        <Text style={styles.label}>{tx('specs')}</Text>
+        <Text style={styles.label}>{tx('specsRequired')}</Text>
         {SPEC_KEYS.map((k) => (
-          <TextInput key={k} style={styles.input} placeholder={tx(k === 'storage' ? 'storage' : k === 'ram' ? 'ram' : k === 'battery_health' ? 'battery' : 'color')} value={f[`spec_${k}`]}
-            onChangeText={set(`spec_${k}`)} maxLength={60} textAlign="right" />
+          <TextInput key={k} style={styles.input} placeholder={tx(k)} value={f[`spec_${k}`]}
+            onChangeText={set(`spec_${k}`)} maxLength={80} textAlign="right" />
         ))}
 
         <TextInput style={[styles.input, { height: 110, textAlignVertical: 'top' }]} placeholder={tx('description')}
