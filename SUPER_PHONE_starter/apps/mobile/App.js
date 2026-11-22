@@ -4,6 +4,7 @@ import { BackHandler, Platform, Pressable, SafeAreaView, StatusBar as RNStatusBa
 import { StatusBar } from 'expo-status-bar';
 import { AuthProvider, useAuth } from './lib/AuthContext';
 import { COLORS } from './lib/constants';
+import { supabase } from './lib/supabase';
 import BrowseScreen from './screens/BrowseScreen';
 import StoreScreen from './screens/StoreScreen';
 import GuidanceScreen from './screens/GuidanceScreen';
@@ -40,7 +41,7 @@ function Shell() {
   const [lang, setLang] = useState('ar');
 
   useEffect(() => {
-    AsyncStorage.getItem('superphone:first-run:v1').then((raw) => {
+    AsyncStorage.getItem('superphone:first-run:v3').then((raw) => {
       if (raw) {
         try { setLang(JSON.parse(raw).lang || 'ar'); } catch {}
       }
@@ -67,7 +68,9 @@ function Shell() {
   else if (tab === 'guide') body = <GuidanceScreen lang={lang} onBrowse={() => setTab('home')} onOpen={openDetail} />;
   else if (tab === 'store') body = <StoreScreen lang={lang} onOpen={openDetail}
     onSell={() => { if (user) { setTab('account'); setRoute({ name: 'new' }); } else setTab('account'); }}
-    onFavorites={() => setRoute({ name: 'favorites' })} />;
+    onFavorites={() => setRoute({ name: 'favorites' })}
+    accountActionLabel={user ? (lang === 'en' ? 'Log out' : lang === 'ku' ? 'چوونەدەرەوە' : 'خروج') : (lang === 'en' ? 'Sign up' : lang === 'ku' ? 'خۆتۆمارکردن' : 'إنشاء حساب')}
+    onAccountAction={() => { if (user) supabase.auth.signOut(); else { setRoute(null); setTab('account'); } }} />;
   else if (tab === 'home') body = <BrowseScreen lang={lang} onOpen={openDetail}
     onSell={() => { if (user) { setTab('account'); setRoute({ name: 'new' }); } else { setRoute(null); setTab('account'); } }}
     onFavorites={() => setRoute({ name: 'favorites' })} />;
