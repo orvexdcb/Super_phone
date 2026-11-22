@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { createBrowserSupabase } from "../lib/supabase-browser";
 import { GOVERNORATES, IRAQ_DISTRICTS } from "@super-phone/shared";
 import { governorateName, districtName } from "../lib/i18n";
-const KEY="superphone:first-run:v2";
+const KEY="superphone:first-run:v3";
 const copy={
 ar:{language:"اختر اللغة",place:"حدد مكان السكن",province:"المحافظة",area:"المنطقة / القضاء",gps:"طلب تحديد الموقع",next:"التالي",skip:"تخطي",start:"ابدأ الاستخدام",intro:["زر بيع هاتفك يتيح لك عرض جهازك للبيع مع الصور والسعر.","زر البحث يساعدك في العثور على الجهاز الذي تريده.","المفضلة تحفظ الأجهزة التي تريد العودة إليها.","الأزرار الرئيسية في أعلى الشاشة ويمكنك استخدامها للتنقل."],gpsHint:"يمكنك السماح بالوصول للموقع أو إكمال الاختيار يدوياً."},
 en:{language:"Choose your language",place:"Set your location",province:"Governorate",area:"Area / District",gps:"Request location",next:"Next",skip:"Skip",start:"Start using SUPER PHONE",intro:["Sell your phone lets you publish your device with photos and a price.","Search helps you find the device you need.","Favorites saves devices for later.","The main actions are at the top of the home screen."],gpsHint:"You can allow location access or continue manually."},
