@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
+import { createServerSupabase } from "../../lib/supabase-server";
+import DeviceComparison from "../../components/DeviceComparison";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Buying guide | SUPER PHONE",
-  description: "Practical checks before buying a used phone or electronic device."
+  description: "Practical device buying advice and side-by-side device comparison."
 };
 
 const CONTENT = {
@@ -48,10 +52,44 @@ const CONTENT = {
   }
 };
 
+type CompareDevice = {
+  id: string;
+  title: string;
+  brand: string | null;
+  model: string | null;
+  price: number;
+  currency: string;
+  condition: string;
+  governorate: string;
+  city: string | null;
+  category: { name_ar: string; slug: string } | null;
+  specs: { spec_key: string; spec_value: string }[];
+};
+
 export default async function BuyingGuidePage() {
   const cookieStore = await cookies();
   const lang = (cookieStore.get("sp_lang")?.value || "ar") as "ar" | "en" | "ku";
   const t = CONTENT[lang] || CONTENT.ar;
+  const supabase = await createServerSupabase();
+  const { data } = await supabase
+    .from("listings")
+    .select("id,title,brand,model,price,currency,condition,governorate,city,categories(name_ar,slug),listing_specs(spec_key,spec_value)")
+    .eq("status", "active")
+    .order("created_at", { ascending: false })
+    .limit(100);
+  const devices = (data ?? []).map((row: any) => ({
+    id: row.id,
+    title: row.title,
+    brand: row.brand,
+    model: row.model,
+    price: Number(row.price),
+    currency: row.currency,
+    condition: row.condition,
+    governorate: row.governorate,
+    city: row.city,
+    category: Array.isArray(row.categories) ? row.categories[0] ?? null : row.categories,
+    specs: row.listing_specs ?? []
+  })) as CompareDevice[];
 
   return (
     <main>
@@ -60,7 +98,8 @@ export default async function BuyingGuidePage() {
         <h1>{t.title}</h1>
         <p>{t.subtitle}</p>
       </header>
-      <section className="grid">
+      <DeviceComparison devices={devices} lang={lang} />
+      <section className="grid sp-guide-checklist">
         {t.cards.map(([number, title, body]) => (
           <article key={number} className="card">
             <div className="body">
