@@ -512,3 +512,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .sp-compare-note{margin-top:12px;font-size:.84rem}
 .sp-compare-error{color:#e34b62;text-align:center;font-weight:700}
 @media(max-width:600px){.sp-compare-panel{padding:16px 12px;border-radius:17px}.sp-compare-pickers{grid-template-columns:1fr;gap:10px}.sp-compare-heading h2{font-size:1.15rem}.sp-compare-table{min-width:480px}.sp-compare-table th,.sp-compare-table td{padding:10px;font-size:.86rem}}
+
+
+/* Consistent red device pictograms for category cards */
+.sp-category-icon { color:#c8102e; background:rgba(200,16,46,.07); }
+.sp-category-icon svg { display:block; width:27px; height:27px; }
+.sp-category { gap:8px; }
