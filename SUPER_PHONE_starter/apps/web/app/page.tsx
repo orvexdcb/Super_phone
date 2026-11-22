@@ -14,42 +14,67 @@ export default async function Home({ searchParams }: { searchParams: SP }) {
   const sp = await searchParams;
   const cookieStore = await cookies();
   const lang = (cookieStore.get("sp_lang")?.value || "ar") as "ar" | "en" | "ku";
-  const copy = { ar: { eyebrow:"بيع • شراء • استبدال", title:"سوقك المتخصص للأجهزة الإلكترونية", intro:"اعثر على جهازك القادم، أو اعرض جهازك للبيع بسهولة وأمان.", sell:"بيع هاتفك", search:"بحث", favorites:"المفضلة", searchLabel:"البحث والتصفية", searchPlaceholder:"ابحث عن جهاز...", allCategories:"كل التصنيفات", allConditions:"كل الحالات", allGovernorates:"كل المحافظات", min:"أدنى سعر", max:"أعلى سعر", newest:"أحدث الأجهزة المعروضة", error:"تعذّر تحميل الإعلانات. حاول مرة أخرى.", empty:"لا توجد إعلانات مطابقة حالياً.", next:"الصفحة التالية", previous:"الصفحة السابقة", page:"صفحة" }, en: { eyebrow:"BUY • SELL • TRADE", title:"Your marketplace for electronic devices", intro:"Find your next device or list yours for sale easily and safely.", sell:"Sell your phone", search:"Search", favorites:"Favorites", searchLabel:"Search and filters", searchPlaceholder:"Search devices...", allCategories:"All categories", allConditions:"All conditions", allGovernorates:"All governorates", min:"Min price", max:"Max price", newest:"Latest listings", error:"Could not load listings. Please try again.", empty:"No matching listings right now.", next:"Next page", previous:"Previous page", page:"Page" }, ku: { eyebrow:"بکڕە • بفرۆشە • ئاڵوگۆڕ", title:"بازاڕی تایبەت بە ئامێرە ئەلیکترۆنییەکان", intro:"ئامێری داهاتووت بدۆزەرەوە یان بە ئاسانی و بە سەلامەتی ئامێرەکەت بفرۆشە.", sell:"مۆبایلەکەت بفرۆشە", search:"گەڕان", favorites:"دڵخوازەکان", searchLabel:"گەڕان و پاڵاوتن", searchPlaceholder:"بگەڕێ بۆ ئامێر...", allCategories:"هەموو پۆلەکان", allConditions:"هەموو دۆخەکان", allGovernorates:"هەموو پارێزگاکان", min:"کەمترین نرخ", max:"زۆرترین نرخ", newest:"نوێترین ئامێرەکان", error:"بارکردنی ڕیکلامەکان سەرکەوتوو نەبوو.", empty:"هیچ ڕیکلامێکی گونجاو نییە.", next:"پەڕەی داهاتوو", previous:"پەڕەی پێشوو", page:"پەڕە" } }[lang] || { eyebrow:"بيع • شراء • استبدال", title:"سوقك المتخصص للأجهزة الإلكترونية", intro:"اعثر على جهازك القادم، أو اعرض جهازك للبيع بسهولة وأمان.", sell:"بيع هاتفك", search:"بحث", favorites:"المفضلة", searchLabel:"البحث والتصفية", searchPlaceholder:"ابحث عن جهاز...", allCategories:"كل التصنيفات", allConditions:"كل الحالات", allGovernorates:"كل المحافظات", min:"أدنى سعر", max:"أعلى سعر", newest:"أحدث الأجهزة المعروضة", error:"تعذّر تحميل الإعلانات. حاول مرة أخرى.", empty:"لا توجد إعلانات مطابقة حالياً.", next:"الصفحة التالية", previous:"الصفحة السابقة", page:"صفحة" };
+  const copy = {
+    ar: { eyebrow:"منصتك للأجهزة الذكية", title:"كل الأجهزة التي تبحث عنها… في مكان واحد", intro:"اكتشف الأجهزة المعروضة للبيع، قارن بينها، أو اعرض جهازك بسهولة.", sell:"بيع جهازك", search:"ابحث عن جهاز", favorites:"المفضلة", categories:"تصفح حسب الفئة", searchLabel:"ابحث وصَفِّ النتائج", searchPlaceholder:"ما الجهاز الذي تبحث عنه؟", allCategories:"جميع الفئات", allConditions:"جميع الحالات", allGovernorates:"كل المحافظات", min:"أقل سعر", max:"أعلى سعر", newest:"أحدث الأجهزة", viewAll:"عرض النتائج", empty:"لا توجد أجهزة مطابقة حالياً.", error:"تعذر تحميل الإعلانات. حاول مجدداً.", promoTitle:"اعثر على جهازك المناسب", promoText:"تصفح الإعلانات وقارن الأسعار والمواصفات قبل التواصل مع البائع.", sellHint:"أضف الصور والتفاصيل والسعر ليصل إعلانك إلى المهتمين." },
+    en: { eyebrow:"YOUR SMART DEVICE MARKETPLACE", title:"Find your next device in one place", intro:"Discover devices for sale, compare options, or list your own in minutes.", sell:"Sell your device", search:"Find a device", favorites:"Favorites", categories:"Browse by category", searchLabel:"Search and filter", searchPlaceholder:"What device are you looking for?", allCategories:"All categories", allConditions:"All conditions", allGovernorates:"All governorates", min:"Min price", max:"Max price", newest:"Latest devices", viewAll:"Show results", empty:"No matching devices right now.", error:"Could not load listings. Please try again.", promoTitle:"Your next device is waiting", promoText:"Browse listings and compare prices and details before contacting sellers.", sellHint:"Add photos, details and a price to reach interested buyers." },
+    ku: { eyebrow:"بازاڕی ئامێرە زیرەکەکان", title:"هەموو ئامێرەکان لە یەک شوێندا", intro:"ئامێرەکان ببینە، بەراوردیان بکە یان ئامێرەکەت بە ئاسانی بفرۆشە.", sell:"ئامێرەکەت بفرۆشە", search:"گەڕان بۆ ئامێر", favorites:"دڵخوازەکان", categories:"گەڕان بەپێی جۆر", searchLabel:"گەڕان و پاڵاوتن", searchPlaceholder:"بەدوای چ ئامێرێکدا دەگەڕێیت؟", allCategories:"هەموو جۆرەکان", allConditions:"هەموو دۆخەکان", allGovernorates:"هەموو پارێزگاکان", min:"کەمترین نرخ", max:"زۆرترین نرخ", newest:"نوێترین ئامێرەکان", viewAll:"بینینی ئەنجامەکان", empty:"هیچ ئامێرێکی گونجاو نییە.", error:"بارکردنی ڕیکلامەکان سەرکەوتوو نەبوو.", promoTitle:"ئامێری دڵخوازت بدۆزەرەوە", promoText:"ڕیکلامەکان ببینە و نرخ و تایبەتمەندییەکان بەراورد بکە.", sellHint:"وێنە و زانیاری و نرخ زیاد بکە بۆ ڕاکێشانی کڕیار." }
+  }[lang];
   const filters: Filters = { q: one(sp.q), category: one(sp.category), condition: one(sp.condition), governorate: one(sp.governorate), min: one(sp.min), max: one(sp.max), page: one(sp.page) };
   const [categories, result] = await Promise.all([fetchCategories(), fetchListings(filters)]);
   const { listings, error, hasNext, page } = result;
   const pageHref = (n: number) => { const p = new URLSearchParams(); (["q","category","condition","governorate","min","max"] as const).forEach(k=>{if(filters[k])p.set(k,filters[k]!)}); if(n>1)p.set("page",String(n)); return p.toString()?"/?"+p.toString():"/"; };
-  return <FirstRunFlow><main>
-    <header className="hero marketplace-hero"><p className="eyebrow">{copy.eyebrow}</p><h1>{copy.title}</h1><p>{copy.intro}</p></header>
-    <div className="home-actions">
-      <a className="home-action primary" href="/account/listings/new">{copy.sell}</a>
-      <a className="home-action" href="#search">{copy.search}</a>
-      <a className="home-action" href="/account/favorites">{copy.favorites}</a>
-    </div>
-    <section className="marketplace-banner"><div><span className="banner-kicker">SUPER PHONE</span><h2>{lang === "en" ? "Your next phone is closer" : lang === "ku" ? "مۆبایلی داهاتووت لێرەیە" : "هاتفك القادم أقرب مما تتخيل"}</h2><p>{lang === "en" ? "Browse trusted listings and compare devices in one place." : lang === "ku" ? "ڕیکلامەکان ببینە و ئامێرەکان لە یەک شوێن بەراورد بکە." : "تصفح إعلانات الهواتف وقارن الأجهزة بسهولة من مكان واحد."}</p></div><span className="banner-device" aria-hidden="true">▯</span></section>
-    <section className="category-strip" aria-label={copy.allCategories}>
-      {categories.map((category) => (
-        <Link key={category.slug} href={"/?category=" + encodeURIComponent(category.slug) + "#search"} className="category-tile">
-          <span className="category-symbol" aria-hidden="true">
-            {category.slug === "phone" ? "▯" : category.slug === "tablet" ? "▱" : category.slug === "laptop" ? "▣" : category.slug === "desktop" ? "▤" : category.slug === "headphones" ? "♫" : category.slug === "smartwatch" ? "◷" : "▯"}
-          </span>
-          <span><strong>{categoryName(lang, category.name_ar)}</strong><small>{lang === "en" ? "Browse devices" : lang === "ku" ? "ئامێرەکان ببینە" : "تصفح الأجهزة"}</small></span>
-        </Link>
-      ))}
-    </section>
-    <section className="search-panel" id="search" aria-label={copy.searchLabel}><form method="get" className="filters">
-      <input name="q" defaultValue={filters.q} placeholder={copy.searchPlaceholder} />
-      <select name="category" defaultValue={filters.category}><option value="">{copy.allCategories}</option>{categories.map(c=><option key={c.slug} value={c.slug}>{categoryName(lang, c.name_ar)}</option>)}</select>
-      <select name="condition" defaultValue={filters.condition}><option value="">{copy.allConditions}</option>{Object.entries(CONDITION_LABELS).map(([k,v])=><option key={k} value={k}>{conditionName(lang, k, v)}</option>)}</select>
-      <select name="governorate" defaultValue={filters.governorate}><option value="">{copy.allGovernorates}</option>{GOVERNORATES.map(g=><option key={g} value={g}>{governorateName(lang, g)}</option>)}</select>
-      <input name="min" type="number" min={0} defaultValue={filters.min} placeholder={copy.min} />
-      <input name="max" type="number" min={0} defaultValue={filters.max} placeholder={copy.max} />
-      <button type="submit">{copy.search}</button><a href="/" className="reset">{lang === "en" ? "Clear" : lang === "ku" ? "پاککردنەوە" : "مسح"}</a>
-    </form></section>
-    <div className="section-head"><h2>{copy.newest}</h2><span className="section-note">● {lang === "en" ? "Recently added" : lang === "ku" ? "تازە زیادکراوەکان" : "أضيفت حديثاً"}</span></div>
-    {error&&<p className="notice">{copy.error}</p>}
-    {!error&&listings.length===0&&<p className="notice">{copy.empty}</p>}
-    <section className="grid">{listings.map(l=><ListingCard key={l.id} listing={l}/>)}</section>
-    {(page>1||hasNext)&&<nav className="pager">{hasNext?<a href={pageHref(page+1)}>{copy.next} ›</a>:<span/>}<span className="meta">{copy.page} {page}</span>{page>1?<a href={pageHref(page-1)}>‹ {copy.previous}</a>:<span/>}</nav>}
-  </main></FirstRunFlow>;
+  const categoryIcons: Record<string,string> = { phone:"▯", tablet:"▱", laptop:"▰", desktop:"▦", headphones:"♫", smartwatch:"◷" };
+  return <FirstRunFlow>
+    <main className="sp-home">
+      <section className="sp-welcome">
+        <div className="sp-welcome-copy">
+          <span className="sp-kicker">{copy.eyebrow}</span>
+          <h1>{copy.title}</h1>
+          <p>{copy.intro}</p>
+        </div>
+        <div className="sp-mark-art" aria-hidden="true"><span>SP</span><i>✦</i></div>
+      </section>
+
+      <section className="sp-primary-actions" aria-label="الأدوات الرئيسية">
+        <Link href="/account/listings/new" className="sp-action sp-action-sell"><span className="sp-action-icon">＋</span><strong>{copy.sell}</strong><small>{copy.sellHint}</small></Link>
+        <Link href="#sp-search" className="sp-action"><span className="sp-action-icon">⌕</span><strong>{copy.search}</strong><small>{lang==="en"?"Search all listings":lang==="ku"?"گەڕان لە هەموو ڕیکلامەکان":"ابحث في جميع الإعلانات"}</small></Link>
+        <Link href="/account/favorites" className="sp-action"><span className="sp-action-icon">♡</span><strong>{copy.favorites}</strong><small>{lang==="en"?"Your saved devices":lang==="ku"?"ئامێرە پاشەکەوتکراوەکان":"الأجهزة التي حفظتها"}</small></Link>
+      </section>
+
+      <section className="sp-category-section">
+        <div className="sp-section-heading"><div><span className="sp-kicker">{lang==="en"?"EXPLORE":"استكشف"}</span><h2>{copy.categories}</h2></div><span className="sp-heading-mark">✦</span></div>
+        <div className="sp-category-grid">
+          {categories.map(category=><Link key={category.slug} href={"/?category="+encodeURIComponent(category.slug)+"#sp-search"} className="sp-category">
+            <span className="sp-category-icon">{categoryIcons[category.slug] || "▯"}</span><strong>{categoryName(lang,category.name_ar)}</strong><span className="sp-category-arrow">↗</span>
+          </Link>)}
+        </div>
+      </section>
+
+      <section className="sp-promo">
+        <div><span className="sp-promo-label">SUPER PHONE</span><h2>{copy.promoTitle}</h2><p>{copy.promoText}</p></div>
+        <div className="sp-promo-device" aria-hidden="true"><span></span></div>
+      </section>
+
+      <section className="sp-search-section" id="sp-search">
+        <div className="sp-section-heading"><div><span className="sp-kicker">DISCOVER</span><h2>{copy.searchLabel}</h2></div></div>
+        <form method="get" className="sp-filters">
+          <input name="q" defaultValue={filters.q} placeholder={copy.searchPlaceholder}/>
+          <select name="category" defaultValue={filters.category}><option value="">{copy.allCategories}</option>{categories.map(c=><option key={c.slug} value={c.slug}>{categoryName(lang,c.name_ar)}</option>)}</select>
+          <select name="condition" defaultValue={filters.condition}><option value="">{copy.allConditions}</option>{Object.entries(CONDITION_LABELS).map(([k,v])=><option key={k} value={k}>{conditionName(lang,k,v)}</option>)}</select>
+          <select name="governorate" defaultValue={filters.governorate}><option value="">{copy.allGovernorates}</option>{GOVERNORATES.map(g=><option key={g} value={g}>{governorateName(lang,g)}</option>)}</select>
+          <input name="min" type="number" min={0} defaultValue={filters.min} placeholder={copy.min}/>
+          <input name="max" type="number" min={0} defaultValue={filters.max} placeholder={copy.max}/>
+          <button type="submit">{copy.viewAll}</button>
+        </form>
+      </section>
+
+      <section className="sp-listings-section">
+        <div className="sp-section-heading"><div><span className="sp-kicker">{lang==="en"?"JUST LISTED":"وصلت حديثاً"}</span><h2>{copy.newest}</h2></div><span className="sp-live-dot">● {lang==="en"?"Live listings":"إعلانات متاحة"}</span></div>
+        {error&&<p className="notice">{copy.error}</p>}
+        {!error&&listings.length===0&&<p className="notice">{copy.empty}</p>}
+        <section className="sp-listing-grid">{listings.map(l=><ListingCard key={l.id} listing={l}/>)}</section>
+        {(page>1||hasNext)&&<nav className="pager">{hasNext?<a href={pageHref(page+1)}>{lang==="en"?"Next":"التالي"} ›</a>:<span/>}<span className="meta">{page}</span>{page>1?<a href={pageHref(page-1)}>‹ {lang==="en"?"Previous":"السابق"}</a>:<span/>}</nav>}
+      </section>
+    </main>
+  </FirstRunFlow>;
 }
