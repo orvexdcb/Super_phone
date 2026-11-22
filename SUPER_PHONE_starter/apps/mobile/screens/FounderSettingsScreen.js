@@ -8,6 +8,7 @@ const BASE = 'https://superphone-orvexdcb.vercel.app';
 const ITEMS = [
   { title: 'مراجعة الإعلانات', desc: 'مراجعة الإعلانات الجديدة وقبولها أو رفضها', path: '/admin/listings', icon: '▣' },
   { title: 'إدارة البلاغات', desc: 'متابعة بلاغات المستخدمين', path: '/admin/reports', icon: '⚑' },
+  { title: 'متجر الإكسسوارات', desc: 'إضافة المنتجات وإدارة المخزون والطلبات', path: '/founder/accessories', icon: '▤' },
   { title: 'لوحة إعدادات المؤسس على الويب', desc: 'فتح مركز أدوات المؤسس الكامل', path: '/founder/settings', icon: '⚙' },
 ];
 
@@ -50,5 +51,5 @@ export default function FounderSettingsScreen() {
   </ScrollView>;
 }
 const s=StyleSheet.create({
-restricted:{flex:1,justifyContent:'center',alignItems:'center',padding:24,gap:10},wrap:{padding:16,gap:12},hero:{backgroundColor:'#C8102E',borderRadius:18,padding:20,gap:8},kicker:{color:'#ffffff',fontSize:10,fontWeight:'900',letterSpacing:2},title:{color:'#ffffff',fontSize:22,fontWeight:'900',textAlign:'right'},sub:{color:'#d2dbe6',fontSize:13,textAlign:'right'},section:{color:COLORS.text,fontWeight:'900',fontSize:17,textAlign:'right',marginTop:8},card:{backgroundColor:COLORS.panel,borderColor:COLORS.border,borderWidth:1,borderRadius:14,padding:15,flexDirection:'row-reverse',alignItems:'center',gap:12},icon:{width:42,height:42,textAlign:'center',textAlignVertical:'center',overflow:'hidden',borderRadius:12,backgroundColor:'#fff0f2',color:'#C8102E',fontSize:22},copy:{flex:1,gap:4},name:{color:COLORS.text,fontWeight:'800',textAlign:'right'},desc:{color:COLORS.muted,fontSize:12,textAlign:'right'},arrow:{color:COLORS.gold,fontSize:20},note:{color:COLORS.muted,fontSize:12,lineHeight:20,textAlign:'right',marginTop:6}
+restricted:{flex:1,justifyContent:'center',alignItems:'center',padding:24,gap:10},wrap:{padding:16,gap:12},hero:{backgroundColor:'#C8102E',borderRadius:18,padding:20,gap:8},kicker:{color:'#ffffff',fontSize:10,fontWeight:'900',letterSpacing:2},title:{color:'#ffffff',fontSize:22,fontWeight:'900',textAlign:'right'},sub:{color:'#d2dbe6',fontSize:13,textAlign:'right'},section:{color:COLORS.text,fontWeight:'900',fontSize:17,textAlign:'right',marginTop:8},card:{backgroundColor:COLORS.panel,borderColor:COLORS.border,borderWidth:1,borderRadius:14,padding:15,flexDirection:'row-reverse',alignItems:'center',gap:12},icon:{width:42,height:42,textAlign:'center',textAlignVertical:'center',overflow:'hidden',borderRadius:12,backgroundColor:'#fff0f2',color:'#C8102E',fontSize:22},copy:{flex:1,gap:4},name:{color:COLORS.text,fontWeight:'800',textAlign:'right'},desc:{color:COLORS.muted,fontSize:12,textAlign:'right'},arrow:{color:'#C8102E',fontSize:20},note:{color:COLORS.muted,fontSize:12,lineHeight:20,textAlign:'right',marginTop:6}
 });
