@@ -10,7 +10,7 @@ const PAGE = 20;
 const SELECT = 'id,title,price,currency,condition,governorate,city,created_at,brand,model,categories!inner(slug,name_ar),listing_images(storage_path,sort_order),listing_specs(spec_key,spec_value)';
 const EMPTY = { q: '', category: '', condition: '', governorate: '', min: '', max: '' };
 const COPY = {
-  ar: { city:'كل المدن', sell:'بيعها', search:'بحث', filter:'فلتر البحث', query:'ابحث عن هاتف أو جهاز...', condition:'حالة الجهاز', governorate:'المحافظة', price:'السعر', min:'أقل سعر', max:'أعلى سعر', clear:'مسح', apply:'تطبيق', all:'الكل', featured:'أجهزة مميزة', latest:'أحدث الأجهزة المعروضة', banner:'بع هاتفك بسهولة', bannerText:'اعرض جهازك بالصور والسعر وتواصل مباشرة مع المشتري.', empty:'لا توجد إعلانات مطابقة حالياً.', error:'تعذّر تحميل الإعلانات. حاول مرة أخرى.', recently:'أضيف حديثاً', choose:'تصفح حسب الفئة' },
+  ar: { city:'كل المدن', sell:'بيع جهازك', search:'بحث', filter:'فلتر البحث', query:'ابحث عن هاتف أو جهاز...', condition:'حالة الجهاز', governorate:'المحافظة', price:'السعر', min:'أقل سعر', max:'أعلى سعر', clear:'مسح', apply:'تطبيق', all:'الكل', featured:'أجهزة مميزة', latest:'أحدث الأجهزة المعروضة', banner:'بع هاتفك بسهولة', bannerText:'اعرض جهازك بالصور والسعر وتواصل مباشرة مع المشتري.', empty:'لا توجد إعلانات مطابقة حالياً.', error:'تعذّر تحميل الإعلانات. حاول مرة أخرى.', recently:'أضيف حديثاً', choose:'تصفح حسب الفئة' },
   en: { city:'All cities', sell:'Sell', search:'Search', filter:'Search filters', query:'Search phones or devices...', condition:'Device condition', governorate:'Governorate', price:'Price', min:'Min price', max:'Max price', clear:'Clear', apply:'Apply', all:'All', featured:'Featured devices', latest:'Latest listings', banner:'Sell your phone easily', bannerText:'Show your device with photos and a price, and contact buyers directly.', empty:'No matching listings right now.', error:'Could not load listings. Please try again.', recently:'Recently added', choose:'Browse by category' },
   ku: { city:'هەموو شارەکان', sell:'بفرۆشە', search:'گەڕان', filter:'پاڵاوتنی گەڕان', query:'بگەڕێ بۆ مۆبایل یان ئامێر...', condition:'دۆخی ئامێر', governorate:'پارێزگا', price:'نرخ', min:'کەمترین نرخ', max:'زۆرترین نرخ', clear:'پاککردنەوە', apply:'جێبەجێکردن', all:'هەموو', featured:'ئامێرە دیارەکان', latest:'نوێترین ڕیکلامەکان', banner:'مۆبایلەکەت بە ئاسانی بفرۆشە', bannerText:'ئامێرەکەت بە وێنە و نرخ پیشان بدە و ڕاستەوخۆ پەیوەندی بکە.', empty:'هیچ ڕیکلامێکی گونجاو نییە.', error:'بارکردنی ڕیکلامەکان سەرکەوتوو نەبوو.', recently:'تازە زیادکراوە', choose:'بەپێی پۆل بگەڕێ' }
 };
@@ -236,11 +236,11 @@ const styles = StyleSheet.create({
   featuredLocation: { color: '#666666', textAlign: 'right', fontSize: 12 },
   promo: { marginHorizontal: 8, marginTop: 9, marginBottom: 10, padding: 15, minHeight: 126, borderRadius: 9, backgroundColor: '#C8102E', flexDirection: 'row-reverse', alignItems: 'center', overflow: 'hidden', position: 'relative' },
   promoImage: { ...StyleSheet.absoluteFillObject, width: '100%', height: '100%' },
-  promoShade: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(4,28,53,0.72)' },
+  promoShade: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(105,0,18,0.72)' },
   promoCopy: { flex: 1, zIndex: 1, alignItems: 'flex-end' },
-  promoBrand: { color: '#d4e8fa', fontSize: 10, fontWeight: '900', letterSpacing: 2 },
+  promoBrand: { color: '#ffffff', fontSize: 10, fontWeight: '900', letterSpacing: 2 },
   promoTitle: { color: '#ffffff', fontSize: 19, fontWeight: '900', textAlign: 'right', marginTop: 5 },
-  promoText: { color: '#edf5fc', fontSize: 12, lineHeight: 18, textAlign: 'right', marginTop: 3 },
+  promoText: { color: '#ffffff', fontSize: 12, lineHeight: 18, textAlign: 'right', marginTop: 3 },
   promoCta: { backgroundColor: '#ffffff', borderRadius: 7, paddingHorizontal: 12, paddingVertical: 7, marginTop: 8, alignSelf: 'flex-start' },
   promoCtaText: { color: '#C8102E', fontWeight: '900', fontSize: 12 },
   sectionHeading: { paddingTop: 9, paddingBottom: 7, flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center' },
