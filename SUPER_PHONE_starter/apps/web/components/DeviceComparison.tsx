@@ -95,7 +95,7 @@ export default function DeviceComparison({ devices, lang }: { devices: CompareDe
   const isKurdish = lang === "ku";
   const labels = t.fields;
 
-  const rows = first && second ? [
+  const rows: { label: string; a: string; b: string; price?: boolean }[] = first && second ? [
     { label: labels[0], a: first.title, b: second.title },
     { label: labels[1], a: [first.brand, first.model].filter(Boolean).join(" ") || t.missing, b: [second.brand, second.model].filter(Boolean).join(" ") || t.missing },
     { label: labels[2], a: money(first.price, first.currency), b: money(second.price, second.currency), price: true },
