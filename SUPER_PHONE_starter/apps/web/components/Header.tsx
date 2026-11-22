@@ -22,7 +22,7 @@ export default async function Header() {
       </Link>
       <div className="nav-actions sp-header-actions">
         <Link href="/account/listings/new" className="sp-nav-action sp-nav-sell" data-guide="sell"><span>＋</span>{words.sell}</Link>
-        <Link href="/#sp-search" className="sp-nav-action" data-guide="search"><span>⌕</span>{words.search}</Link>
+        <Link href="/search" className="sp-nav-action" data-guide="search"><span>⌕</span>{words.search}</Link>
         <Link href="/account/favorites" className="sp-nav-action" data-guide="favorites"><span>♡</span>{words.favorites}</Link>
         {user ? <><SignOutButton/><>{profile?.role==="admin"&&<Link href="/founder/settings" className="sp-founder-link">المؤسس</Link>}</></> : <Link href="/signup" className="sp-nav-action sp-nav-account" data-guide="account">{words.signup}</Link>}
       </div>
