@@ -4,6 +4,7 @@ import { BackHandler, Platform, Pressable, SafeAreaView, StatusBar as RNStatusBa
 import { StatusBar } from 'expo-status-bar';
 import { AuthProvider, useAuth } from './lib/AuthContext';
 import { COLORS } from './lib/constants';
+import { supabase } from './lib/supabase';
 import BrowseScreen from './screens/BrowseScreen';
 import StoreScreen from './screens/StoreScreen';
 import GuidanceScreen from './screens/GuidanceScreen';
@@ -19,7 +20,7 @@ import { tr } from './lib/i18n';
 const TAB_LABELS = { ar: ['حسابي','المتجر','إرشاد','البداية'], en: ['Account','Store','Guide','Home'], ku: ['هەژمار','فرۆشگا','ڕێنمایی','سەرەکی'] };
 const TAB_KEYS = ['account','store','guide','home'];
 function TabIcon({ name, active }) {
-  const color = active ? '#e84b53' : '#555555';
+  const color = active ? '#C8102E' : '#555555';
   if (name === 'account') {
     return <View style={iconStyles.frame}><View style={[iconStyles.personHead,{borderColor:color}]} /><View style={[iconStyles.personBody,{borderColor:color}]} /></View>;
   }
@@ -40,7 +41,7 @@ function Shell() {
   const [lang, setLang] = useState('ar');
 
   useEffect(() => {
-    AsyncStorage.getItem('superphone:first-run:v1').then((raw) => {
+    AsyncStorage.getItem('superphone:first-run:v3').then((raw) => {
       if (raw) {
         try { setLang(JSON.parse(raw).lang || 'ar'); } catch {}
       }
@@ -67,7 +68,9 @@ function Shell() {
   else if (tab === 'guide') body = <GuidanceScreen lang={lang} onBrowse={() => setTab('home')} onOpen={openDetail} />;
   else if (tab === 'store') body = <StoreScreen lang={lang} onOpen={openDetail}
     onSell={() => { if (user) { setTab('account'); setRoute({ name: 'new' }); } else setTab('account'); }}
-    onFavorites={() => setRoute({ name: 'favorites' })} />;
+    onFavorites={() => setRoute({ name: 'favorites' })}
+    accountActionLabel={user ? (lang === 'en' ? 'Log out' : lang === 'ku' ? 'چوونەدەرەوە' : 'خروج') : (lang === 'en' ? 'Sign up' : lang === 'ku' ? 'خۆتۆمارکردن' : 'إنشاء حساب')}
+    onAccountAction={() => { if (user) supabase.auth.signOut(); else { setRoute(null); setTab('account'); } }} />;
   else if (tab === 'home') body = <BrowseScreen lang={lang} onOpen={openDetail}
     onSell={() => { if (user) { setTab('account'); setRoute({ name: 'new' }); } else { setRoute(null); setTab('account'); } }}
     onFavorites={() => setRoute({ name: 'favorites' })} />;
@@ -115,11 +118,11 @@ const iconStyles = StyleSheet.create({
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#ffffff', paddingTop: Platform.OS === 'android' ? (RNStatusBar.currentHeight || 0) : 0 },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 18, paddingVertical: 13, backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#eeeeee' },
-  brand: { fontSize: 17, fontWeight: '900', letterSpacing: 1.4, color: '#e84b53' },
-  back: { color: '#e84b53', fontSize: 16 },
+  brand: { fontSize: 17, fontWeight: '900', letterSpacing: 1.4, color: '#C8102E' },
+  back: { color: '#C8102E', fontSize: 16 },
   tabs: { flexDirection: 'row-reverse', borderTopWidth: 1, borderTopColor: '#e9e9e9', backgroundColor: '#ffffff', paddingTop: 5, paddingBottom: Platform.OS === 'ios' ? 8 : 3 },
   tab: { flex: 1, paddingVertical: 5, alignItems: 'center', gap: 2 },
   tabIcon: { color: '#555555', fontSize: 23, lineHeight: 25 },
   tabText: { color: '#555555', fontSize: 12 },
-  tabOn: { color: '#e84b53', fontWeight: '900' }
+  tabOn: { color: '#C8102E', fontWeight: '900' }
 });

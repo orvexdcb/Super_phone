@@ -8,30 +8,30 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../lib/AuthContext';
 import * as Location from 'expo-location';
 
-const KEY = 'superphone:first-run:v2';
-const TIPS_KEY = 'superphone:reference-tour:v2';
+const KEY = 'superphone:first-run:v3';
+const TIPS_KEY = 'superphone:reference-tour:v3';
 const T = {
   ar: {
     language: 'اختر اللغة', place: 'أين تسكن؟', governorate: 'المحافظة', area: 'المدينة / المنطقة',
     gps: 'تحديد موقعي', next: 'التالي', start: 'ابدأ الاستخدام', terms: 'Terms & Conditions',
-    tipTitle: ['بيع جهازك', 'بحث سهل ودقيق'],
-    tipBody: ['قم بعرض هاتفك بسهولة في تطبيق SUPER PHONE مع الصور والسعر والمواصفات.', 'حدد نوع الجهاز والعلامة التجارية والحالة والسعر والمزيد للعثور على ما تريد.'],
+    tipTitle: ['بيع جهازك', 'بحث سهل ودقيق', 'احفظ الأجهزة في المفضلة', 'حسابك'],
+    tipBody: ['قم بعرض جهازك بسهولة في SUPER PHONE مع الصور والسعر والمواصفات.', 'ابحث حسب نوع الجهاز والعلامة التجارية والحالة والسعر.', 'اضغط على رمز القلب لحفظ الأجهزة والعودة إليها لاحقاً.', 'من هنا تنشئ حساباً أو تسجل الخروج عند الدخول.'],
     skip: 'تخطي', finish: 'ابدأ الاستخدام', hint: 'اختر المحافظة والمدينة أو حدد موقعك للمساعدة في الاختيار.',
     located: 'تم تحديد المحافظة:'
   },
   en: {
     language: 'Choose your language', place: 'Where do you live?', governorate: 'Governorate', area: 'City / area',
     gps: 'Use my location', next: 'Next', start: 'Start using the app', terms: 'Terms & Conditions',
-    tipTitle: ['Sell your device', 'Easy and accurate search'],
-    tipBody: ['List your phone easily on SUPER PHONE with photos, price and specifications.', 'Choose a device type, brand, condition, price and more to find what you need.'],
+    tipTitle: ['Sell your device', 'Easy and accurate search', 'Save devices to Favorites', 'Your account'],
+    tipBody: ['List your device on SUPER PHONE with photos, price and specifications.', 'Search by device type, brand, condition and price.', 'Tap the heart to save devices and return to them later.', 'Open your account here to sign up or log out.'],
     skip: 'Skip', finish: 'Start using the app', hint: 'Choose your governorate and city, or use your location to help select them.',
     located: 'Detected governorate:'
   },
   ku: {
     language: 'زمان هەڵبژێرە', place: 'لە کوێ دەژیت؟', governorate: 'پارێزگا', area: 'شار / ناوچە',
     gps: 'شوێنەکەم دیاری بکە', next: 'دواتر', start: 'دەستپێبکە', terms: 'Terms & Conditions',
-    tipTitle: ['ئامێرەکەت بفرۆشە', 'گەڕانی ئاسان و ورد'],
-    tipBody: ['مۆبایلەکەت بە وێنە و نرخ و تایبەتمەندییەکان لە SUPER PHONE بڵاو بکەرەوە.', 'جۆری ئامێر و براند و دۆخ و نرخ هەڵبژێرە بۆ دۆزینەوەی داواکراو.'],
+    tipTitle: ['ئامێرەکەت بفرۆشە', 'گەڕانی ئاسان و ورد', 'ئامێرەکان لە دڵخوازەکان بپارێزە', 'هەژمارەکەت'],
+    tipBody: ['ئامێرەکەت بە وێنە و نرخ و تایبەتمەندییەکان لە SUPER PHONE بڵاو بکەرەوە.', 'بەپێی جۆر و براند و دۆخ و نرخ بگەڕێ.', 'نیشانی دڵ دابگرە بۆ پاراستنی ئامێرەکانت.', 'لێرە هەژمار دروست بکە یان بچۆرە دەرەوە.'],
     skip: 'تێپەڕاندن', finish: 'دەستپێبکە', hint: 'پارێزگا و شار هەڵبژێرە یان شوێنی خۆت دیاری بکە.',
     located: 'پارێزگای دیاریکراو:'
   }
@@ -56,7 +56,9 @@ export default function FirstRunFlow({ children, onComplete }) {
       if (!raw) return;
       try {
         const saved = JSON.parse(raw);
-        setLang(['ar', 'en', 'ku'].includes(saved.lang) ? saved.lang : 'ar');
+        const savedLang = ['ar', 'en', 'ku'].includes(saved.lang) ? saved.lang : 'ar';
+        setLang(savedLang);
+        onComplete?.(savedLang);
         setGov(saved.governorate || 'بغداد');
         setArea(saved.area || 'بغداد');
         setDone(true);
@@ -118,7 +120,7 @@ export default function FirstRunFlow({ children, onComplete }) {
   };
 
   const nextTutorial = () => {
-    if (tutorialStep === 0) setTutorialStep(1);
+    if (tutorialStep < 3) setTutorialStep(tutorialStep + 1);
     else finishTutorial();
   };
 
@@ -147,7 +149,7 @@ export default function FirstRunFlow({ children, onComplete }) {
     } catch { setGps(t.hint); }
   };
 
-  if (loading) return <View style={s.splash}><StatusBar style="light" /><ActivityIndicator color="#c6a35b" /></View>;
+  if (loading) return <View style={s.splash}><StatusBar style="light" /><ActivityIndicator color="#C8102E" /></View>;
   if (done) {
     return (
       <View style={s.appRoot}>
@@ -155,14 +157,14 @@ export default function FirstRunFlow({ children, onComplete }) {
         {tutorialStep >= 0 ? (
           <View style={s.tourRoot}>
             <View style={s.tourShade} />
-            <View style={[s.tourFocus, tutorialStep === 0 ? s.tourSellFocus : s.tourSearchFocus]} />
+            <View style={[s.tourFocus, tutorialStep === 0 ? s.tourSellFocus : tutorialStep === 1 ? s.tourSearchFocus : tutorialStep === 2 ? s.tourFavoritesFocus : s.tourAccountFocus]} />
             <View style={s.tourBubble}>
-              <View style={[s.tourPointer, tutorialStep === 0 ? s.pointerSell : s.pointerSearch]} />
+              <View style={[s.tourPointer, tutorialStep === 0 ? s.pointerSell : tutorialStep === 1 ? s.pointerSearch : tutorialStep === 2 ? s.pointerFavorites : s.pointerAccount]} />
               <Text style={s.tourTitle}>{T[lang].tipTitle[tutorialStep]}</Text>
               <Text style={s.tourText}>{T[lang].tipBody[tutorialStep]}</Text>
               <View style={s.tourActions}>
                 <Pressable onPress={finishTutorial} style={s.tourSkip}><Text style={s.tourSkipText}>{T[lang].skip}</Text></Pressable>
-                <Pressable onPress={nextTutorial} style={s.tourNext}><Text style={s.tourNextText}>{tutorialStep === 0 ? T[lang].next : T[lang].finish}</Text></Pressable>
+                <Pressable onPress={nextTutorial} style={s.tourNext}><Text style={s.tourNextText}>{tutorialStep < 3 ? T[lang].next : T[lang].finish}</Text></Pressable>
               </View>
             </View>
           </View>
@@ -247,67 +249,71 @@ export default function FirstRunFlow({ children, onComplete }) {
 }
 
 const s = StyleSheet.create({
-  appRoot: { flex: 1, backgroundColor: '#101a2c' },
-  root: { flex: 1, backgroundColor: '#101a2c' },
-  splash: { flex: 1, backgroundColor: '#101a2c', alignItems: 'center', justifyContent: 'center' },
+  appRoot: { flex: 1, backgroundColor: '#FFFFFF' },
+  root: { flex: 1, backgroundColor: '#FFFFFF' },
+  splash: { flex: 1, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' },
   logo: { width: 174, height: 174, marginBottom: 10 },
-  brand: { color: '#303b54', fontSize: 27, fontWeight: '900', letterSpacing: 2 },
+  brand: { color: '#C8102E', fontSize: 27, fontWeight: '900', letterSpacing: 2 },
   welcome: { color: '#aeb8c7', fontSize: 13, marginTop: 7 },
   splashDots: { flexDirection: 'row', gap: 6, marginTop: 38 },
-  dotActive: { width: 24, height: 3, borderRadius: 2, backgroundColor: '#c6a35b' },
+  dotActive: { width: 24, height: 3, borderRadius: 2, backgroundColor: '#C8102E' },
   dot: { width: 6, height: 3, borderRadius: 2, backgroundColor: '#d5d5d5' },
-  startButton: { marginTop: 30, paddingHorizontal: 25, paddingVertical: 13, backgroundColor: '#c6a35b', borderRadius: 9 },
+  startButton: { marginTop: 30, paddingHorizontal: 25, paddingVertical: 13, backgroundColor: '#C8102E', borderRadius: 9 },
   startText: { color: '#ffffff', fontSize: 15, fontWeight: '900' },
-  languagePage: { flex: 1, backgroundColor: '#101a2c', paddingHorizontal: 38, paddingTop: 90, paddingBottom: 90 },
+  languagePage: { flex: 1, backgroundColor: '#FFFFFF', paddingHorizontal: 38, paddingTop: 90, paddingBottom: 90 },
   languageSpacer: { flex: 1 },
-  languageOption: { height: 72, borderWidth: 1.4, borderColor: 'rgba(198,163,91,0.35)', borderRadius: 16, alignItems: 'center', justifyContent: 'center', marginBottom: 12, backgroundColor: '#101a2c' },
-  languageSelected: { borderColor: 'rgba(198,163,91,0.35)' },
-  languageText: { color: '#f4f0e7', fontSize: 21, fontWeight: '600' },
+  languageOption: { height: 72, borderWidth: 1.4, borderColor: 'rgba(200,16,46,0.25)', borderRadius: 16, alignItems: 'center', justifyContent: 'center', marginBottom: 12, backgroundColor: '#FFFFFF' },
+  languageSelected: { borderColor: 'rgba(200,16,46,0.25)' },
+  languageText: { color: '#333333', fontSize: 21, fontWeight: '600' },
   termsRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 24, minHeight: 42 },
-  termsText: { color: '#399ad5', fontSize: 15 },
-  checkbox: { width: 20, height: 20, borderWidth: 1.5, borderColor: '#399ad5', alignItems: 'center', justifyContent: 'center' },
-  checkboxOn: { backgroundColor: '#399ad5' },
+  termsText: { color: '#C8102E', fontSize: 15 },
+  checkbox: { width: 20, height: 20, borderWidth: 1.5, borderColor: '#C8102E', alignItems: 'center', justifyContent: 'center' },
+  checkboxOn: { backgroundColor: '#C8102E' },
   checkmark: { color: '#ffffff', fontSize: 14, fontWeight: '900', lineHeight: 17 },
-  locationPage: { flex: 1, backgroundColor: '#101a2c' },
-  locationTitle: { color: '#f4f0e7', fontSize: 23, fontWeight: '900', textAlign: 'center', paddingTop: 26, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: 'rgba(198,163,91,0.25)' },
+  locationPage: { flex: 1, backgroundColor: '#FFFFFF' },
+  locationTitle: { color: '#333333', fontSize: 23, fontWeight: '900', textAlign: 'center', paddingTop: 26, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: 'rgba(200,16,46,0.18)' },
   locationScroll: { flex: 1 },
   locationContent: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 28, gap: 10 },
   locationLabel: { color: '#d2d7df', fontSize: 19, fontWeight: '700', textAlign: 'right', marginTop: 3 },
-  dropdown: { minHeight: 58, borderWidth: 1.3, borderColor: 'rgba(198,163,91,0.35)', borderRadius: 13, paddingHorizontal: 17, flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between' },
+  dropdown: { minHeight: 58, borderWidth: 1.3, borderColor: 'rgba(200,16,46,0.25)', borderRadius: 13, paddingHorizontal: 17, flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between' },
   dropdownValue: { color: '#454545', fontSize: 20, fontWeight: '600' },
   dropdownArrow: { color: '#d2d7df', fontSize: 25 },
   districtList: { gap: 9 },
-  districtButton: { minHeight: 58, borderWidth: 1.3, borderColor: 'rgba(198,163,91,0.35)', borderRadius: 13, backgroundColor: '#101a2c', alignItems: 'center', justifyContent: 'center' },
-  districtSelected: { borderColor: '#c6a35b', backgroundColor: '#1b2a42' },
-  districtText: { color: '#f4f0e7', fontSize: 19, fontWeight: '600' },
-  gpsButton: { marginTop: 8, minHeight: 48, borderWidth: 1.2, borderColor: '#c6a35b', borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
-  gpsText: { color: '#c6a35b', fontSize: 14, fontWeight: '800' },
+  districtButton: { minHeight: 58, borderWidth: 1.3, borderColor: 'rgba(200,16,46,0.25)', borderRadius: 13, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' },
+  districtSelected: { borderColor: '#C8102E', backgroundColor: '#C8102E' },
+  districtText: { color: '#333333', fontSize: 19, fontWeight: '600' },
+  gpsButton: { marginTop: 8, minHeight: 48, borderWidth: 1.2, borderColor: '#C8102E', borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+  gpsText: { color: '#C8102E', fontSize: 14, fontWeight: '800' },
   gpsHint: { color: '#aeb8c7', fontSize: 12, textAlign: 'right' },
-  continueButton: { backgroundColor: '#c6a35b', borderRadius: 10, minHeight: 52, alignItems: 'center', justifyContent: 'center', marginTop: 7 },
+  continueButton: { backgroundColor: '#C8102E', borderRadius: 10, minHeight: 52, alignItems: 'center', justifyContent: 'center', marginTop: 7 },
   continueDisabled: { opacity: 0.45 },
   continueText: { color: '#ffffff', fontSize: 16, fontWeight: '900' },
   modalShade: { flex: 1, backgroundColor: 'rgba(0,0,0,0.45)', justifyContent: 'center', padding: 22 },
-  modalCard: { maxHeight: '82%', backgroundColor: '#101a2c', borderRadius: 16, padding: 16 },
+  modalCard: { maxHeight: '82%', backgroundColor: '#FFFFFF', borderRadius: 16, padding: 16 },
   modalTitle: { color: '#333333', fontSize: 20, fontWeight: '900', textAlign: 'center', marginBottom: 12 },
   modalList: { maxHeight: 500 },
-  modalOption: { minHeight: 50, borderBottomWidth: 1, borderBottomColor: 'rgba(198,163,91,0.2)', justifyContent: 'center', alignItems: 'center' },
-  modalOptionText: { color: '#f4f0e7', fontSize: 17, fontWeight: '600' },
-  modalClose: { backgroundColor: '#c6a35b', borderRadius: 9, alignItems: 'center', paddingVertical: 11, marginTop: 12 },
+  modalOption: { minHeight: 50, borderBottomWidth: 1, borderBottomColor: 'rgba(200,16,46,0.16)', justifyContent: 'center', alignItems: 'center' },
+  modalOptionText: { color: '#333333', fontSize: 17, fontWeight: '600' },
+  modalClose: { backgroundColor: '#C8102E', borderRadius: 9, alignItems: 'center', paddingVertical: 11, marginTop: 12 },
   modalCloseText: { color: '#ffffff', fontWeight: '900' },
   tourRoot: { ...StyleSheet.absoluteFillObject, zIndex: 1000, justifyContent: 'flex-start' },
   tourShade: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.58)' },
   tourFocus: { position: 'absolute', top: 40, height: 36, width: 72, backgroundColor: 'transparent', borderWidth: 2, borderColor: '#ffffff', borderRadius: 7 },
   tourSellFocus: { left: '23%' },
   tourSearchFocus: { left: '3%' },
-  tourBubble: { position: 'absolute', top: 111, left: 14, width: '80%', minHeight: 66, paddingHorizontal: 10, paddingVertical: 8, borderRadius: 11, backgroundColor: '#c6a35b' },
-  tourPointer: { position: 'absolute', top: -10, width: 0, height: 0, borderLeftWidth: 11, borderRightWidth: 11, borderBottomWidth: 11, borderLeftColor: 'transparent', borderRightColor: 'transparent', borderBottomColor: '#c6a35b' },
+  tourFavoritesFocus: { left: '67%' },
+  tourAccountFocus: { left: '82%' },
+  tourBubble: { position: 'absolute', top: 111, left: 14, width: '80%', minHeight: 66, paddingHorizontal: 10, paddingVertical: 8, borderRadius: 11, backgroundColor: '#C8102E' },
+  tourPointer: { position: 'absolute', top: -10, width: 0, height: 0, borderLeftWidth: 11, borderRightWidth: 11, borderBottomWidth: 11, borderLeftColor: 'transparent', borderRightColor: 'transparent', borderBottomColor: '#C8102E' },
   pointerSell: { left: '36%' },
   pointerSearch: { left: '10%' },
+  pointerFavorites: { left: '76%' },
+  pointerAccount: { left: '91%' },
   tourTitle: { color: '#ffffff', textAlign: 'center', fontSize: 17, fontWeight: '900' },
   tourText: { color: '#ffffff', textAlign: 'center', fontSize: 13, lineHeight: 18, marginTop: 3 },
   tourActions: { flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center', marginTop: 9 },
   tourSkip: { padding: 7 },
   tourSkipText: { color: '#ffffff', fontWeight: '700' },
-  tourNext: { backgroundColor: '#101a2c', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 7 },
-  tourNextText: { color: '#c6a35b', fontWeight: '900' }
+  tourNext: { backgroundColor: '#FFFFFF', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 7 },
+  tourNextText: { color: '#C8102E', fontWeight: '900' }
 });

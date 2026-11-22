@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   appleWebApp: { capable: true, title: "SUPER PHONE", statusBarStyle: "black-translucent" },
 };
 
-export const viewport: Viewport = { themeColor: "#0b1728", colorScheme: "dark" };
+export const viewport: Viewport = { themeColor: "#c8102e", colorScheme: "light" };
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const cookieStore = await cookies();

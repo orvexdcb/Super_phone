@@ -10,7 +10,7 @@ const PAGE = 20;
 const SELECT = 'id,title,price,currency,condition,governorate,city,created_at,brand,model,categories!inner(slug,name_ar),listing_images(storage_path,sort_order),listing_specs(spec_key,spec_value)';
 const EMPTY = { q: '', category: '', condition: '', governorate: '', min: '', max: '' };
 const COPY = {
-  ar: { city:'كل المدن', sell:'بيعها', search:'بحث', filter:'فلتر البحث', query:'ابحث عن هاتف أو جهاز...', condition:'حالة الجهاز', governorate:'المحافظة', price:'السعر', min:'أقل سعر', max:'أعلى سعر', clear:'مسح', apply:'تطبيق', all:'الكل', featured:'أجهزة مميزة', latest:'أحدث الأجهزة المعروضة', banner:'بع هاتفك بسهولة', bannerText:'اعرض جهازك بالصور والسعر وتواصل مباشرة مع المشتري.', empty:'لا توجد إعلانات مطابقة حالياً.', error:'تعذّر تحميل الإعلانات. حاول مرة أخرى.', recently:'أضيف حديثاً', choose:'تصفح حسب الفئة' },
+  ar: { city:'كل المدن', sell:'بيع جهازك', search:'بحث', filter:'فلتر البحث', query:'ابحث عن هاتف أو جهاز...', condition:'حالة الجهاز', governorate:'المحافظة', price:'السعر', min:'أقل سعر', max:'أعلى سعر', clear:'مسح', apply:'تطبيق', all:'الكل', featured:'أجهزة مميزة', latest:'أحدث الأجهزة المعروضة', banner:'بع هاتفك بسهولة', bannerText:'اعرض جهازك بالصور والسعر وتواصل مباشرة مع المشتري.', empty:'لا توجد إعلانات مطابقة حالياً.', error:'تعذّر تحميل الإعلانات. حاول مرة أخرى.', recently:'أضيف حديثاً', choose:'تصفح حسب الفئة' },
   en: { city:'All cities', sell:'Sell', search:'Search', filter:'Search filters', query:'Search phones or devices...', condition:'Device condition', governorate:'Governorate', price:'Price', min:'Min price', max:'Max price', clear:'Clear', apply:'Apply', all:'All', featured:'Featured devices', latest:'Latest listings', banner:'Sell your phone easily', bannerText:'Show your device with photos and a price, and contact buyers directly.', empty:'No matching listings right now.', error:'Could not load listings. Please try again.', recently:'Recently added', choose:'Browse by category' },
   ku: { city:'هەموو شارەکان', sell:'بفرۆشە', search:'گەڕان', filter:'پاڵاوتنی گەڕان', query:'بگەڕێ بۆ مۆبایل یان ئامێر...', condition:'دۆخی ئامێر', governorate:'پارێزگا', price:'نرخ', min:'کەمترین نرخ', max:'زۆرترین نرخ', clear:'پاککردنەوە', apply:'جێبەجێکردن', all:'هەموو', featured:'ئامێرە دیارەکان', latest:'نوێترین ڕیکلامەکان', banner:'مۆبایلەکەت بە ئاسانی بفرۆشە', bannerText:'ئامێرەکەت بە وێنە و نرخ پیشان بدە و ڕاستەوخۆ پەیوەندی بکە.', empty:'هیچ ڕیکلامێکی گونجاو نییە.', error:'بارکردنی ڕیکلامەکان سەرکەوتوو نەبوو.', recently:'تازە زیادکراوە', choose:'بەپێی پۆل بگەڕێ' }
 };
@@ -19,7 +19,7 @@ function firstImage(listing) {
   return [...(listing?.listing_images || [])].sort((a, b) => a.sort_order - b.sort_order)[0];
 }
 
-export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar', fixedCategorySlug = '' }) {
+export default function BrowseScreen({ onOpen, onSell, onFavorites, onAccountAction, accountActionLabel, lang = 'ar', fixedCategorySlug = '' }) {
   const t = COPY[lang] || COPY.ar;
   const [draft, setDraft] = useState({ ...EMPTY, category: fixedCategorySlug });
   const [applied, setApplied] = useState({ ...EMPTY, category: fixedCategorySlug });
@@ -84,7 +84,10 @@ export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar',
   };
   const activeCount = ['condition', 'governorate', 'min', 'max'].filter((key) => applied[key]).length;
   const featured = fixedCategorySlug ? null : items[0];
-  const rows = featured ? items.slice(1) : items;
+  const rows = (featured ? items.slice(1) : items).flatMap((item, index) => {
+    const itemNumber = (featured ? 1 : 0) + index + 1;
+    return itemNumber % 5 === 0 ? [item, { id: `promo-${itemNumber}`, __type: 'promo' }] : [item];
+  });
 
   const header = (
     <View>
@@ -94,8 +97,10 @@ export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar',
           <Text style={styles.cityText}>{applied.governorate ? governorateLabel(lang, applied.governorate) : t.city}</Text>
         </Pressable>
         <View style={styles.topActions}>
-          <Pressable style={styles.outlineButton} onPress={onSell}><Text style={styles.outlineButtonText}>▱  {t.sell}</Text></Pressable>
-          <Pressable style={styles.outlineButton} onPress={() => setShowFilters((v) => !v)}><Text style={styles.outlineButtonText}>☷  {t.search}</Text></Pressable>
+          <Pressable style={styles.outlineButton} onPress={onSell}><Text style={styles.outlineButtonText}>＋ {t.sell}</Text></Pressable>
+          <Pressable style={styles.outlineButton} onPress={() => setShowFilters((v) => !v)}><Text style={styles.outlineButtonText}>⌕ {t.search}</Text></Pressable>
+          <Pressable style={styles.outlineButton} onPress={onFavorites}><Text style={styles.outlineButtonText}>♡ {lang === 'en' ? 'Favorites' : lang === 'ku' ? 'دڵخوازەکان' : 'المفضلة'}</Text></Pressable>
+          <Pressable style={[styles.outlineButton, styles.accountTopButton]} onPress={onAccountAction}><Text style={[styles.outlineButtonText, styles.accountTopText]}>{accountActionLabel || (lang === 'en' ? 'Account' : lang === 'ku' ? 'هەژمار' : 'حساب')}</Text></Pressable>
         </View>
       </View>
 
@@ -180,7 +185,14 @@ export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar',
         loading ? <ActivityIndicator color={COLORS.danger} style={{ margin: 36 }} /> :
         <Text style={styles.empty}>{error || (featured ? '' : t.empty)}</Text>
       }
-      renderItem={({ item }) => <ListingCard lang={lang} listing={item} onPress={() => onOpen(item.id)} />}
+      renderItem={({ item }) => item.__type === 'promo' ? (
+        <Pressable style={styles.inlineAd} onPress={onSell}>
+          <Text style={styles.inlineAdLabel}>{lang === 'en' ? 'SPONSORED SPACE' : lang === 'ku' ? 'شوێنی ڕیکلام' : 'مساحة إعلانية'}</Text>
+          <Text style={styles.inlineAdTitle}>{lang === 'en' ? 'Promote your device on SUPER PHONE' : lang === 'ku' ? 'ئامێرەکەت لە SUPER PHONE بەرز بکەرەوە' : 'روّج لجهازك على SUPER PHONE'}</Text>
+          <Text style={styles.inlineAdText}>{lang === 'en' ? 'Reach buyers looking for their next device.' : lang === 'ku' ? 'بگەیەنە بە کڕیارانی بەدوای ئامێری نوێدا.' : 'اعرض جهازك أمام الباحثين عن أجهزتهم القادمة.'}</Text>
+          <Text style={styles.inlineAdAction}>{lang === 'en' ? 'Create a listing ←' : lang === 'ku' ? 'دانانی ڕیکلام ←' : 'أضف إعلانك ←'}</Text>
+        </Pressable>
+      ) : <ListingCard lang={lang} listing={item} onPress={() => onOpen(item.id)} />}
     />
   );
 }
@@ -190,18 +202,20 @@ const styles = StyleSheet.create({
   listContent: { paddingBottom: 20 },
   topBar: { minHeight: 66, paddingHorizontal: 14, paddingVertical: 9, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8, backgroundColor: '#ffffff' },
   cityButton: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingVertical: 8, flexShrink: 1 },
-  pin: { color: '#e84b53', fontSize: 25, fontWeight: '700' },
+  pin: { color: '#C8102E', fontSize: 25, fontWeight: '700' },
   cityText: { color: '#3b3b3b', fontSize: 17, fontWeight: '600' },
-  topActions: { flexDirection: 'row', gap: 7 },
-  outlineButton: { borderWidth: 1.3, borderColor: '#505050', borderRadius: 9, paddingHorizontal: 11, paddingVertical: 9, backgroundColor: '#ffffff' },
-  outlineButtonText: { color: '#454545', fontSize: 14, fontWeight: '600' },
+  topActions: { flexDirection: 'row', gap: 4, flex: 1, justifyContent: 'flex-end' },
+  outlineButton: { flex: 1, minWidth: 0, borderWidth: 1.2, borderColor: '#e2b7be', borderRadius: 9, paddingHorizontal: 3, paddingVertical: 8, backgroundColor: '#ffffff', alignItems: 'center' },
+  outlineButtonText: { color: '#C8102E', fontSize: 10, fontWeight: '800', textAlign: 'center' },
+  accountTopButton: { backgroundColor: '#C8102E', borderColor: '#C8102E' },
+  accountTopText: { color: '#ffffff' },
   filterPanel: { marginHorizontal: 12, marginBottom: 10, padding: 13, gap: 9, borderRadius: 13, borderWidth: 1, borderColor: '#e4e4e4', backgroundColor: '#ffffff' },
   input: { borderWidth: 1, borderColor: '#dedede', borderRadius: 10, paddingHorizontal: 12, paddingVertical: 11, color: '#333333', backgroundColor: '#ffffff', fontSize: 15 },
   label: { color: '#555555', textAlign: 'right', fontSize: 14, fontWeight: '700', marginTop: 3 },
   wrap: { flexDirection: 'row-reverse', flexWrap: 'wrap', gap: 7 },
   priceRow: { flexDirection: 'row-reverse', gap: 8 },
   priceInput: { flex: 1 },
-  filterAction: { flex: 1, backgroundColor: '#e84b53', borderRadius: 9, padding: 12, alignItems: 'center' },
+  filterAction: { flex: 1, backgroundColor: '#C8102E', borderRadius: 9, padding: 12, alignItems: 'center' },
   filterActionText: { color: '#ffffff', fontWeight: '800' },
   clearAction: { backgroundColor: '#ffffff', borderWidth: 1, borderColor: '#dedede' },
   clearText: { color: '#555555', fontWeight: '700' },
@@ -212,24 +226,29 @@ const styles = StyleSheet.create({
   featuredCard: { marginHorizontal: 0, height: 270, overflow: 'hidden', backgroundColor: '#f1f1f1', position: 'relative' },
   featuredImage: { width: '100%', height: '100%' },
   noImage: { alignItems: 'center', justifyContent: 'center', backgroundColor: '#f2f2f2' },
-  noImageText: { color: '#e84b53', fontWeight: '900', fontSize: 22, letterSpacing: 2 },
+  noImageText: { color: '#C8102E', fontWeight: '900', fontSize: 22, letterSpacing: 2 },
   featuredShade: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.12)' },
-  featuredPrice: { position: 'absolute', left: 12, bottom: 12, backgroundColor: '#e84b53', paddingHorizontal: 13, paddingVertical: 8, minWidth: 145 },
+  featuredPrice: { position: 'absolute', left: 12, bottom: 12, backgroundColor: '#C8102E', paddingHorizontal: 13, paddingVertical: 8, minWidth: 145 },
   featuredCurrency: { color: '#ffffff', fontSize: 12 },
   featuredPriceText: { color: '#ffffff', fontWeight: '900', fontSize: 18 },
   featuredTitleWrap: { position: 'absolute', right: 12, top: 12, maxWidth: '70%', padding: 8, backgroundColor: 'rgba(255,255,255,0.92)', borderRadius: 8 },
   featuredTitle: { color: '#333333', fontWeight: '900', fontSize: 16, textAlign: 'right' },
   featuredLocation: { color: '#666666', textAlign: 'right', fontSize: 12 },
-  promo: { marginHorizontal: 8, marginTop: 9, marginBottom: 10, padding: 15, minHeight: 126, borderRadius: 9, backgroundColor: '#16578d', flexDirection: 'row-reverse', alignItems: 'center', overflow: 'hidden', position: 'relative' },
+  promo: { marginHorizontal: 8, marginTop: 9, marginBottom: 10, padding: 15, minHeight: 126, borderRadius: 9, backgroundColor: '#C8102E', flexDirection: 'row-reverse', alignItems: 'center', overflow: 'hidden', position: 'relative' },
   promoImage: { ...StyleSheet.absoluteFillObject, width: '100%', height: '100%' },
-  promoShade: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(4,28,53,0.72)' },
+  promoShade: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(105,0,18,0.72)' },
   promoCopy: { flex: 1, zIndex: 1, alignItems: 'flex-end' },
-  promoBrand: { color: '#d4e8fa', fontSize: 10, fontWeight: '900', letterSpacing: 2 },
+  promoBrand: { color: '#ffffff', fontSize: 10, fontWeight: '900', letterSpacing: 2 },
   promoTitle: { color: '#ffffff', fontSize: 19, fontWeight: '900', textAlign: 'right', marginTop: 5 },
-  promoText: { color: '#edf5fc', fontSize: 12, lineHeight: 18, textAlign: 'right', marginTop: 3 },
+  promoText: { color: '#ffffff', fontSize: 12, lineHeight: 18, textAlign: 'right', marginTop: 3 },
   promoCta: { backgroundColor: '#ffffff', borderRadius: 7, paddingHorizontal: 12, paddingVertical: 7, marginTop: 8, alignSelf: 'flex-start' },
-  promoCtaText: { color: '#16578d', fontWeight: '900', fontSize: 12 },
+  promoCtaText: { color: '#C8102E', fontWeight: '900', fontSize: 12 },
   sectionHeading: { paddingTop: 9, paddingBottom: 7, flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center' },
   recent: { color: '#888888', fontSize: 11, paddingHorizontal: 14 },
   empty: { color: '#777777', textAlign: 'center', padding: 25, fontSize: 14 },
+  inlineAd: { marginHorizontal: 12, marginVertical: 8, padding: 16, borderRadius: 12, borderWidth: 1, borderColor: '#e5b2bb', backgroundColor: '#fff7f8', gap: 6 },
+  inlineAdLabel: { color: '#C8102E', fontSize: 10, fontWeight: '900', textAlign: 'right', letterSpacing: 1 },
+  inlineAdTitle: { color: '#292929', fontSize: 16, fontWeight: '900', textAlign: 'right' },
+  inlineAdText: { color: '#666666', fontSize: 12, textAlign: 'right', lineHeight: 18 },
+  inlineAdAction: { color: '#C8102E', fontWeight: '900', textAlign: 'left', paddingTop: 4 },
 });

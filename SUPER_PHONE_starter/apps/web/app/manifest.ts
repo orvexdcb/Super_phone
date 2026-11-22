@@ -13,13 +13,12 @@ export default function manifest(): MetadataRoute.Manifest {
     display: "standalone",
     display_override: ["standalone", "minimal-ui"],
     orientation: "portrait",
-    background_color: "#091321",
-    theme_color: "#091321",
+    background_color: "#ffffff",
+    theme_color: "#C8102E",
     prefer_related_applications: false,
     icons: [
       { src: "/pwa-icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
-      { src: "/pwa-icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
-      { src: "/pwa-maskable.png", sizes: "512x512", type: "image/png", purpose: "maskable" }
+      { src: "/pwa-icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" }
     ]
   };
 }

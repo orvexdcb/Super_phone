@@ -316,3 +316,131 @@ main{max-width:1180px;margin:0 auto;padding:22px 22px 54px}
  .sp-header-actions>a:not(.cta) { display:none; }
  .sp-header-actions .cta { padding:8px 10px; font-size:.73rem; }
 }
+
+/* SUPER PHONE red & white visual system */
+:root{color-scheme:light;--bg:#fff;--panel:#fff;--panel-soft:#fff;--line:#ead9dc;--text:#252525;--muted:#777;--gold:#c8102e;--gold-light:#e3263f;--ink:#fff;--sp-navy:#fff;--sp-panel:#fff;--sp-gold:#c8102e;--sp-cream:#252525}
+html,body{background:#fff!important;color:#252525!important}
+body{background:#fff!important;color:#252525!important}
+.site-header,.sp-site-header,.topbar{background:#fff!important;color:#252525!important;border-color:#f0dadd!important}
+.brand-copy strong,.brand-copy strong i,.sp-kicker,.sp-heading-mark,.sp-category-icon,.price,.section-head a,.pager a{color:#c8102e!important}
+.brand-copy small,.nav-actions a,.sp-header-actions a{color:#4b4b4b!important}
+.brand-mark{border:0!important;border-radius:12px!important}
+.sp-nav-action{display:inline-flex!important;align-items:center;justify-content:center;gap:6px;padding:10px 12px;border:1px solid #f0cbd1;border-radius:12px;background:#fff;color:#c8102e!important;font-weight:800;text-decoration:none;white-space:nowrap}
+.sp-nav-action span{font-size:1.2rem}
+.sp-nav-sell,.sp-nav-account{background:#c8102e!important;color:#fff!important;border-color:#c8102e!important}
+.sp-welcome,.sp-action,.sp-category,.sp-promo,.sp-search-section,.sp-listing-grid .card,.card,.auth,.search-panel,.category-tile,.page-card,.panel{background:#fff!important;color:#252525!important;border:1px solid #f0dadd!important;box-shadow:0 5px 18px rgba(90,0,15,.06)}
+.sp-welcome{background:linear-gradient(120deg,#fff,#fff5f6)!important}
+.sp-welcome h1,.sp-section-heading h2,.sp-action strong,.sp-category strong,.sp-promo h2,.body h3,.card h3{color:#252525!important}
+.sp-welcome p,.sp-action small,.sp-promo p,.sp-live-dot,.meta,.notice{color:#777!important}
+.sp-mark-art{background:linear-gradient(145deg,#c8102e,#8e001a)!important;border:2px solid #fff!important}
+.sp-mark-art span,.sp-mark-art i{color:#fff!important}
+.sp-action-sell,.nav-actions .cta,.cta,.cta-link,.filters button,.auth-form button,.first-run-btn,.sp-filters button{background:#c8102e!important;color:#fff!important;border-color:#c8102e!important}
+.sp-action-icon,.sp-category-icon{background:#fff0f2!important;color:#c8102e!important}
+.sp-action-sell small{color:#fff!important}
+.sp-category{background:#fff!important}
+.sp-promo{background:linear-gradient(110deg,#fff5f6,#fff)!important}
+.sp-promo-label{color:#c8102e!important}
+.sp-promo-device{border-color:#c8102e!important}
+.sp-promo-device span{background:#fff!important;border-color:#c8102e!important}
+.sp-search-section{background:#fff!important}
+.sp-filters input,.sp-filters select,.filters input,.filters select,.auth-form input,.auth-form select,.auth-form textarea,.first-run-field{background:#fff!important;color:#252525!important;border:1px solid #e5c6cb!important}
+.sp-filters input:focus,.sp-filters select:focus{outline:2px solid #c8102e55;border-color:#c8102e!important}
+.sp-listing-grid .card,.card{background:#fff!important}
+.sp-listing-grid .thumb,.thumb{background:#fff5f6!important}
+.pager a,.row-actions button,.row-actions a{background:#fff!important;color:#c8102e!important;border-color:#efcbd1!important}
+.first-run-overlay{background:rgba(255,255,255,.96)!important;color:#252525!important}
+.first-run-panel{background:#fff!important;color:#252525!important;border:1px solid #efcbd1!important}
+.first-run-title{color:#c8102e!important}
+.first-run-option{background:#fff!important;color:#252525!important;border-color:#efcbd1!important}
+.first-run-option.active{background:#fff0f2!important;border-color:#c8102e!important}
+.first-run-logo-mark{display:grid;place-items:center;width:124px;height:124px;margin:0 auto 18px;border-radius:28px;background:#c8102e;color:#fff;font:bold 3.5rem Arial;border:5px solid #fff;outline:2px solid #c8102e}
+.sp-guide-stage{position:fixed;inset:0;z-index:1000;pointer-events:none}
+.sp-guide-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.58);pointer-events:auto}
+.sp-guide-tip{position:absolute;z-index:2;top:112px;left:50%;transform:translateX(-50%);width:min(88vw,430px);padding:20px 18px;border-radius:16px;background:#c8102e;color:#fff;box-shadow:0 12px 40px #0005;text-align:center;pointer-events:auto}
+.sp-guide-tip:before{content:"";position:absolute;top:-12px;left:50%;border-width:0 13px 13px;border-style:solid;border-color:transparent transparent #c8102e;transform:translateX(-50%)}
+.sp-guide-tip h2{margin:0 0 6px;color:#fff;font-size:1.25rem}
+.sp-guide-tip p{margin:0 0 14px;color:#fff;line-height:1.6}
+.sp-guide-count{display:block;font-size:.72rem;opacity:.8;margin-bottom:5px}
+.sp-guide-controls{display:flex;justify-content:center;align-items:center;gap:14px}
+.sp-guide-controls .first-run-btn{background:#fff!important;color:#c8102e!important}
+.sp-guide-skip{background:transparent;border:0;color:#fff;text-decoration:underline;font:inherit;cursor:pointer}
+.sp-site-header .topbar{gap:10px}
+.sp-header-actions{gap:7px;flex-wrap:wrap}
+@media(max-width:640px){
+ body{padding-bottom:0!important}
+ .sp-site-header .topbar{align-items:center;flex-wrap:wrap;padding:8px 10px}
+ .sp-site-header .brand-lockup{gap:6px}
+ .sp-site-header .brand-mark{width:34px;height:34px}
+ .sp-site-header .brand-copy strong{font-size:.82rem}
+ .sp-header-actions{width:100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+ .sp-nav-action{padding:8px 4px;font-size:.68rem;gap:3px;border-radius:9px}
+ .sp-nav-action span{font-size:1rem}
+ .sp-header-actions .sp-founder-link{display:none}
+ .sp-primary-actions{display:none!important}
+ .sp-guide-tip{top:155px}
+ .sp-guide-step-3{top:155px}
+ .sp-guide-step-4{top:155px}
+ .sp-guide-step-5{top:155px}
+ .sp-guide-step-6{top:155px}
+}
+
+
+/* Final supplied-icon and guided onboarding refinements */
+.first-run-logo-image{display:block;width:112px;height:112px;object-fit:contain;margin:0 auto 16px;border-radius:22px}
+.first-run-logo-mark{display:none!important}
+.sp-site-header .brand-mark{object-fit:contain;border-radius:10px}
+.sp-header-actions .link-btn.sp-nav-action{border:0;cursor:pointer;font:inherit}
+.sp-guide-tip{top:132px;max-width:410px;background:#C8102E}
+.sp-guide-tip:before{border-bottom-color:#C8102E}
+.sp-guide-step-3:before{left:17%}
+.sp-guide-step-4:before{left:42%}
+.sp-guide-step-5:before{left:66%}
+.sp-guide-step-6:before{left:88%}
+body:has(.sp-guide-step-3) [data-guide="sell"],
+body:has(.sp-guide-step-4) [data-guide="search"],
+body:has(.sp-guide-step-5) [data-guide="favorites"],
+body:has(.sp-guide-step-6) [data-guide="account"]{position:relative;z-index:5;outline:3px solid #fff;box-shadow:0 0 0 5px #C8102E;border-radius:10px}
+.first-run-overlay{background:#fff!important}
+.first-run-panel{background:#fff!important;color:#272727!important}
+.first-run-title{color:#C8102E!important}
+.first-run-option{background:#fff!important;border-color:#e3e3e3!important;color:#333!important}
+.first-run-option.active{border-color:#C8102E!important;color:#C8102E!important}
+.first-run-field{background:#fff!important;color:#333!important;border-color:#ddd!important}
+.first-run-btn{background:#C8102E!important;color:#fff!important}
+@media(max-width:640px){
+ .sp-guide-tip{top:155px}
+ .sp-header-actions .sp-nav-account{font-size:.66rem}
+}
+
+.sp-inline-ad{grid-column:1/-1;padding:18px 20px;border:1px solid #edc4cb;border-radius:14px;background:linear-gradient(105deg,#fff7f8,#fff);display:flex;flex-direction:column;gap:6px;text-align:right}
+.sp-inline-ad>span{font-size:.68rem;color:#C8102E;font-weight:900;letter-spacing:.08em}
+.sp-inline-ad strong{font-size:1.05rem;color:#272727}
+.sp-inline-ad p{margin:0;color:#686868;font-size:.9rem}
+.sp-inline-ad a{color:#C8102E;font-weight:900;text-decoration:none;align-self:flex-start}
+
+/* Red-white cleanup for older account, seller and founder routes */
+:root{--bg:#fff;--panel:#fff;--panel-soft:#fff;--line:#ead9dc;--text:#252525;--muted:#777;--gold:#C8102E;--gold-light:#C8102E;--ink:#fff}
+.marketplace-banner,.founder-heading{background:linear-gradient(115deg,#C8102E,#8e001a)!important;border-color:#C8102E!important;color:#fff!important}
+.marketplace-banner h2,.marketplace-banner .banner-kicker,.founder-heading h1,.founder-kicker{color:#fff!important}
+.marketplace-banner p,.founder-heading p{color:#fff!important;opacity:.9}
+.banner-device{color:#fff!important}
+.auth,.admin-item,.specs,.desc,.founder-tool,.founder-stats article{background:#fff!important;color:#252525!important;border:1px solid #efcbd1!important;box-shadow:0 5px 18px rgba(90,0,15,.05)}
+.specs th,.specs td,.desc,.admin-item,.founder-shell{color:#333!important}
+.specs th{color:#777!important}
+.admin-actions input,.report-form input,.ghost,.row-actions button,.row-actions a{background:#fff!important;color:#333!important;border-color:#efcbd1!important}
+.admin-actions button,.admin-actions .ok-btn,.admin-actions .no-btn,.report-form button{background:#C8102E!important;color:#fff!important;border-color:#C8102E!important}
+.badge{background:#fff0f2!important;color:#C8102E!important}
+.s-pending_review,.s-rejected{background:#fff0f2!important;color:#C8102E!important}
+.safety{background:#fff5f6!important;color:#8e001a!important}
+.founder-shell,.founder-stats strong,.founder-tool{color:#252525!important}
+.founder-stats .founder-admin,.founder-tool-icon,.founder-arrow,.founder-nav-link,.founder-account-link{color:#C8102E!important}
+.founder-tool-icon,.founder-account-link{background:#fff0f2!important}
+.founder-tool:hover{border-color:#C8102E!important}
+.mobile-dock{background:rgba(255,255,255,.98)!important;border-top:1px solid #efcbd1!important}
+.dock-item,.dock-add{color:#C8102E!important}
+.home-action{background:#fff!important;color:#C8102E!important;border-color:#efcbd1!important}
+.home-action.primary{background:#C8102E!important;color:#fff!important;border-color:#C8102E!important}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline-color:#C8102E!important}
+.sp-mark-art{background:#C8102E!important;border-color:#fff!important;box-shadow:0 12px 26px rgba(200,16,46,.18)!important;transform:none!important}
+.sp-mark-art img{width:100%;height:100%;object-fit:cover;border-radius:inherit}
+.sp-mark-art span,.sp-mark-art i{display:none!important}

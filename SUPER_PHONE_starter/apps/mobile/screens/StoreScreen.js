@@ -58,7 +58,7 @@ export default function StoreScreen({ lang = 'ar', onOpen, onSell, onFavorites }
 
   const findCategory = (pattern) => categories.find((item) => pattern.test(item.slug + ' ' + item.name_ar));
 
-  if (loading) return <View style={styles.center}><ActivityIndicator color="#e84b53" /></View>;
+  if (loading) return <View style={styles.center}><ActivityIndicator color="#C8102E" /></View>;
 
   if (selected) {
     const category = categories.find((item) => item.slug === selected);
@@ -177,25 +177,25 @@ const styles = StyleSheet.create({
   sectionHeading: { paddingHorizontal: 18, paddingTop: 22, paddingBottom: 10, flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center' },
   sectionTitle: { color: '#454545', fontSize: 18, fontWeight: '800', textAlign: 'right' },
   sectionTitleStandalone: { color: '#454545', fontSize: 18, fontWeight: '800', textAlign: 'right', paddingHorizontal: 18, marginTop: 24, marginBottom: 12 },
-  viewAll: { color: '#e84b53', fontSize: 12, fontWeight: '800' },
+  viewAll: { color: '#C8102E', fontSize: 12, fontWeight: '800' },
   horizontalProducts: { paddingHorizontal: 10, gap: 10, flexDirection: 'row-reverse' },
   productGrid: { paddingHorizontal: 12, flexDirection: 'row-reverse', flexWrap: 'wrap', justifyContent: 'space-between', rowGap: 12 },
   productCard: { width: 205, maxWidth: '48%', minHeight: 190, backgroundColor: '#ffffff', borderWidth: 1, borderColor: '#e5e5e5', borderRadius: 10, overflow: 'hidden' },
   productImage: { width: '100%', height: 126, backgroundColor: '#f1f1f1' },
   noImage: { alignItems: 'center', justifyContent: 'center' },
-  productIcon: { color: '#e84b53', fontSize: 42 },
+  productIcon: { color: '#C8102E', fontSize: 42 },
   productInfo: { padding: 8, gap: 4 },
   productTitle: { color: '#333333', fontSize: 13, fontWeight: '800', textAlign: 'right' },
-  productPrice: { color: '#e84b53', fontSize: 14, fontWeight: '900', textAlign: 'right' },
+  productPrice: { color: '#C8102E', fontSize: 14, fontWeight: '900', textAlign: 'right' },
   productLocation: { color: '#888888', fontSize: 10, textAlign: 'right' },
   categoryGrid: { paddingHorizontal: 14, flexDirection: 'row-reverse', flexWrap: 'wrap', gap: 10 },
   categoryCard: { width: '48%', minHeight: 88, padding: 12, borderWidth: 1, borderColor: '#e6e6e6', borderRadius: 10, backgroundColor: '#fafafa', flexDirection: 'row-reverse', alignItems: 'center', gap: 10 },
-  categoryIcon: { color: '#e84b53', fontSize: 27 },
+  categoryIcon: { color: '#C8102E', fontSize: 27 },
   categoryName: { color: '#444444', fontSize: 14, fontWeight: '800', textAlign: 'right', flex: 1 },
   empty: { color: '#888888', textAlign: 'center', padding: 20, fontSize: 13 },
   selectedHeader: { paddingHorizontal: 16, paddingVertical: 11, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#eeeeee', backgroundColor: '#ffffff' },
   selectedTitle: { color: '#333333', fontWeight: '900', fontSize: 17 },
   back: { padding: 6 },
-  backText: { color: '#e84b53', fontWeight: '700' },
+  backText: { color: '#C8102E', fontWeight: '700' },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#ffffff' },
 });
