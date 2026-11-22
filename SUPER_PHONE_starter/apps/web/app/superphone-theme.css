@@ -546,12 +546,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 /* Compact mobile header action buttons (not category icons or cards) */
 @media(max-width:760px){
   .sp-nav-action{
-    min-height:36px!important;
-    padding:5px 6px!important;
-    gap:3px!important;
-    border-radius:8px!important;
-    font-size:.72rem!important;
-    line-height:1.1!important;
+    min-height:30px!important;
+    padding:3px 4px!important;
+    gap:2px!important;
+    border-radius:7px!important;
+    font-size:.64rem!important;
+    line-height:1.05!important;
   }
-  .sp-nav-action span{font-size:.85rem!important}
+  .sp-nav-action span{font-size:.72rem!important}
 }
