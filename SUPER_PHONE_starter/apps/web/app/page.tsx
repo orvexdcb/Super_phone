@@ -38,28 +38,10 @@ export default async function Home({ searchParams }: { searchParams: SP }) {
       <section id="sp-category-section" className="sp-category-section">
         <div className="sp-section-heading"><div><span className="sp-kicker">{lang==="en"?"EXPLORE":"استكشف"}</span><h2>{copy.categories}</h2></div><span className="sp-heading-mark">✦</span></div>
         <div className="sp-category-grid">
-          {categories.map(category=><Link key={category.slug} href={"/?category="+encodeURIComponent(category.slug)+"#sp-search"} className="sp-category">
+          {categories.map(category=><Link key={category.slug} href={"/search?category="+encodeURIComponent(category.slug)+"#sp-search"} className="sp-category">
             <span className="sp-category-icon">{categoryIcons[category.slug] || "▯"}</span><strong>{categoryName(lang,category.name_ar)}</strong><span className="sp-category-arrow">↗</span>
           </Link>)}
         </div>
-      </section>
-
-      <section className="sp-promo">
-        <div><span className="sp-promo-label">SUPER PHONE</span><h2>{copy.promoTitle}</h2><p>{copy.promoText}</p></div>
-        <div className="sp-promo-device" aria-hidden="true"><span></span></div>
-      </section>
-
-      <section className="sp-search-section" id="sp-search">
-        <div className="sp-section-heading"><div><span className="sp-kicker">DISCOVER</span><h2>{copy.searchLabel}</h2></div></div>
-        <form method="get" className="sp-filters">
-          <input name="q" defaultValue={filters.q} placeholder={copy.searchPlaceholder}/>
-          <select name="category" defaultValue={filters.category}><option value="">{copy.allCategories}</option>{categories.map(c=><option key={c.slug} value={c.slug}>{categoryName(lang,c.name_ar)}</option>)}</select>
-          <select name="condition" defaultValue={filters.condition}><option value="">{copy.allConditions}</option>{Object.entries(CONDITION_LABELS).map(([k,v])=><option key={k} value={k}>{conditionName(lang,k,v)}</option>)}</select>
-          <select name="governorate" defaultValue={filters.governorate}><option value="">{copy.allGovernorates}</option>{GOVERNORATES.map(g=><option key={g} value={g}>{governorateName(lang,g)}</option>)}</select>
-          <input name="min" type="number" min={0} defaultValue={filters.min} placeholder={copy.min}/>
-          <input name="max" type="number" min={0} defaultValue={filters.max} placeholder={copy.max}/>
-          <button type="submit">{copy.viewAll}</button>
-        </form>
       </section>
 
       <section className="sp-listings-section">
