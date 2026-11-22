@@ -97,8 +97,9 @@ export default function BrowseScreen({ onOpen, onSell, onFavorites, lang = 'ar',
           <Text style={styles.cityText}>{applied.governorate ? governorateLabel(lang, applied.governorate) : t.city}</Text>
         </Pressable>
         <View style={styles.topActions}>
-          <Pressable style={styles.outlineButton} onPress={onSell}><Text style={styles.outlineButtonText}>▱  {t.sell}</Text></Pressable>
-          <Pressable style={styles.outlineButton} onPress={() => setShowFilters((v) => !v)}><Text style={styles.outlineButtonText}>☷  {t.search}</Text></Pressable>
+          <Pressable style={styles.outlineButton} onPress={onSell}><Text style={styles.outlineButtonText}>＋ {t.sell}</Text></Pressable>
+          <Pressable style={styles.outlineButton} onPress={() => setShowFilters((v) => !v)}><Text style={styles.outlineButtonText}>⌕ {t.search}</Text></Pressable>
+          <Pressable style={styles.outlineButton} onPress={onFavorites}><Text style={styles.outlineButtonText}>♡ {lang === 'en' ? 'Favorites' : lang === 'ku' ? 'دڵخوازەکان' : 'المفضلة'}</Text></Pressable>
         </View>
       </View>
 
@@ -202,9 +203,9 @@ const styles = StyleSheet.create({
   cityButton: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingVertical: 8, flexShrink: 1 },
   pin: { color: '#C8102E', fontSize: 25, fontWeight: '700' },
   cityText: { color: '#3b3b3b', fontSize: 17, fontWeight: '600' },
-  topActions: { flexDirection: 'row', gap: 7 },
-  outlineButton: { borderWidth: 1.3, borderColor: '#505050', borderRadius: 9, paddingHorizontal: 11, paddingVertical: 9, backgroundColor: '#ffffff' },
-  outlineButtonText: { color: '#454545', fontSize: 14, fontWeight: '600' },
+  topActions: { flexDirection: 'row', gap: 5, flex: 1, justifyContent: 'flex-end' },
+  outlineButton: { flex: 1, minWidth: 0, borderWidth: 1.2, borderColor: '#e2b7be', borderRadius: 9, paddingHorizontal: 5, paddingVertical: 8, backgroundColor: '#ffffff', alignItems: 'center' },
+  outlineButtonText: { color: '#C8102E', fontSize: 11, fontWeight: '800', textAlign: 'center' },
   filterPanel: { marginHorizontal: 12, marginBottom: 10, padding: 13, gap: 9, borderRadius: 13, borderWidth: 1, borderColor: '#e4e4e4', backgroundColor: '#ffffff' },
   input: { borderWidth: 1, borderColor: '#dedede', borderRadius: 10, paddingHorizontal: 12, paddingVertical: 11, color: '#333333', backgroundColor: '#ffffff', fontSize: 15 },
   label: { color: '#555555', textAlign: 'right', fontSize: 14, fontWeight: '700', marginTop: 3 },
