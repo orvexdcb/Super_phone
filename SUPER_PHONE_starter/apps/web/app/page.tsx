@@ -23,7 +23,18 @@ export default async function Home({ searchParams }: { searchParams: SP }) {
   const [categories, result] = await Promise.all([fetchCategories(), fetchListings(filters)]);
   const { listings, error, hasNext, page } = result;
   const pageHref = (n: number) => { const p = new URLSearchParams(); (["q","category","condition","governorate","min","max"] as const).forEach(k=>{if(filters[k])p.set(k,filters[k]!)}); if(n>1)p.set("page",String(n)); return p.toString()?"/?"+p.toString():"/"; };
-  const categoryIcons: Record<string,string> = { phone:"▯", tablet:"▱", laptop:"▰", desktop:"▦", headphones:"♫", smartwatch:"◷" };
+  const iconSvg = (slug: string) => {
+    const common = { viewBox: "0 0 48 48", fill: "none", stroke: "currentColor", strokeWidth: 2.4, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true as const };
+    switch (slug) {
+      case "phone": return <svg {...common}><rect x="14" y="4" width="20" height="40" rx="4"/><path d="M21 9h6M22 38h4"/></svg>;
+      case "tablet": return <svg {...common}><rect x="8" y="4" width="32" height="40" rx="4"/><path d="M21 9h6M22 39h4"/></svg>;
+      case "laptop": return <svg {...common}><rect x="11" y="7" width="26" height="25" rx="2"/><path d="M5 37h38l-3 5H8z"/></svg>;
+      case "desktop": return <svg {...common}><rect x="5" y="5" width="38" height="28" rx="3"/><path d="M24 33v8M16 42h16M19 12h10M19 18h10"/></svg>;
+      case "headphones": return <svg {...common}><path d="M7 25v-4a17 17 0 0 1 34 0v4"/><rect x="6" y="23" width="8" height="15" rx="3"/><rect x="34" y="23" width="8" height="15" rx="3"/><path d="M34 38c-2 4-6 5-11 5"/></svg>;
+      case "smartwatch": return <svg {...common}><path d="M17 4h14l2 9H15zM15 35h18l-2 9H17z"/><rect x="11" y="13" width="26" height="22" rx="5"/><path d="M24 18v6l5 3"/></svg>;
+      default: return <svg {...common}><rect x="14" y="4" width="20" height="40" rx="4"/></svg>;
+    }
+  };
   return <FirstRunFlow>
     <main className="sp-home">
       <section className="sp-welcome">
@@ -39,7 +50,7 @@ export default async function Home({ searchParams }: { searchParams: SP }) {
         <div className="sp-section-heading"><div><span className="sp-kicker">{lang==="en"?"EXPLORE":"استكشف"}</span><h2>{copy.categories}</h2></div><span className="sp-heading-mark">✦</span></div>
         <div className="sp-category-grid">
           {categories.map(category=><Link key={category.slug} href={"/search?category="+encodeURIComponent(category.slug)+"#sp-search"} className="sp-category">
-            <span className="sp-category-icon">{categoryIcons[category.slug] || "▯"}</span><strong>{categoryName(lang,category.name_ar)}</strong><span className="sp-category-arrow">↗</span>
+            <span className="sp-category-icon">{iconSvg(category.slug)}</span><strong>{categoryName(lang,category.name_ar)}</strong><span className="sp-category-arrow">↗</span>
           </Link>)}
         </div>
       </section>
