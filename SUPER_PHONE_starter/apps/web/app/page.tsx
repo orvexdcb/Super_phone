@@ -35,12 +35,6 @@ export default async function Home({ searchParams }: { searchParams: SP }) {
         <div className="sp-mark-art" aria-hidden="true"><span>SP</span><i>✦</i></div>
       </section>
 
-      <section className="sp-primary-actions" aria-label="الأدوات الرئيسية">
-        <Link href="/account/listings/new" className="sp-action sp-action-sell"><span className="sp-action-icon">＋</span><strong>{copy.sell}</strong><small>{copy.sellHint}</small></Link>
-        <Link href="#sp-search" className="sp-action"><span className="sp-action-icon">⌕</span><strong>{copy.search}</strong><small>{lang==="en"?"Search all listings":lang==="ku"?"گەڕان لە هەموو ڕیکلامەکان":"ابحث في جميع الإعلانات"}</small></Link>
-        <Link href="/account/favorites" className="sp-action"><span className="sp-action-icon">♡</span><strong>{copy.favorites}</strong><small>{lang==="en"?"Your saved devices":lang==="ku"?"ئامێرە پاشەکەوتکراوەکان":"الأجهزة التي حفظتها"}</small></Link>
-      </section>
-
       <section className="sp-category-section">
         <div className="sp-section-heading"><div><span className="sp-kicker">{lang==="en"?"EXPLORE":"استكشف"}</span><h2>{copy.categories}</h2></div><span className="sp-heading-mark">✦</span></div>
         <div className="sp-category-grid">
