@@ -11,7 +11,7 @@ const QUICK = [
   { icon: '♡', title: 'المفضلة', hint: 'الأجهزة التي حفظتها', route: 'favorites' },
   { icon: '⌕', title: 'البحث', hint: 'اعثر على جهاز مناسب', tab: 'home' },
   { icon: '◎', title: 'إرشاد', hint: 'نصائح قبل شراء الهاتف', tab: 'guide' },
-  { icon: '▣', title: 'المتجر', hint: 'تصفح فئات الأجهزة', tab: 'store' },
+  { icon: '▣', title: 'متجر الإكسسوارات', hint: 'تصفح إكسسوارات الهواتف والأجهزة', tab: 'store' },
 ];
 
 export default function AccountScreen({ onNavigate, onTab, lang = 'ar' }) {
