@@ -411,3 +411,9 @@ body:has(.sp-guide-step-6) [data-guide="account"]{position:relative;z-index:5;ou
  .sp-guide-tip{top:155px}
  .sp-header-actions .sp-nav-account{font-size:.66rem}
 }
+
+.sp-inline-ad{grid-column:1/-1;padding:18px 20px;border:1px solid #edc4cb;border-radius:14px;background:linear-gradient(105deg,#fff7f8,#fff);display:flex;flex-direction:column;gap:6px;text-align:right}
+.sp-inline-ad>span{font-size:.68rem;color:#C8102E;font-weight:900;letter-spacing:.08em}
+.sp-inline-ad strong{font-size:1.05rem;color:#272727}
+.sp-inline-ad p{margin:0;color:#686868;font-size:.9rem}
+.sp-inline-ad a{color:#C8102E;font-weight:900;text-decoration:none;align-self:flex-start}
