@@ -102,7 +102,7 @@ export default function GuidanceScreen({ onBrowse, onOpen, lang = 'ar' }) {
         <Text style={s.sectionTitle}>{t.best}</Text>
         <Text style={s.sectionHint}>{items.length}</Text>
       </View>
-      {loading ? <ActivityIndicator color="#e84b53" style={{ margin: 22 }} /> : items.length ? (
+      {loading ? <ActivityIndicator color="#C8102E" style={{ margin: 22 }} /> : items.length ? (
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={s.productStrip}>
           {items.slice(0, 6).map((item) => {
             const photo = firstImage(item);
@@ -140,13 +140,13 @@ const s = StyleSheet.create({
   toolIcon: { color: '#454545', fontSize: 29, marginBottom: 7 },
   toolTitle: { color: '#444444', fontSize: 13, fontWeight: '900', textAlign: 'center' },
   toolBody: { color: '#888888', fontSize: 10, textAlign: 'center', marginTop: 5, lineHeight: 15 },
-  newTag: { position: 'absolute', left: 8, top: 8, backgroundColor: '#e84b53', borderRadius: 18, paddingHorizontal: 9, paddingVertical: 4 },
+  newTag: { position: 'absolute', left: 8, top: 8, backgroundColor: '#C8102E', borderRadius: 18, paddingHorizontal: 9, paddingVertical: 4 },
   newTagText: { color: '#ffffff', fontWeight: '900', fontSize: 10 },
-  valueCard: { marginHorizontal: 16, marginTop: 18, borderRadius: 13, backgroundColor: '#15558c', padding: 19, minHeight: 178 },
+  valueCard: { marginHorizontal: 16, marginTop: 18, borderRadius: 13, backgroundColor: '#C8102E', padding: 19, minHeight: 178 },
   valueTitle: { color: '#ffffff', textAlign: 'right', fontSize: 23, fontWeight: '900' },
   valueBody: { color: '#e7f2fb', textAlign: 'right', marginTop: 7, fontSize: 14, lineHeight: 23 },
   valueButton: { marginTop: 14, backgroundColor: '#ffffff', borderRadius: 9, alignSelf: 'flex-start', paddingVertical: 12, paddingHorizontal: 16 },
-  valueButtonText: { color: '#15558c', fontSize: 15, fontWeight: '900' },
+  valueButtonText: { color: '#C8102E', fontSize: 15, fontWeight: '900' },
   sectionHeading: { paddingHorizontal: 18, flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center', marginTop: 27, marginBottom: 12 },
   sectionTitle: { color: '#444444', fontSize: 18, fontWeight: '900', textAlign: 'right' },
   sectionHint: { color: '#999999', fontSize: 12 },
@@ -154,7 +154,7 @@ const s = StyleSheet.create({
   guideCard: { width: 160, height: 188, borderRadius: 9, overflow: 'hidden', backgroundColor: '#f4f4f4', position: 'relative' },
   guideImage: { width: '100%', height: 122, backgroundColor: '#f0f0f0' },
   guideFallback: { alignItems: 'center', justifyContent: 'center' },
-  guideFallbackIcon: { color: '#e84b53', fontSize: 48 },
+  guideFallbackIcon: { color: '#C8102E', fontSize: 48 },
   play: { position: 'absolute', top: 42, alignSelf: 'center', width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(0,0,0,0.58)', alignItems: 'center', justifyContent: 'center' },
   playText: { color: '#ffffff', fontSize: 17, marginLeft: 3 },
   guideTitle: { color: '#444444', fontSize: 12, fontWeight: '800', textAlign: 'right', padding: 8, lineHeight: 18 },
@@ -162,11 +162,11 @@ const s = StyleSheet.create({
   productCard: { width: 170, borderWidth: 1, borderColor: '#e2e2e2', borderRadius: 9, backgroundColor: '#ffffff', overflow: 'hidden' },
   productImage: { width: '100%', height: 106, backgroundColor: '#f2f2f2' },
   productTitle: { color: '#444444', fontSize: 13, fontWeight: '800', textAlign: 'right', paddingHorizontal: 8, paddingTop: 7 },
-  productPrice: { color: '#e84b53', fontSize: 14, fontWeight: '900', textAlign: 'right', paddingHorizontal: 8, paddingTop: 4 },
+  productPrice: { color: '#C8102E', fontSize: 14, fontWeight: '900', textAlign: 'right', paddingHorizontal: 8, paddingTop: 4 },
   productLocation: { color: '#888888', fontSize: 10, textAlign: 'right', paddingHorizontal: 8, paddingVertical: 6 },
   empty: { color: '#888888', textAlign: 'center', padding: 20, fontSize: 13 },
   sectionTitleStandalone: { color: '#444444', fontSize: 18, fontWeight: '900', textAlign: 'right', marginHorizontal: 18, marginTop: 25, marginBottom: 8 },
   tipRow: { marginHorizontal: 16, paddingVertical: 13, borderBottomWidth: 1, borderBottomColor: '#eeeeee', flexDirection: 'row-reverse', alignItems: 'center', gap: 13 },
-  tipNumber: { color: '#e84b53', fontSize: 17, fontWeight: '900', width: 32 },
+  tipNumber: { color: '#C8102E', fontSize: 17, fontWeight: '900', width: 32 },
   tipText: { color: '#555555', flex: 1, textAlign: 'right', fontSize: 14, lineHeight: 21 }
 });
