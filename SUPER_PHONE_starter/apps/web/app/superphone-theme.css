@@ -543,15 +543,19 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   max-height:12px!important;
 }
 
-/* Compact mobile header action buttons (not category icons or cards) */
+/* Compact mobile header action buttons (not category icons or cards).
+   Higher specificity overrides the inherited font shorthand on link buttons. */
 @media(max-width:760px){
-  .sp-nav-action{
+  .sp-header-actions .sp-nav-action,
+  .sp-header-actions .link-btn.sp-nav-action{
+    box-sizing:border-box!important;
     min-height:26px!important;
-    padding:2px 3px!important;
+    height:26px!important;
+    padding:0 3px!important;
     gap:1px!important;
     border-radius:6px!important;
     font-size:.58rem!important;
     line-height:1!important;
   }
-  .sp-nav-action span{font-size:.65rem!important}
+  .sp-header-actions .sp-nav-action span{font-size:.65rem!important;line-height:1!important}
 }
