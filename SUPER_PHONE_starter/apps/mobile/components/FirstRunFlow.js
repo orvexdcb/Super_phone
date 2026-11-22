@@ -14,24 +14,24 @@ const T = {
   ar: {
     language: 'اختر اللغة', place: 'أين تسكن؟', governorate: 'المحافظة', area: 'المدينة / المنطقة',
     gps: 'تحديد موقعي', next: 'التالي', start: 'ابدأ الاستخدام', terms: 'Terms & Conditions',
-    tipTitle: ['بيع جهازك', 'بحث سهل ودقيق', 'احفظ الأجهزة في المفضلة'],
-    tipBody: ['قم بعرض جهازك بسهولة في SUPER PHONE مع الصور والسعر والمواصفات.', 'ابحث حسب نوع الجهاز والعلامة التجارية والحالة والسعر.', 'اضغط على رمز القلب لحفظ الأجهزة والعودة إليها لاحقاً.'],
+    tipTitle: ['بيع جهازك', 'بحث سهل ودقيق', 'احفظ الأجهزة في المفضلة', 'حسابك'],
+    tipBody: ['قم بعرض جهازك بسهولة في SUPER PHONE مع الصور والسعر والمواصفات.', 'ابحث حسب نوع الجهاز والعلامة التجارية والحالة والسعر.', 'اضغط على رمز القلب لحفظ الأجهزة والعودة إليها لاحقاً.', 'من هنا تنشئ حساباً أو تسجل الخروج عند الدخول.'],
     skip: 'تخطي', finish: 'ابدأ الاستخدام', hint: 'اختر المحافظة والمدينة أو حدد موقعك للمساعدة في الاختيار.',
     located: 'تم تحديد المحافظة:'
   },
   en: {
     language: 'Choose your language', place: 'Where do you live?', governorate: 'Governorate', area: 'City / area',
     gps: 'Use my location', next: 'Next', start: 'Start using the app', terms: 'Terms & Conditions',
-    tipTitle: ['Sell your device', 'Easy and accurate search', 'Save devices to Favorites'],
-    tipBody: ['List your device on SUPER PHONE with photos, price and specifications.', 'Search by device type, brand, condition and price.', 'Tap the heart to save devices and return to them later.'],
+    tipTitle: ['Sell your device', 'Easy and accurate search', 'Save devices to Favorites', 'Your account'],
+    tipBody: ['List your device on SUPER PHONE with photos, price and specifications.', 'Search by device type, brand, condition and price.', 'Tap the heart to save devices and return to them later.', 'Open your account here to sign up or log out.'],
     skip: 'Skip', finish: 'Start using the app', hint: 'Choose your governorate and city, or use your location to help select them.',
     located: 'Detected governorate:'
   },
   ku: {
     language: 'زمان هەڵبژێرە', place: 'لە کوێ دەژیت؟', governorate: 'پارێزگا', area: 'شار / ناوچە',
     gps: 'شوێنەکەم دیاری بکە', next: 'دواتر', start: 'دەستپێبکە', terms: 'Terms & Conditions',
-    tipTitle: ['ئامێرەکەت بفرۆشە', 'گەڕانی ئاسان و ورد', 'ئامێرەکان لە دڵخوازەکان بپارێزە'],
-    tipBody: ['ئامێرەکەت بە وێنە و نرخ و تایبەتمەندییەکان لە SUPER PHONE بڵاو بکەرەوە.', 'بەپێی جۆر و براند و دۆخ و نرخ بگەڕێ.', 'نیشانی دڵ دابگرە بۆ پاراستنی ئامێرەکانت.'],
+    tipTitle: ['ئامێرەکەت بفرۆشە', 'گەڕانی ئاسان و ورد', 'ئامێرەکان لە دڵخوازەکان بپارێزە', 'هەژمارەکەت'],
+    tipBody: ['ئامێرەکەت بە وێنە و نرخ و تایبەتمەندییەکان لە SUPER PHONE بڵاو بکەرەوە.', 'بەپێی جۆر و براند و دۆخ و نرخ بگەڕێ.', 'نیشانی دڵ دابگرە بۆ پاراستنی ئامێرەکانت.', 'لێرە هەژمار دروست بکە یان بچۆرە دەرەوە.'],
     skip: 'تێپەڕاندن', finish: 'دەستپێبکە', hint: 'پارێزگا و شار هەڵبژێرە یان شوێنی خۆت دیاری بکە.',
     located: 'پارێزگای دیاریکراو:'
   }
@@ -56,7 +56,9 @@ export default function FirstRunFlow({ children, onComplete }) {
       if (!raw) return;
       try {
         const saved = JSON.parse(raw);
-        setLang(['ar', 'en', 'ku'].includes(saved.lang) ? saved.lang : 'ar');
+        const savedLang = ['ar', 'en', 'ku'].includes(saved.lang) ? saved.lang : 'ar';
+        setLang(savedLang);
+        onComplete?.(savedLang);
         setGov(saved.governorate || 'بغداد');
         setArea(saved.area || 'بغداد');
         setDone(true);
@@ -118,7 +120,7 @@ export default function FirstRunFlow({ children, onComplete }) {
   };
 
   const nextTutorial = () => {
-    if (tutorialStep < 2) setTutorialStep(tutorialStep + 1);
+    if (tutorialStep < 3) setTutorialStep(tutorialStep + 1);
     else finishTutorial();
   };
 
@@ -155,14 +157,14 @@ export default function FirstRunFlow({ children, onComplete }) {
         {tutorialStep >= 0 ? (
           <View style={s.tourRoot}>
             <View style={s.tourShade} />
-            <View style={[s.tourFocus, tutorialStep === 0 ? s.tourSellFocus : tutorialStep === 1 ? s.tourSearchFocus : s.tourFavoritesFocus]} />
+            <View style={[s.tourFocus, tutorialStep === 0 ? s.tourSellFocus : tutorialStep === 1 ? s.tourSearchFocus : tutorialStep === 2 ? s.tourFavoritesFocus : s.tourAccountFocus]} />
             <View style={s.tourBubble}>
-              <View style={[s.tourPointer, tutorialStep === 0 ? s.pointerSell : tutorialStep === 1 ? s.pointerSearch : s.pointerFavorites]} />
+              <View style={[s.tourPointer, tutorialStep === 0 ? s.pointerSell : tutorialStep === 1 ? s.pointerSearch : tutorialStep === 2 ? s.pointerFavorites : s.pointerAccount]} />
               <Text style={s.tourTitle}>{T[lang].tipTitle[tutorialStep]}</Text>
               <Text style={s.tourText}>{T[lang].tipBody[tutorialStep]}</Text>
               <View style={s.tourActions}>
                 <Pressable onPress={finishTutorial} style={s.tourSkip}><Text style={s.tourSkipText}>{T[lang].skip}</Text></Pressable>
-                <Pressable onPress={nextTutorial} style={s.tourNext}><Text style={s.tourNextText}>{tutorialStep < 2 ? T[lang].next : T[lang].finish}</Text></Pressable>
+                <Pressable onPress={nextTutorial} style={s.tourNext}><Text style={s.tourNextText}>{tutorialStep < 3 ? T[lang].next : T[lang].finish}</Text></Pressable>
               </View>
             </View>
           </View>
@@ -299,12 +301,14 @@ const s = StyleSheet.create({
   tourFocus: { position: 'absolute', top: 40, height: 36, width: 72, backgroundColor: 'transparent', borderWidth: 2, borderColor: '#ffffff', borderRadius: 7 },
   tourSellFocus: { left: '23%' },
   tourSearchFocus: { left: '3%' },
-  tourFavoritesFocus: { left: '63%' },
+  tourFavoritesFocus: { left: '67%' },
+  tourAccountFocus: { left: '82%' },
   tourBubble: { position: 'absolute', top: 111, left: 14, width: '80%', minHeight: 66, paddingHorizontal: 10, paddingVertical: 8, borderRadius: 11, backgroundColor: '#C8102E' },
   tourPointer: { position: 'absolute', top: -10, width: 0, height: 0, borderLeftWidth: 11, borderRightWidth: 11, borderBottomWidth: 11, borderLeftColor: 'transparent', borderRightColor: 'transparent', borderBottomColor: '#C8102E' },
   pointerSell: { left: '36%' },
   pointerSearch: { left: '10%' },
-  pointerFavorites: { left: '74%' },
+  pointerFavorites: { left: '76%' },
+  pointerAccount: { left: '91%' },
   tourTitle: { color: '#ffffff', textAlign: 'center', fontSize: 17, fontWeight: '900' },
   tourText: { color: '#ffffff', textAlign: 'center', fontSize: 13, lineHeight: 18, marginTop: 3 },
   tourActions: { flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center', marginTop: 9 },
