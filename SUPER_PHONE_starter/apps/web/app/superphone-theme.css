@@ -543,25 +543,43 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   max-height:12px!important;
 }
 
-/* Reduce the complete mobile header action buttons, not their pictograms.
-   Cover both header action wrappers used by the web layouts. */
+/* Compact the entire mobile header action buttons: height and width. */
 @media(max-width:760px){
-  .sp-header-actions .sp-nav-action,
-  .sp-header-actions a,
-  .sp-header-actions button,
-  .nav-actions .sp-nav-action,
-  .nav-actions a,
-  .nav-actions button,
+  .sp-header-actions{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-end!important;
+    flex-wrap:nowrap!important;
+    gap:5px!important;
+  }
+  .sp-header-actions > a,
+  .sp-header-actions > button,
+  .sp-header-actions > .sp-nav-action,
+  .sp-header-actions > a.sp-nav-action,
+  .sp-header-actions > a.cta,
+  .sp-header-actions > a.cta.sp-nav-action,
+  .nav-actions > a,
+  .nav-actions > button,
   .topbar .sp-nav-action{
     box-sizing:border-box!important;
-    min-height:32px!important;
-    height:32px!important;
-    padding:0 5px!important;
+    display:inline-flex!important;
+    flex:0 1 auto!important;
+    width:auto!important;
+    min-width:0!important;
+    min-height:27px!important;
+    height:27px!important;
+    max-height:27px!important;
+    padding:0 6px!important;
+    margin:0!important;
     gap:2px!important;
-    border-radius:8px!important;
-    font-size:.68rem!important;
+    border-radius:7px!important;
+    font-size:.59rem!important;
     line-height:1!important;
+    white-space:nowrap!important;
   }
   .sp-header-actions .sp-nav-action span,
-  .nav-actions .sp-nav-action span{font-size:.72rem!important;line-height:1!important}
+  .nav-actions .sp-nav-action span{
+    font-size:.62rem!important;
+    line-height:1!important;
+  }
 }
