@@ -10,11 +10,11 @@ export const metadata: Metadata = {
   description: "SUPER PHONE — سوق الهواتف والأجهزة الذكية للبيع والشراء والاستبدال في العراق.",
   applicationName: "SUPER PHONE",
   manifest: "/manifest.webmanifest",
-  icons: { icon: "/icon.png", apple: "/apple-icon.png" },
+  icons: { icon: "/sp-icon.svg", apple: "/sp-icon.svg" },
   appleWebApp: { capable: true, title: "SUPER PHONE", statusBarStyle: "black-translucent" },
 };
 
-export const viewport: Viewport = { themeColor: "#0b1728", colorScheme: "dark" };
+export const viewport: Viewport = { themeColor: "#c8102e", colorScheme: "light" };
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const cookieStore = await cookies();
