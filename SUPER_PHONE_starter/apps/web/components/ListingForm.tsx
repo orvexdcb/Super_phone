@@ -10,7 +10,7 @@ import { t, categoryName, conditionName, governorateName } from "../lib/i18n";
 type Cat = { id: string; name_ar: string };
 type Defaults = { phone: string; governorate: string; city: string };
 
-const SPEC_KEYS = ["storage", "ram", "battery_health", "color"] as const;
+const SPEC_KEYS = ["screen", "processor", "ram", "storage", "cameras", "battery", "charging_speed", "release_year"] as const;
 
 const EXT: Record<string, string> = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" };
 
@@ -38,7 +38,9 @@ export default function ListingForm({ categories, defaults, lang = "ar" }: { cat
     setError("");
     const f = new FormData(e.currentTarget);
     const price = Number(f.get("price"));
-    if (!Number.isFinite(price) || price < 0) return setError(tx("priceError"));
+    if (!Number.isFinite(price) || price <= 0) return setError(tx("priceError"));
+    const requiredSpecs = ["screen", "processor", "ram", "storage", "cameras", "battery", "charging_speed", "release_year"];
+    if (!String(f.get("brand") ?? "").trim() || !String(f.get("model") ?? "").trim() || requiredSpecs.some((key) => !String(f.get(`spec_${key}`) ?? "").trim())) return setError(tx("requiredSpecsError"));
     if (files.length === 0) return setError(tx("photoRequired"));
 
     setBusy(true);
@@ -124,8 +126,8 @@ export default function ListingForm({ categories, defaults, lang = "ar" }: { cat
         {Object.entries(CONDITION_LABELS).map(([k, v]) => <option key={k} value={k}>{conditionName(lang, k, v)}</option>)}
       </select>
       <div className="row">
-        <input name="brand" placeholder={tx("brand")} maxLength={60} />
-        <input name="model" placeholder={tx("model")} maxLength={60} />
+        <input name="brand" placeholder={tx("brand")} maxLength={60} required />
+        <input name="model" placeholder={tx("model")} maxLength={60} required />
       </div>
       <div className="row">
         <select name="governorate" required defaultValue={defaults.governorate}>
@@ -137,9 +139,9 @@ export default function ListingForm({ categories, defaults, lang = "ar" }: { cat
       <input name="contact_phone" defaultValue={defaults.phone} placeholder={tx("contact")} maxLength={20} dir="ltr" required />
 
       <fieldset>
-        <legend>{tx("specs")}</legend>
+        <legend>{tx("specsRequired")}</legend>
         {SPEC_KEYS.map((key) => (
-          <input key={key} name={`spec_${key}`} placeholder={tx(key === "storage" ? "storage" : key === "ram" ? "ram" : key === "battery_health" ? "battery" : "color")} maxLength={60} />
+          <input key={key} name={`spec_${key}`} placeholder={tx(key === "charging_speed" ? "chargingSpeed" : key === "release_year" ? "releaseYear" : key)} maxLength={80} required />
         ))}
       </fieldset>
 
