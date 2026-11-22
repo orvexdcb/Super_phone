@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description: "SUPER PHONE — سوق الهواتف والأجهزة الذكية للبيع والشراء والاستبدال في العراق.",
   applicationName: "SUPER PHONE",
   manifest: "/manifest.webmanifest",
-  icons: { icon: "/sp-icon.svg", apple: "/sp-icon.svg" },
+  icons: { icon: "/icon.png", apple: "/apple-icon.png" },
   appleWebApp: { capable: true, title: "SUPER PHONE", statusBarStyle: "black-translucent" },
 };
 
