@@ -17,7 +17,7 @@ export default async function Header() {
   return <header className="site-header sp-site-header">
     <nav className="topbar sp-topbar">
       <Link href="/" className="brand-lockup" aria-label="SUPER PHONE">
-        <img src="/sp-icon.svg" alt="" width="46" height="46" className="brand-mark"/>
+        <img src="/pwa-icon-192.png" alt="" width="46" height="46" className="brand-mark"/>
         <span className="brand-copy"><strong>SUPER PHONE</strong><small>{words.tagline}</small></span>
       </Link>
       <div className="nav-actions sp-header-actions">
