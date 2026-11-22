@@ -35,7 +35,7 @@ export default async function Home({ searchParams }: { searchParams: SP }) {
         <div className="sp-mark-art" aria-hidden="true"><img src="/pwa-icon-192.png" alt="" /></div>
       </section>
 
-      <section className="sp-category-section">
+      <section id="sp-category-section" className="sp-category-section">
         <div className="sp-section-heading"><div><span className="sp-kicker">{lang==="en"?"EXPLORE":"استكشف"}</span><h2>{copy.categories}</h2></div><span className="sp-heading-mark">✦</span></div>
         <div className="sp-category-grid">
           {categories.map(category=><Link key={category.slug} href={"/?category="+encodeURIComponent(category.slug)+"#sp-search"} className="sp-category">
