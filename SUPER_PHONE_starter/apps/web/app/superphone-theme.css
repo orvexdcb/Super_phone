@@ -526,21 +526,22 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .sp-category { gap:6px!important; }
 
 
-/* Final compact icon override: smaller pictogram and holder */
+/* Compact category pictograms and their pale holders */
 .sp-category-icon {
-  width:22px!important;
-  height:22px!important;
-  min-width:22px!important;
-  min-height:22px!important;
+  width:18px!important;
+  height:18px!important;
+  min-width:18px!important;
+  min-height:18px!important;
   padding:0!important;
-  border-radius:7px!important;
-  flex:0 0 22px!important;
+  border-radius:6px!important;
+  flex:0 0 18px!important;
+  font-size:11px!important;
 }
 .sp-category-icon svg {
-  width:12px!important;
-  height:12px!important;
-  max-width:12px!important;
-  max-height:12px!important;
+  width:10px!important;
+  height:10px!important;
+  max-width:10px!important;
+  max-height:10px!important;
 }
 
 /* Compact mobile header action buttons (not category icons or cards).
