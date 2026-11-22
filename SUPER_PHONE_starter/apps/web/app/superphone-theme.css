@@ -383,3 +383,31 @@ body{background:#fff!important;color:#252525!important}
  .sp-guide-step-5{top:155px}
  .sp-guide-step-6{top:155px}
 }
+
+
+/* Final supplied-icon and guided onboarding refinements */
+.first-run-logo-image{display:block;width:112px;height:112px;object-fit:contain;margin:0 auto 16px;border-radius:22px}
+.first-run-logo-mark{display:none!important}
+.sp-site-header .brand-mark{object-fit:contain;border-radius:10px}
+.sp-header-actions .link-btn.sp-nav-action{border:0;cursor:pointer;font:inherit}
+.sp-guide-tip{top:132px;max-width:410px;background:#C8102E}
+.sp-guide-tip:before{border-bottom-color:#C8102E}
+.sp-guide-step-3:before{left:17%}
+.sp-guide-step-4:before{left:42%}
+.sp-guide-step-5:before{left:66%}
+.sp-guide-step-6:before{left:88%}
+body:has(.sp-guide-step-3) [data-guide="sell"],
+body:has(.sp-guide-step-4) [data-guide="search"],
+body:has(.sp-guide-step-5) [data-guide="favorites"],
+body:has(.sp-guide-step-6) [data-guide="account"]{position:relative;z-index:5;outline:3px solid #fff;box-shadow:0 0 0 5px #C8102E;border-radius:10px}
+.first-run-overlay{background:#fff!important}
+.first-run-panel{background:#fff!important;color:#272727!important}
+.first-run-title{color:#C8102E!important}
+.first-run-option{background:#fff!important;border-color:#e3e3e3!important;color:#333!important}
+.first-run-option.active{border-color:#C8102E!important;color:#C8102E!important}
+.first-run-field{background:#fff!important;color:#333!important;border-color:#ddd!important}
+.first-run-btn{background:#C8102E!important;color:#fff!important}
+@media(max-width:640px){
+ .sp-guide-tip{top:155px}
+ .sp-header-actions .sp-nav-account{font-size:.66rem}
+}
