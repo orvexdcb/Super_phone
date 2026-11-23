@@ -28,7 +28,7 @@ export default async function FounderArchitecturePage() {
   const webRoutes = architecture.webRoutes || [];
   const mobileScreens = architecture.mobileScreens || [];
   const mobileComponents = architecture.mobileComponents || [];
-  const databaseRelationships = architecture.database.relationships || [];
+  const databaseRelationships: { fromTable: string; fromColumn: string; toTable: string; toColumn: string }[] = architecture.database.relationships || [];
 
   return (
     <main className="founder-shell" dir="rtl">
