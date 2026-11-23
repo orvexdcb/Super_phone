@@ -25,6 +25,7 @@ export default async function FounderArchitecturePage() {
   const commit = architecture.commitSha || process.env.VERCEL_GIT_COMMIT_SHA || "غير متاح";
   const generatedAt = architecture.generatedAt ? new Date(architecture.generatedAt).toLocaleString("ar-IQ") : "بانتظار أول عملية بناء";
   const topDependencies = architecture.dependencies.slice(0, 70);
+  const sourceFiles = architecture.sourceFiles || [];
   const webRoutes = architecture.webRoutes || [];
   const mobileScreens = architecture.mobileScreens || [];
   const mobileComponents = architecture.mobileComponents || [];
@@ -149,6 +150,13 @@ export default async function FounderArchitecturePage() {
             </tbody></table>
           </div>
           <p className="meta">يعرض الجدول أول {topDependencies.length} علاقة من أصل {architecture.dependencies.length}. افتح الملفات من الروابط لعرض بقية التفاصيل.</p>
+          <details className="arch-details" style={{marginTop:12}}>
+            <summary>فهرس جميع ملفات المصدر ({sourceFiles.length})</summary>
+            <div className="arch-list">{sourceFiles.map(file=><div className="arch-item" key={file}>
+              <a href={githubFile(file)} target="_blank" rel="noreferrer">{file.replace(projectRoot,"")}</a>
+              <span>{file.includes("/apps/mobile/")?"الهاتف":file.includes("/apps/web/")?"الويب":file.includes("/packages/shared/")?"مشترك":"ملف"}</span>
+            </div>)}</div>
+          </details>
         </section>
 
         <section className="sp-admin-panel">
