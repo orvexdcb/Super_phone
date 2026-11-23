@@ -39,7 +39,37 @@ jobs:
           FLOORPLAN_AGENT: "none"
         run: |
           node /tmp/floorplan-upstream/skills/floorplan/scripts/scan.mjs . --json --unattended > /tmp/floorplan-scan-result.json
-          node -e "const r=require('/tmp/floorplan-scan-result.json'); if(!r.ok || !r.counts || !r.counts.files) { console.error(JSON.stringify(r)); process.exit(1) }; console.log(JSON.stringify({schema:r.schema,ok:r.ok,files:r.counts.files,code:r.counts.code?.files,imports:r.counts.importEdges,routes:r.counts.routes,warnings:r.warnings?.length||0},null,2))"
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const r = JSON.parse(fs.readFileSync('/tmp/floorplan-scan-result.json', 'utf8'));
+          const valid = r.schema === 'floorplan/scan-result@1'
+            && r.ok === true
+            && Number.isInteger(r.counts?.files) && r.counts.files > 0
+            && Number.isInteger(r.counts?.importEdges)
+            && Number.isInteger(r.counts?.routes)
+            && r.scanFile === 'floorplan/.cache/scan.json'
+            && Array.isArray(r.repos) && r.repos.length > 0
+            && r.repos.every(repo => repo.listed === true);
+          if (!valid) {
+            console.error('Floorplan scan result failed validation:', JSON.stringify(r, null, 2));
+            process.exit(1);
+          }
+          const scan = JSON.parse(fs.readFileSync(r.scanFile, 'utf8'));
+          if (!Array.isArray(scan.files) || scan.files.length !== r.counts.files) {
+            console.error('Scan artifact does not match its summary.');
+            process.exit(1);
+          }
+          console.log(JSON.stringify({
+            schema: r.schema,
+            ok: r.ok,
+            files: r.counts.files,
+            codeFiles: r.counts.code.files,
+            importEdges: r.counts.importEdges,
+            routes: r.counts.routes,
+            httpMatches: r.counts.httpMatches,
+            warnings: r.warnings.length
+          }, null, 2));
+          NODE
           test -s floorplan/.cache/scan.json
       - name: Upload Floorplan scan artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
