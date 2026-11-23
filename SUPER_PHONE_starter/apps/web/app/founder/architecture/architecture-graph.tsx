@@ -28,9 +28,9 @@ export default function ArchitectureGraph(props: Props) {
   const [selectedId, setSelectedId] = useState("");
 
   const nodes = useMemo<Node[]>(() => {
-    const routes = new Map(props.webRoutes.map((item) => [item.file, item]));
-    const screens = new Map(props.mobileScreens.map((item) => [item.file, item]));
-    const components = new Map(props.mobileComponents.map((item) => [item.file, item]));
+    const routes = new Map(props.webRoutes.map((item) => [item.file, item] as const));
+    const screens = new Map(props.mobileScreens.map((item) => [item.file, item] as const));
+    const components = new Map(props.mobileComponents.map((item) => [item.file, item] as const));
     const files = props.sourceFiles.map((file) => {
       const route = routes.get(file);
       const screen = screens.get(file);
