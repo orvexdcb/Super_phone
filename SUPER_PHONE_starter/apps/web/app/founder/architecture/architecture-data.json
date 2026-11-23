@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-11-23T13:25:15.523Z",
-  "commitSha": "b242d4e7481af771452b382b938bea7733c0c70b",
+  "generatedAt": "2026-11-23T13:47:03.155Z",
+  "commitSha": "76621cd40a2b800c8cbe89cc791c87dc9660c022",
   "counts": {
-    "sourceFiles": 68,
+    "sourceFiles": 69,
     "webRoutes": 23,
     "mobileScreens": 9,
     "mobileComponents": 3,
@@ -48,6 +48,7 @@
     "SUPER_PHONE_starter/apps/web/app/favorites/page.tsx",
     "SUPER_PHONE_starter/apps/web/app/founder/accessories/actions.ts",
     "SUPER_PHONE_starter/apps/web/app/founder/accessories/page.tsx",
+    "SUPER_PHONE_starter/apps/web/app/founder/architecture/architecture-assistant.tsx",
     "SUPER_PHONE_starter/apps/web/app/founder/architecture/architecture-graph.tsx",
     "SUPER_PHONE_starter/apps/web/app/founder/architecture/map/route.ts",
     "SUPER_PHONE_starter/apps/web/app/founder/architecture/page.tsx",
