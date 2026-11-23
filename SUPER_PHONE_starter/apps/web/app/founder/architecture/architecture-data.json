@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-11-23T13:47:03.155Z",
-  "commitSha": "76621cd40a2b800c8cbe89cc791c87dc9660c022",
+  "generatedAt": "2026-11-23T13:47:17.060Z",
+  "commitSha": "6df63421d61167339e450b3d6945b4c71d181246",
   "counts": {
     "sourceFiles": 69,
     "webRoutes": 23,
     "mobileScreens": 9,
     "mobileComponents": 3,
-    "localDependencies": 126,
+    "localDependencies": 127,
     "databaseTables": 11,
     "databaseRelationships": 14,
     "migrations": 10,
@@ -214,6 +214,7 @@
       "type": "Page",
       "file": "SUPER_PHONE_starter/apps/web/app/founder/architecture/page.tsx",
       "imports": [
+        "SUPER_PHONE_starter/apps/web/app/founder/architecture/architecture-assistant.tsx",
         "SUPER_PHONE_starter/apps/web/app/founder/architecture/architecture-graph.tsx",
         "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts"
       ]
@@ -766,6 +767,11 @@
     {
       "from": "SUPER_PHONE_starter/apps/web/app/founder/architecture/page.tsx",
       "to": "SUPER_PHONE_starter/apps/web/app/founder/architecture/architecture-graph.tsx",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/founder/architecture/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/app/founder/architecture/architecture-assistant.tsx",
       "kind": "local import"
     },
     {
