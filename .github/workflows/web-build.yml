@@ -6,8 +6,10 @@ on:
       - feature/first-run-redesign
       - feature/phone-marketplace-visual-refresh
       - feature/founder-full-settings
+      - feature/founder-architecture-center
     paths:
       - "SUPER_PHONE_starter/apps/web/**"
+      - ".github/scripts/**"
       - "SUPER_PHONE_starter/packages/shared/**"
       - "SUPER_PHONE_starter/pnpm-lock.yaml"
       - "SUPER_PHONE_starter/package.json"
