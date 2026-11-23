@@ -1,0 +1,52 @@
+name: SUPER PHONE Floorplan scan
+
+on:
+  push:
+    branches:
+      - feature/founder-architecture-center
+    paths:
+      - "SUPER_PHONE_starter/**"
+      - ".github/workflows/floorplan-scan.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  floorplan-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout SUPER PHONE
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - name: Check Node.js
+        run: |
+          node --version
+          node -e "if (Number(process.versions.node.split('.')[0]) < 18) process.exit(1)"
+      - name: Fetch pinned Floorplan source
+        env:
+          FLOORPLAN_COMMIT: 94f81b463b7617e06d873ac71323ce71644c8399
+        run: |
+          mkdir -p /tmp/floorplan-upstream
+          curl --fail --location --silent --show-error \
+            "https://codeload.github.com/haydenschmitty/floorplan/tar.gz/$FLOORPLAN_COMMIT" \
+            | tar -xz --strip-components=1 -C /tmp/floorplan-upstream
+          test -f /tmp/floorplan-upstream/skills/floorplan/scripts/scan.mjs
+          printf 'Using Floorplan commit: %s\n' "$FLOORPLAN_COMMIT"
+      - name: Scan repository with upstream Floorplan
+        env:
+          FLOORPLAN_UNATTENDED: "1"
+          FLOORPLAN_AGENT: "none"
+        run: |
+          node /tmp/floorplan-upstream/skills/floorplan/scripts/scan.mjs . --json --unattended > /tmp/floorplan-scan-result.json
+          node -e "const r=require('/tmp/floorplan-scan-result.json'); if(!r.ok || !r.counts || !r.counts.files) { console.error(JSON.stringify(r)); process.exit(1) }; console.log(JSON.stringify({schema:r.schema,ok:r.ok,files:r.counts.files,code:r.counts.code?.files,imports:r.counts.importEdges,routes:r.counts.routes,warnings:r.warnings?.length||0},null,2))"
+          test -s floorplan/.cache/scan.json
+      - name: Upload Floorplan scan artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: super-phone-floorplan-scan
+          path: |
+            /tmp/floorplan-scan-result.json
+            floorplan/.cache/scan.json
+          if-no-files-found: error
+          retention-days: 7
