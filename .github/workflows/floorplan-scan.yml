@@ -75,6 +75,10 @@ jobs:
           }, null, 2));
           NODE
           test -s floorplan/.cache/scan.json
+      - name: Generate founder architecture inventory
+        run: |
+          node .github/scripts/generate-architecture.mjs
+          test -s SUPER_PHONE_starter/apps/web/app/founder/architecture/architecture-data.json
       - name: Build Floorplan architecture map
         env:
           FLOORPLAN_UNATTENDED: "1"
@@ -108,7 +112,7 @@ jobs:
           mkdir -p SUPER_PHONE_starter/apps/web/private/founder
           cp floorplan/index.html SUPER_PHONE_starter/apps/web/private/founder/floorplan-map.html
           cp floorplan/graph.json SUPER_PHONE_starter/apps/web/private/founder/floorplan-graph.json
-          git add SUPER_PHONE_starter/apps/web/private/founder/floorplan-map.html SUPER_PHONE_starter/apps/web/private/founder/floorplan-graph.json
+          git add SUPER_PHONE_starter/apps/web/private/founder/floorplan-map.html SUPER_PHONE_starter/apps/web/private/founder/floorplan-graph.json SUPER_PHONE_starter/apps/web/app/founder/architecture/architecture-data.json
           if git diff --cached --quiet; then
             echo "The founder map has not changed."
           else
