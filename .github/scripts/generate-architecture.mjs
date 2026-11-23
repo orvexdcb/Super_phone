@@ -8,9 +8,7 @@ const repoRoot = path.resolve(scriptDir, "../..");
 const projectRoot = path.join(repoRoot, "SUPER_PHONE_starter");
 const outFile = path.join(projectRoot, "apps/web/app/founder/architecture/architecture-data.json");
 const sourceRoots = [
-  "apps/web/app",
-  "apps/web/components",
-  "apps/web/lib",
+  "apps/web",
   "apps/mobile",
   "packages/shared/src",
 ];
