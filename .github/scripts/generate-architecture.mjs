@@ -133,6 +133,16 @@ for (const migration of migrationFiles) {
     }
   }
   for (const match of sql.matchAll(/alter\s+table\s+public\.([a-zA-Z0-9_]+)\s+enable\s+row\s+level\s+security/gi)) rlsEnabled.add(match[1]);
+
+  for (const match of sql.matchAll(/alter\s+table\s+public\.([a-zA-Z0-9_]+)\s+add\s+column\s+(?:if\s+not\s+exists\s+)?([a-zA-Z0-9_]+)/gi)) {
+    const table = tables.get(match[1]);
+    if (table && !table.columns.includes(match[2])) table.columns.push(match[2]);
+  }
+  for (const match of sql.matchAll(/alter\s+table\s+public\.([a-zA-Z0-9_]+)[\s\S]*?add\s+constraint\s+[a-zA-Z0-9_]+\s+foreign\s+key\s*\(\s*([a-zA-Z0-9_]+)\s*\)\s*references\s+public\.([a-zA-Z0-9_]+)\s*\(\s*([a-zA-Z0-9_]+)\s*\)/gi)) {
+    const table = tables.get(match[1]);
+    const edge = { column: match[2], referencesTable: match[3], referencesColumn: match[4] };
+    if (table && !table.foreignKeys.some(item => JSON.stringify(item) === JSON.stringify(edge))) table.foreignKeys.push(edge);
+  }
   for (const match of sql.matchAll(/create\s+policy\s+([a-zA-Z0-9_]+)\s+on\s+public\.([a-zA-Z0-9_]+)/gi)) policies.push({ name: match[1], table: match[2], migration });
   for (const match of sql.matchAll(/create\s+or\s+replace\s+function\s+public\.([a-zA-Z0-9_]+)\s*\(/gi)) functions.push({ name: match[1], migration });
   for (const match of sql.matchAll(/create\s+trigger\s+([a-zA-Z0-9_]+)[\s\S]*?\bon\s+public\.([a-zA-Z0-9_]+)[\s\S]*?execute\s+function\s+public\.([a-zA-Z0-9_]+)\s*\(/gi)) triggers.push({ name: match[1], table: match[2], function: match[3], migration });
