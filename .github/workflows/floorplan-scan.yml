@@ -12,6 +12,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: floorplan-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   floorplan-scan:
     runs-on: ubuntu-latest
@@ -111,6 +115,7 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git commit -m "chore: refresh founder Floorplan map [skip ci]"
+            git pull --rebase origin "$GITHUB_REF_NAME"
             git push
           fi
       - name: Upload Floorplan map and scan artifacts
