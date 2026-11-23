@@ -33,6 +33,20 @@ export default async function FounderArchitecturePage() {
     <main className="founder-shell" dir="rtl">
       <style>{`
         .arch-wrap{display:grid;gap:18px}
+        .founder-shell{--line:#e5e7eb;--muted:#6b7280;--gold:#c8102e;--gold-light:#c8102e;color:#1f2937;background:#fff}
+        .founder-shell .founder-heading h1,.founder-shell .arch-subtitle,.founder-shell .founder-kicker{color:#c8102e}
+        .founder-shell .founder-heading p,.founder-shell .meta{color:#6b7280}
+        .founder-shell .sp-admin-panel,.founder-shell .arch-card,.founder-shell .arch-stat,.founder-shell .arch-node,.founder-shell .arch-details{background:#fff!important;color:#1f2937;border:1px solid #e5e7eb!important;box-shadow:0 2px 10px rgba(17,24,39,.04)}
+        .founder-shell .arch-card h2,.founder-shell .arch-card li,.founder-shell .arch-node strong,.founder-shell .arch-stat strong,.founder-shell .arch-table th,.founder-shell .arch-details summary{color:#c8102e}
+        .founder-shell .arch-card p,.founder-shell .arch-node small,.founder-shell .arch-stat span,.founder-shell .arch-item span:last-child{color:#6b7280}
+        .founder-shell .arch-tag{color:#c8102e;background:#fff1f2}
+        .founder-shell .arch-pill{color:#c8102e;border-color:#fecdd3;background:#fff}
+        .founder-shell .arch-table{color:#1f2937}
+        .founder-shell .arch-table th,.founder-shell .arch-table td{border-bottom-color:#e5e7eb}
+        .founder-shell .arch-table a,.founder-shell .arch-links a,.founder-shell .arch-code{color:#c8102e}
+        .founder-shell .arch-note{border-right-color:#c8102e;background:#fff1f2;color:#374151}
+        .founder-shell .arch-links a{border-color:#fecdd3}
+        .founder-shell iframe{background:#fff!important}
         .arch-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
         .arch-pill{border:1px solid var(--line);border-radius:999px;padding:7px 12px;color:var(--gold-light);font-size:.78rem;overflow-wrap:anywhere}
         .arch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
