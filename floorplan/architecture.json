@@ -1,0 +1,205 @@
+{
+  "$schema": "floorplan/architecture@1",
+  "project": {
+    "name": "SUPER PHONE",
+    "summary": "منصة لعرض وبيع وشراء الأجهزة الإلكترونية ذات الشاشات، مع تطبيق ويب وتطبيق هاتف ولوحة للمؤسس. تعتمد على Supabase لتسجيل الدخول والبيانات والصور، وتستخدم Next.js وExpo.",
+    "entrypoints": [
+      "SUPER_PHONE_starter/apps/web/app/layout.tsx",
+      "SUPER_PHONE_starter/apps/web/app/page.tsx",
+      "SUPER_PHONE_starter/apps/mobile/App.js",
+      "SUPER_PHONE_starter/packages/shared/src/index.ts"
+    ]
+  },
+  "nodes": [
+    {
+      "id": "web",
+      "label": "تطبيق الويب",
+      "kind": "ui",
+      "summary": "يعرض الأجهزة والإعلانات وصفحات الحساب والإدارة ومركز المؤسس عبر المتصفح.",
+      "paths": [
+        "SUPER_PHONE_starter/apps/web/**"
+      ]
+    },
+    {
+      "id": "web.pages",
+      "parent": "web",
+      "label": "الصفحات ومسارات التطبيق",
+      "kind": "feature",
+      "summary": "تقدم صفحات التصفح والتفاصيل والحساب والإدارة والواجهات الخاصة بالمؤسس.",
+      "paths": [
+        "SUPER_PHONE_starter/apps/web/app/**"
+      ]
+    },
+    {
+      "id": "web.components",
+      "parent": "web",
+      "label": "مكونات الواجهة",
+      "kind": "library",
+      "summary": "تجمع عناصر الواجهة المشتركة التي تستخدمها صفحات الويب.",
+      "paths": [
+        "SUPER_PHONE_starter/apps/web/components/**"
+      ]
+    },
+    {
+      "id": "web.services",
+      "parent": "web",
+      "label": "خدمات الويب",
+      "kind": "library",
+      "summary": "تحتوي أدوات الاتصال بالمصادقة والبيانات والخدمات المساعدة.",
+      "paths": [
+        "SUPER_PHONE_starter/apps/web/lib/**"
+      ]
+    },
+    {
+      "id": "mobile",
+      "label": "تطبيق الهاتف",
+      "kind": "ui",
+      "summary": "يوفر تجربة الهاتف لعرض الأجهزة وإضافة الإعلانات وإدارة الحساب والمفضلة.",
+      "paths": [
+        "SUPER_PHONE_starter/apps/mobile/**"
+      ]
+    },
+    {
+      "id": "mobile.screens",
+      "parent": "mobile",
+      "label": "شاشات الهاتف",
+      "kind": "feature",
+      "summary": "تضم شاشات التصفح والتفاصيل وإضافة إعلان والحساب والإعدادات.",
+      "paths": [
+        "SUPER_PHONE_starter/apps/mobile/screens/**"
+      ]
+    },
+    {
+      "id": "mobile.components",
+      "parent": "mobile",
+      "label": "مكونات الهاتف",
+      "kind": "library",
+      "summary": "تجمع عناصر العرض المشتركة وتدفق التشغيل الأول وبطاقات الإعلانات.",
+      "paths": [
+        "SUPER_PHONE_starter/apps/mobile/components/**"
+      ]
+    },
+    {
+      "id": "mobile.services",
+      "parent": "mobile",
+      "label": "خدمات الهاتف",
+      "kind": "library",
+      "summary": "تدير جلسة المستخدم والاتصال بقاعدة البيانات والنصوص والثوابت.",
+      "paths": [
+        "SUPER_PHONE_starter/apps/mobile/lib/**"
+      ]
+    },
+    {
+      "id": "shared",
+      "label": "الحزمة المشتركة",
+      "kind": "library",
+      "summary": "تحتوي الأنواع والوظائف المشتركة بين أجزاء المشروع.",
+      "paths": [
+        "SUPER_PHONE_starter/packages/shared/**"
+      ]
+    },
+    {
+      "id": "database",
+      "label": "قاعدة البيانات",
+      "kind": "data",
+      "summary": "تحتوي ملفات SQL التي تنشئ الجداول والعلاقات وسياسات الوصول ووظائف قاعدة البيانات.",
+      "paths": [
+        "SUPER_PHONE_starter/supabase/**"
+      ]
+    },
+    {
+      "id": "automation",
+      "label": "أدوات الفحص والبناء",
+      "kind": "script",
+      "summary": "تحتوي أدوات توليد خريطة المشروع وفحوصات البناء الآلية.",
+      "paths": [
+        ".github/scripts/**"
+      ]
+    },
+    {
+      "id": "supabase",
+      "label": "Supabase",
+      "kind": "external",
+      "summary": "تقدم خدمات تسجيل الدخول وقاعدة البيانات وتخزين صور الإعلانات.",
+      "packages": [
+        "@supabase/*"
+      ]
+    },
+    {
+      "id": "whatsapp",
+      "label": "WhatsApp",
+      "kind": "external",
+      "summary": "يفتح قناة التواصل المباشر مع صاحب الإعلان عبر روابط واتساب.",
+      "hosts": [
+        "wa.me"
+      ]
+    }
+  ],
+  "flows": [
+    {
+      "id": "browse-listings",
+      "title": "تصفح الأجهزة",
+      "description": "رحلة قراءة الإعلانات من تطبيق الهاتف إلى خدمة البيانات.",
+      "steps": [
+        {
+          "node": "mobile.screens",
+          "note": "يفتح المستخدم شاشة التصفح ويحدد البحث والفلاتر."
+        },
+        {
+          "node": "mobile.services",
+          "note": "تستخدم الشاشة عميل الاتصال المهيأ لخدمة البيانات."
+        },
+        {
+          "node": "supabase",
+          "note": "تُقرأ الإعلانات النشطة وتفاصيل الفئات والصور من الخدمة."
+        }
+      ]
+    },
+    {
+      "id": "founder-admin",
+      "title": "دخول مركز المؤسس",
+      "description": "التحقق من صلاحية المؤسس قبل عرض أدوات الإدارة.",
+      "steps": [
+        {
+          "node": "web.pages",
+          "note": "يفتح المؤسس صفحة مركز الهندسة."
+        },
+        {
+          "node": "web.services",
+          "note": "تتحقق الصفحة من جلسة المستخدم ودور الحساب."
+        },
+        {
+          "node": "supabase",
+          "note": "تُقرأ هوية المستخدم ودوره قبل السماح بعرض الصفحة."
+        }
+      ]
+    }
+  ],
+  "tour": [
+    {
+      "node": "web",
+      "title": "واجهة الويب",
+      "note": "ابدأ من واجهة المتصفح التي تعرض المنصة للمستخدمين."
+    },
+    {
+      "node": "mobile",
+      "title": "تطبيق الهاتف",
+      "note": "تعرف على تجربة الهاتف ومسارات التصفح وإضافة الأجهزة."
+    },
+    {
+      "node": "shared",
+      "title": "الوظائف المشتركة",
+      "note": "راجع الجزء المشترك بين تطبيقات المشروع."
+    },
+    {
+      "node": "database",
+      "title": "تعريفات البيانات",
+      "note": "انتقل إلى ملفات إنشاء الجداول وسياسات الوصول."
+    },
+    {
+      "node": "supabase",
+      "title": "الخدمات الخارجية",
+      "note": "اختم بمصدر المصادقة والبيانات والصور."
+    }
+  ]
+}
