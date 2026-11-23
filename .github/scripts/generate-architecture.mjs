@@ -98,7 +98,7 @@ while ((mobileMatch = mobileImportPattern.exec(mobileSource)) !== null) {
 const mobileScreens = mobileImports.filter(item => item.file.includes("/screens/"));
 const mobileComponents = files
   .filter(file => rel(file).startsWith("SUPER_PHONE_starter/apps/mobile/components/"))
-  .map(file => ({ name: path.basename(file).replace(/\\.[^.]+$/, ""), file: rel(file) }));
+  .map(file => ({ name: path.basename(file).replace(/\.[^.]+$/, ""), file: rel(file) }));
 const mobileFiles = files.filter(file => rel(file).startsWith("SUPER_PHONE_starter/apps/mobile/"));
 
 const sqlDir = path.join(projectRoot, "supabase/migrations");
