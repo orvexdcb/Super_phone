@@ -8,7 +8,8 @@ export const dynamic = "force-dynamic";
 
 const projectRoot = "SUPER_PHONE_starter/";
 const githubRef = process.env.VERCEL_GIT_COMMIT_REF || "main";
-const githubFile = (file: string) => `https://github.com/orvexdcb/Super_phone/blob/${encodeURIComponent(githubRef)}/${file}`;
+const encodedGithubRef = encodeURIComponent(githubRef).replace(/%2F/g, "/");
+const githubFile = (file: string) => `https://github.com/orvexdcb/Super_phone/blob/${encodedGithubRef}/${file}`;
 
 export default async function FounderArchitecturePage() {
   const supabase = await createServerSupabase();
@@ -18,11 +19,6 @@ export default async function FounderArchitecturePage() {
   if (profile?.role !== "admin") redirect("/account");
 
   const databaseTables = architecture.database.tables || [];
-  const counts = await Promise.all(databaseTables.map(async (table) => {
-    const { count, error } = await supabase.from(table.name).select("*", { count: "exact", head: true });
-    return { name: table.name, count: error ? null : count };
-  }));
-  const tableCount = new Map(counts.map(row => [row.name, row.count]));
   const commit = architecture.commitSha || process.env.VERCEL_GIT_COMMIT_SHA || "غير متاح";
   const generatedAt = architecture.generatedAt ? new Date(architecture.generatedAt).toLocaleString("ar-IQ") : "بانتظار أول عملية بناء";
   const topDependencies = architecture.dependencies.slice(0, 70);
@@ -74,9 +70,9 @@ export default async function FounderArchitecturePage() {
 
       <div className="arch-wrap">
         <div className="arch-top">
-          <span className="arch-pill">توليد الخريطة: ${generatedAt}</span>
-          <span className="arch-pill">Commit: ${commit.slice(0, 12)}</span>
-          <span className="arch-pill">الفرع: ${githubRef}</span>
+          <span className="arch-pill">توليد الخريطة: {generatedAt}</span>
+          <span className="arch-pill">Commit: {commit.slice(0, 12)}</span>
+          <span className="arch-pill">الفرع: {githubRef}</span>
         </div>
 
         <section className="sp-admin-panel">
@@ -177,12 +173,12 @@ export default async function FounderArchitecturePage() {
         <section className="sp-admin-panel">
           <h2 className="arch-subtitle">قاعدة البيانات وعلاقات المفاتيح الخارجية</h2>
           <div className="arch-table-wrap">
-            <table className="arch-table"><thead><tr><th>الجدول</th><th>الأعمدة المستخرجة</th><th>RLS في ملفات SQL</th><th>السجلات الحالية</th></tr></thead>
+            <table className="arch-table"><thead><tr><th>الجدول</th><th>الأعمدة المستخرجة</th><th>RLS في ملفات SQL</th></tr></thead>
               <tbody>{databaseTables.map(table=><tr key={table.name}>
                 <td><strong>{table.name}</strong><br/><code>{table.policies.length} سياسات</code></td>
                 <td><code>{table.columns.join(" · ")}</code></td>
                 <td>{table.rlsEnabled ? "مفعّل في الترحيلات" : "غير مثبت في الترحيلات"}</td>
-                <td>{tableCount.get(table.name) === null ? "غير متاح" : tableCount.get(table.name) ?? "—"}</td>
+                
               </tr>)}</tbody>
             </table>
           </div>
@@ -218,7 +214,7 @@ export default async function FounderArchitecturePage() {
 
         <section className="arch-links">
           <Link href="/founder/settings">العودة إلى إعدادات المؤسس</Link>
-          <a href="https://github.com/orvexdcb/Super_phone/tree/${encodeURIComponent(githubRef)}/SUPER_PHONE_starter" target="_blank" rel="noreferrer">فتح ملفات المشروع</a>
+          <a href={`https://github.com/orvexdcb/Super_phone/tree/${encodedGithubRef}/SUPER_PHONE_starter`} target="_blank" rel="noreferrer">فتح ملفات المشروع</a>
           <a href="https://supabase.com/dashboard/project/eqlenftagozvjezswbaf" target="_blank" rel="noreferrer">فتح قاعدة البيانات</a>
         </section>
       </div>
