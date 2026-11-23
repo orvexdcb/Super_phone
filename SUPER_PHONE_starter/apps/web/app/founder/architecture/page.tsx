@@ -76,6 +76,11 @@ export default async function FounderArchitecturePage() {
         .arch-links{display:flex;gap:9px;flex-wrap:wrap}.arch-links a{border:1px solid var(--line);padding:9px 12px;border-radius:10px}
         .arch-subtitle{margin:0 0 12px;font-size:1.02rem}
         @media(max-width:720px){
+          html,body{width:100%;max-width:100%;overflow-x:clip}
+          main.founder-shell{display:block;width:100%;max-width:100%;min-width:0;margin:0;padding:14px 12px calc(112px + env(safe-area-inset-bottom));overflow-x:clip}
+          .founder-shell,.founder-shell *{min-width:0}
+          .founder-shell .sp-admin-panel{width:100%;max-width:100%}
+          .founder-shell iframe{display:block;width:100%;max-width:100%}
           .arch-wrap{gap:13px}
           .arch-top{display:grid;grid-template-columns:1fr;gap:7px}
           .arch-pill{width:100%;box-sizing:border-box;font-size:.72rem;padding:8px 10px}
