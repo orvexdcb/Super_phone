@@ -90,6 +90,21 @@ export default async function FounderArchitecturePage() {
         </section>
 
         <section className="sp-admin-panel">
+          <h2 className="arch-subtitle">خريطة Floorplan التفاعلية</h2>
+          <p className="meta">الخريطة الأصلية المولدة من تحليل الملفات والعلاقات. لا تتصل بقاعدة البيانات ولا تنفذ أي تغييرات.</p>
+          <div style={{border:"1px solid var(--line)",borderRadius:14,overflow:"hidden",background:"#0d1726"}}>
+            <iframe
+              title="خريطة بنية SUPER PHONE"
+              src="/founder/architecture/map"
+              sandbox="allow-scripts allow-popups"
+              loading="lazy"
+              referrerPolicy="no-referrer"
+              style={{display:"block",width:"100%",height:"min(78vh, 900px)",minHeight:560,border:0,background:"#0d1726"}}
+            />
+          </div>
+        </section>
+
+        <section className="sp-admin-panel">
           <h2 className="arch-subtitle">الخريطة العامة وتدفق الاعتماد</h2>
           <div className="arch-flow">
             <div className="arch-node"><strong>تطبيق الويب</strong><small>Next.js · React</small></div>
