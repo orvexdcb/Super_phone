@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   floorplan-scan:
@@ -99,6 +99,20 @@ jobs:
             screens: r.screens
           }, null, 2));
           NODE
+      - name: Publish map data to the protected founder route
+        run: |
+          mkdir -p SUPER_PHONE_starter/apps/web/private/founder
+          cp floorplan/index.html SUPER_PHONE_starter/apps/web/private/founder/floorplan-map.html
+          cp floorplan/graph.json SUPER_PHONE_starter/apps/web/private/founder/floorplan-graph.json
+          git add SUPER_PHONE_starter/apps/web/private/founder/floorplan-map.html SUPER_PHONE_starter/apps/web/private/founder/floorplan-graph.json
+          if git diff --cached --quiet; then
+            echo "The founder map has not changed."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "chore: refresh founder Floorplan map [skip ci]"
+            git push
+          fi
       - name: Upload Floorplan map and scan artifacts
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
