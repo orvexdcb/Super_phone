@@ -1,0 +1,30 @@
+{
+  "generatedAt": null,
+  "commitSha": "pending-first-build",
+  "counts": {
+    "sourceFiles": 0,
+    "webRoutes": 0,
+    "mobileScreens": 0,
+    "mobileComponents": 0,
+    "localDependencies": 0,
+    "databaseTables": 0,
+    "databaseRelationships": 0,
+    "migrations": 0,
+    "policies": 0,
+    "functions": 0,
+    "triggers": 0
+  },
+  "sourceFiles": [],
+  "webRoutes": [],
+  "mobileScreens": [],
+  "mobileComponents": [],
+  "dependencies": [],
+  "database": {
+    "tables": [],
+    "relationships": [],
+    "policies": [],
+    "functions": [],
+    "triggers": [],
+    "migrations": []
+  }
+}
