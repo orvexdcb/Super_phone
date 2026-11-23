@@ -61,7 +61,36 @@ export default async function FounderArchitecturePage() {
         .arch-note{border-right:3px solid var(--gold);padding:10px 13px;background:rgba(216,173,94,.08);border-radius:10px;color:#e9dfca;font-size:.84rem}
         .arch-links{display:flex;gap:9px;flex-wrap:wrap}.arch-links a{border:1px solid var(--line);padding:9px 12px;border-radius:10px}
         .arch-subtitle{margin:0 0 12px;font-size:1.02rem}
-        @media(max-width:600px){.arch-table{font-size:.75rem}.arch-table th,.arch-table td{padding:8px 6px}.arch-pill{font-size:.7rem}}
+        @media(max-width:720px){
+          .arch-wrap{gap:13px}
+          .arch-top{display:grid;grid-template-columns:1fr;gap:7px}
+          .arch-pill{width:100%;box-sizing:border-box;font-size:.72rem;padding:8px 10px}
+          .arch-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+          .arch-stat{padding:9px}
+          .arch-stat strong{font-size:1.15rem}
+          .arch-stat span{font-size:.7rem}
+          .arch-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+          .arch-card{padding:11px;border-radius:13px}
+          .arch-flow{grid-template-columns:repeat(2,minmax(0,1fr))}
+          .arch-node{padding:9px 7px}
+          .arch-node strong{font-size:.8rem}
+          .arch-node small{font-size:.68rem}
+          .arch-table-wrap{margin-inline:-4px;max-width:100%;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+          .arch-table{font-size:.74rem;min-width:520px}
+          .arch-table th,.arch-table td{padding:8px 7px}
+          .arch-item{align-items:flex-start;flex-direction:column;gap:4px}
+          .arch-item span:last-child{text-align:right}
+          .arch-links{display:grid;grid-template-columns:1fr}
+          .arch-links a{text-align:center}
+          .arch-subtitle{font-size:.95rem}
+          .arch-mobile-hint{display:block}
+        }
+        @media(max-width:390px){
+          .arch-grid{grid-template-columns:1fr}
+          .arch-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+          .arch-flow{grid-template-columns:1fr 1fr}
+        }
+        @media(min-width:721px){.arch-mobile-hint{display:none}}
       `}</style>
       <section className="founder-heading">
         <span className="founder-kicker">SUPER PHONE · ARCHITECTURE CENTER</span>
@@ -93,6 +122,7 @@ export default async function FounderArchitecturePage() {
         <section className="sp-admin-panel">
           <h2 className="arch-subtitle">خريطة Floorplan التفاعلية</h2>
           <p className="meta">الخريطة الأصلية المولدة من تحليل الملفات والعلاقات. لا تتصل بقاعدة البيانات ولا تنفذ أي تغييرات.</p>
+          <p className="meta arch-mobile-hint">على الهاتف: اسحب الخريطة بإصبعك للتنقل، وقرّب أو أبعد بإصبعيك. استخدم الوضع الأفقي عند الحاجة لمساحة أوسع.</p>
           <div style={{border:"1px solid var(--line)",borderRadius:14,overflow:"hidden",background:"#0d1726"}}>
             <iframe
               title="خريطة بنية SUPER PHONE"
@@ -100,7 +130,7 @@ export default async function FounderArchitecturePage() {
               sandbox="allow-scripts allow-popups"
               loading="lazy"
               referrerPolicy="no-referrer"
-              style={{display:"block",width:"100%",height:"min(78vh, 900px)",minHeight:560,border:0,background:"#0d1726"}}
+              style={{display:"block",width:"100%",height:"clamp(420px, 76svh, 900px)",minHeight:0,border:0,background:"#0d1726",touchAction:"pan-x pan-y"}}
             />
           </div>
         </section>
