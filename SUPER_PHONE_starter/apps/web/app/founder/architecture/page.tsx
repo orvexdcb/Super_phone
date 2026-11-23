@@ -1,27 +1,13 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import architecture from "./architecture-data.json";
 import { createServerSupabase } from "../../../lib/supabase-server";
 
 export const dynamic = "force-dynamic";
 
-const areas = [
-  { title: "واجهة الويب", tag: "Next.js 15", files: ["app/ — المسارات والشاشات", "components/ — عناصر الواجهة", "lib/ — الاتصال والوظائف المساعدة"], uses: "Supabase SSR · الحزمة المشتركة" },
-  { title: "تطبيق الهاتف", tag: "Expo 52 · React Native", files: ["App.js — التنقل وتجميع الشاشات", "screens/ — شاشات المستخدم والمؤسس", "components/ — مكونات الهاتف", "lib/ — الجلسة والترجمة والاتصال"], uses: "Supabase JS · AsyncStorage" },
-  { title: "المنطق المشترك", tag: "@super-phone/shared", files: ["packages/shared/src/"], uses: "أنواع وبيانات مشتركة بين التطبيقات" },
-  { title: "قاعدة البيانات", tag: "Supabase · PostgreSQL", files: ["profiles · categories · listings", "listing_images · listing_specs · favorites · reports", "accessory_categories · accessory_products", "accessory_product_images · accessory_orders"], uses: "RLS · Triggers · Functions · Storage" },
-  { title: "النشر", tag: "Vercel + GitHub Actions", files: ["GitHub: main / feature branches", "Vercel: مشروع super_phone", ".github/workflows/ — بناء الويب وAPK"], uses: "النشر التلقائي مرتبط بفرع الإنتاج" }
-];
-
-const relations = [
-  ["المستخدم", "profiles", "هوية الحساب والصلاحية"],
-  ["البائع", "listings", "إعلانات الأجهزة"],
-  ["الإعلان", "listing_images / listing_specs", "صور ومواصفات الإعلان"],
-  ["المستخدم", "favorites", "الأجهزة المحفوظة"],
-  ["المستخدم", "reports", "بلاغات الإعلانات"],
-  ["فئة الإكسسوار", "accessory_products", "تصنيف المنتجات"],
-  ["المنتج", "accessory_product_images", "صور المنتج"],
-  ["المنتج", "accessory_orders", "طلبات الشراء والمخزون"]
-];
+const projectRoot = "SUPER_PHONE_starter/";
+const githubRef = process.env.VERCEL_GIT_COMMIT_REF || "main";
+const githubFile = (file: string) => `https://github.com/orvexdcb/Super_phone/blob/${encodeURIComponent(githubRef)}/${file}`;
 
 export default async function FounderArchitecturePage() {
   const supabase = await createServerSupabase();
@@ -30,84 +16,186 @@ export default async function FounderArchitecturePage() {
   const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
   if (profile?.role !== "admin") redirect("/account");
 
-  const tableNames = ["profiles","categories","listings","listing_images","listing_specs","favorites","reports","accessory_categories","accessory_products","accessory_product_images","accessory_orders"];
-  const counts = await Promise.all(tableNames.map(async (name) => {
-    const { count, error } = await supabase.from(name).select("*", { count: "exact", head: true });
-    return { name, count: error ? null : count };
+  const databaseTables = architecture.database.tables || [];
+  const counts = await Promise.all(databaseTables.map(async (table) => {
+    const { count, error } = await supabase.from(table.name).select("*", { count: "exact", head: true });
+    return { name: table.name, count: error ? null : count };
   }));
-  const commit = process.env.VERCEL_GIT_COMMIT_SHA || "غير متاح في بيئة المعاينة";
+  const tableCount = new Map(counts.map(row => [row.name, row.count]));
+  const commit = architecture.commitSha || process.env.VERCEL_GIT_COMMIT_SHA || "غير متاح";
+  const generatedAt = architecture.generatedAt ? new Date(architecture.generatedAt).toLocaleString("ar-IQ") : "بانتظار أول عملية بناء";
+  const topDependencies = architecture.dependencies.slice(0, 70);
+  const webRoutes = architecture.webRoutes || [];
+  const mobileScreens = architecture.mobileScreens || [];
+  const mobileComponents = architecture.mobileComponents || [];
+  const databaseRelationships = architecture.database.relationships || [];
+
   return (
     <main className="founder-shell" dir="rtl">
       <style>{`
         .arch-wrap{display:grid;gap:18px}
-        .arch-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-        .arch-pill{border:1px solid var(--line);border-radius:999px;padding:7px 12px;color:var(--gold-light);font-size:.8rem}
-        .arch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
-        .arch-card{background:linear-gradient(150deg,#1b2a3e,#101d2e);border:1px solid var(--line);border-radius:17px;padding:16px;min-width:0}
-        .arch-card h2{margin:0 0 6px;font-size:1.02rem}.arch-card p{color:var(--muted);margin:7px 0;font-size:.86rem}
-        .arch-card ul{margin:12px 0 0;padding-right:18px;color:#e7ebf1;font-size:.84rem;line-height:1.9}
-        .arch-tag{display:inline-block;color:var(--gold-light);font-size:.76rem;background:rgba(216,173,94,.1);padding:4px 9px;border-radius:999px}
-        .arch-flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:9px;align-items:stretch}
-        .arch-node{border:1px solid rgba(216,173,94,.32);background:#17263a;border-radius:13px;padding:12px;text-align:center}
-        .arch-node strong{display:block;color:var(--gold-light);font-size:.9rem}.arch-node small{color:var(--muted)}
-        .arch-table{width:100%;border-collapse:collapse;font-size:.86rem}.arch-table th,.arch-table td{padding:10px;text-align:right;border-bottom:1px solid var(--line)}.arch-table th{color:var(--gold-light);font-weight:700}
-        .arch-counts{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px}
-        .arch-count{background:#17263a;border:1px solid var(--line);border-radius:12px;padding:11px}.arch-count strong{display:block;color:var(--gold-light);font-size:1.2rem}.arch-count span{font-size:.78rem;color:var(--muted);overflow-wrap:anywhere}
-        .arch-note{border-right:3px solid var(--gold);padding:10px 13px;background:rgba(216,173,94,.08);border-radius:10px;color:#e9dfca;font-size:.86rem}
-        .arch-links{display:flex;gap:10px;flex-wrap:wrap}.arch-links a{color:var(--gold-light);text-decoration:none;border:1px solid var(--line);padding:9px 12px;border-radius:10px}
-        @media(max-width:600px){.arch-table{font-size:.75rem}.arch-table th,.arch-table td{padding:8px 5px}}
+        .arch-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+        .arch-pill{border:1px solid var(--line);border-radius:999px;padding:7px 12px;color:var(--gold-light);font-size:.78rem;overflow-wrap:anywhere}
+        .arch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+        .arch-card{background:linear-gradient(150deg,#1b2a3e,#101d2e);border:1px solid var(--line);border-radius:16px;padding:15px;min-width:0}
+        .arch-card h2{margin:0 0 7px;font-size:1rem}.arch-card p{color:var(--muted);margin:7px 0;font-size:.84rem}
+        .arch-card ul{margin:10px 0 0;padding-right:18px;color:#e7ebf1;font-size:.82rem;line-height:1.8}
+        .arch-tag{display:inline-block;color:var(--gold-light);font-size:.74rem;background:rgba(216,173,94,.1);padding:4px 9px;border-radius:999px}
+        .arch-flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;align-items:stretch}
+        .arch-node{border:1px solid rgba(216,173,94,.32);background:#17263a;border-radius:12px;padding:11px;text-align:center}
+        .arch-node strong{display:block;color:var(--gold-light);font-size:.88rem}.arch-node small{color:var(--muted);font-size:.75rem}
+        .arch-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:8px}
+        .arch-stat{background:#17263a;border:1px solid var(--line);border-radius:12px;padding:11px;min-width:0}
+        .arch-stat strong{display:block;color:var(--gold-light);font-size:1.3rem;line-height:1.5}
+        .arch-stat span{font-size:.76rem;color:var(--muted)}
+        .arch-table-wrap{overflow-x:auto}
+        .arch-table{width:100%;border-collapse:collapse;font-size:.82rem;min-width:540px}
+        .arch-table th,.arch-table td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line);vertical-align:top}
+        .arch-table th{color:var(--gold-light);font-weight:800}
+        .arch-table code,.arch-code{font-size:.76rem;color:#d6dfeb;overflow-wrap:anywhere;white-space:normal}
+        .arch-table a,.arch-links a{color:var(--gold-light);text-decoration:none}
+        .arch-details{background:#17263a;border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+        .arch-details summary{cursor:pointer;color:var(--gold-light);font-weight:700}
+        .arch-list{display:grid;gap:7px;margin-top:10px}
+        .arch-item{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:.8rem}
+        .arch-item span:last-child{color:var(--muted);text-align:left}
+        .arch-note{border-right:3px solid var(--gold);padding:10px 13px;background:rgba(216,173,94,.08);border-radius:10px;color:#e9dfca;font-size:.84rem}
+        .arch-links{display:flex;gap:9px;flex-wrap:wrap}.arch-links a{border:1px solid var(--line);padding:9px 12px;border-radius:10px}
+        .arch-subtitle{margin:0 0 12px;font-size:1.02rem}
+        @media(max-width:600px){.arch-table{font-size:.75rem}.arch-table th,.arch-table td{padding:8px 6px}.arch-pill{font-size:.7rem}}
       `}</style>
       <section className="founder-heading">
         <span className="founder-kicker">SUPER PHONE · ARCHITECTURE CENTER</span>
         <h1>مركز هندسة المشروع</h1>
-        <p>خريطة مكونات النظام، تدفق البيانات، وعلاقات قاعدة البيانات — مخصصة للمؤسس.</p>
+        <p>خريطة مستخرجة من ملفات المستودع، مع فحص مباشر لجداول قاعدة البيانات — للمؤسس فقط.</p>
       </section>
+
       <div className="arch-wrap">
         <div className="arch-top">
-          <span className="arch-pill">فحص حي لقاعدة البيانات</span>
-          <span className="arch-pill">Commit: {commit.slice(0, 12)}</span>
+          <span className="arch-pill">توليد الخريطة: ${generatedAt}</span>
+          <span className="arch-pill">Commit: ${commit.slice(0, 12)}</span>
+          <span className="arch-pill">الفرع: ${githubRef}</span>
         </div>
+
         <section className="sp-admin-panel">
-          <h2>الخريطة العامة للنظام</h2>
+          <h2 className="arch-subtitle">مؤشرات حجم النظام المكتشفة</h2>
+          <div className="arch-stats">
+            <div className="arch-stat"><strong>{architecture.counts.sourceFiles}</strong><span>ملفات مصدر محللة</span></div>
+            <div className="arch-stat"><strong>{architecture.counts.webRoutes}</strong><span>مسارات ويب</span></div>
+            <div className="arch-stat"><strong>{architecture.counts.mobileScreens}</strong><span>شاشات هاتف مستوردة</span></div>
+            <div className="arch-stat"><strong>{architecture.counts.localDependencies}</strong><span>روابط استيراد محلية</span></div>
+            <div className="arch-stat"><strong>{architecture.counts.databaseTables}</strong><span>جداول في ملفات الترحيل</span></div>
+            <div className="arch-stat"><strong>{architecture.counts.databaseRelationships}</strong><span>علاقات مفاتيح خارجية</span></div>
+            <div className="arch-stat"><strong>{architecture.counts.policies}</strong><span>سياسات معرفة في SQL</span></div>
+            <div className="arch-stat"><strong>{architecture.counts.functions + architecture.counts.triggers}</strong><span>دوال ومحفزات في SQL</span></div>
+          </div>
+        </section>
+
+        <section className="sp-admin-panel">
+          <h2 className="arch-subtitle">الخريطة العامة وتدفق الاعتماد</h2>
           <div className="arch-flow">
-            <div className="arch-node"><strong>الويب</strong><small>Next.js 15</small></div>
-            <div className="arch-node"><strong>الهاتف</strong><small>Expo / React Native</small></div>
-            <div className="arch-node"><strong>الحزمة المشتركة</strong><small>Types & Logic</small></div>
-            <div className="arch-node"><strong>Supabase</strong><small>Auth · DB · Storage</small></div>
-            <div className="arch-node"><strong>GitHub</strong><small>Source Control</small></div>
-            <div className="arch-node"><strong>Vercel</strong><small>Web Deployment</small></div>
+            <div className="arch-node"><strong>تطبيق الويب</strong><small>Next.js · React</small></div>
+            <div className="arch-node"><strong>تطبيق الهاتف</strong><small>Expo · React Native</small></div>
+            <div className="arch-node"><strong>الحزمة المشتركة</strong><small>أنواع ووظائف مشتركة</small></div>
+            <div className="arch-node"><strong>Supabase Auth</strong><small>جلسات وهوية المستخدم</small></div>
+            <div className="arch-node"><strong>PostgreSQL + Storage</strong><small>بيانات وإعلانات وصور</small></div>
+            <div className="arch-node"><strong>GitHub → Vercel</strong><small>مصدر الويب ونشره</small></div>
           </div>
-          <p className="meta">المسار المنطقي: واجهات الويب والهاتف ← المصادقة وواجهات Supabase ← PostgreSQL وStorage. GitHub يحفظ المصدر وVercel ينشر نسخة الويب.</p>
+          <p className="meta">الأسهم تمثل اعتماد التطبيقات على خدمات المصادقة والبيانات. تفاصيل استيرادات الملفات والعلاقات الفعلية مدرجة أدناه.</p>
         </section>
+
         <section>
-          <div className="sp-section-heading"><div><span className="founder-kicker">SYSTEM MAP</span><h2>أجزاء المشروع</h2></div></div>
-          <div className="arch-grid">
-            {areas.map(area => <article className="arch-card" key={area.title}><span className="arch-tag">{area.tag}</span><h2>{area.title}</h2><ul>{area.files.map(file=><li key={file}>{file}</li>)}</ul><p>{area.uses}</p></article>)}
+          <div className="sp-section-heading"><div><span className="founder-kicker">WEB APPLICATION</span><h2>مسارات الويب</h2></div></div>
+          <div className="sp-admin-panel">
+            <div className="arch-table-wrap">
+              <table className="arch-table"><thead><tr><th>المسار</th><th>النوع</th><th>ملف المصدر</th><th>الاعتماديات المحلية</th></tr></thead>
+                <tbody>{webRoutes.map((route) => <tr key={route.file}>
+                  <td><strong>{route.route}</strong></td><td>{route.type}</td>
+                  <td><a href={githubFile(route.file)} target="_blank" rel="noreferrer">{route.file.split("/").slice(-2).join("/")}</a></td>
+                  <td>{route.imports.length}</td>
+                </tr>)}</tbody>
+              </table>
+            </div>
+            <details className="arch-details" style={{marginTop:12}}>
+              <summary>عرض الاستيرادات الفعلية لكل مسار</summary>
+              <div className="arch-list">{webRoutes.map(route=><div className="arch-item" key={route.file}><span><strong>{route.route}</strong><br/><code>{route.imports.join(" · ") || "لا توجد استيرادات محلية مكتشفة"}</code></span><span>{route.imports.length}</span></div>)}</div>
+            </details>
           </div>
         </section>
+
         <section className="sp-admin-panel">
-          <h2>علاقات البيانات المكتشفة</h2>
-          <div style={{overflowX:"auto"}}>
-            <table className="arch-table"><thead><tr><th>المصدر</th><th>الجدول المرتبط</th><th>العلاقة</th></tr></thead><tbody>
-              {relations.map((r,i)=><tr key={i}><td>{r[0]}</td><td>{r[1]}</td><td>{r[2]}</td></tr>)}
+          <h2 className="arch-subtitle">شاشات تطبيق الهاتف</h2>
+          <div className="arch-grid">
+            {mobileScreens.map(screen=><article className="arch-card" key={screen.file}>
+              <span className="arch-tag">Mobile Screen</span><h2>{screen.name}</h2>
+              <a className="arch-code" href={githubFile(screen.file)} target="_blank" rel="noreferrer">{screen.file}</a>
+            </article>)}
+          </div>
+          <details className="arch-details" style={{marginTop:12}}>
+            <summary>المكونات المشتركة في تطبيق الهاتف ({mobileComponents.length})</summary>
+            <div className="arch-list">{mobileComponents.map(item=><div className="arch-item" key={item.file}><a href={githubFile(item.file)} target="_blank" rel="noreferrer">{item.name}</a><span>{item.file}</span></div>)}</div>
+          </details>
+        </section>
+
+        <section className="sp-admin-panel">
+          <h2 className="arch-subtitle">شبكة اعتماد الملفات</h2>
+          <p className="meta">يستخرج الماسح الاستيرادات المحلية من ملفات TypeScript وJavaScript ويربط الملف المستهلك بالملف الذي يعتمد عليه.</p>
+          <div className="arch-table-wrap">
+            <table className="arch-table"><thead><tr><th>الملف المستهلك</th><th>يعتمد على</th></tr></thead><tbody>
+              {topDependencies.map((edge, index)=><tr key={index}>
+                <td><a href={githubFile(edge.from)} target="_blank" rel="noreferrer">{edge.from.replace(projectRoot,"")}</a></td>
+                <td><a href={githubFile(edge.to)} target="_blank" rel="noreferrer">{edge.to.replace(projectRoot,"")}</a></td>
+              </tr>)}
             </tbody></table>
           </div>
+          <p className="meta">يعرض الجدول أول {topDependencies.length} علاقة من أصل {architecture.dependencies.length}. افتح الملفات من الروابط لعرض بقية التفاصيل.</p>
         </section>
+
         <section className="sp-admin-panel">
-          <h2>حالة الجداول — قراءة مباشرة</h2>
-          <div className="arch-counts">{counts.map(row=><div className="arch-count" key={row.name}><strong>{row.count===null?"—":row.count}</strong><span>{row.name}</span></div>)}</div>
-          <p className="meta">العدد يمثل إجمالي الصفوف كما تسمح به صلاحيات جلسة المؤسس الحالية؛ لا يتم تعديل أي بيانات من هذه الصفحة.</p>
+          <h2 className="arch-subtitle">قاعدة البيانات وعلاقات المفاتيح الخارجية</h2>
+          <div className="arch-table-wrap">
+            <table className="arch-table"><thead><tr><th>الجدول</th><th>الأعمدة المستخرجة</th><th>RLS في ملفات SQL</th><th>السجلات الحالية</th></tr></thead>
+              <tbody>{databaseTables.map(table=><tr key={table.name}>
+                <td><strong>{table.name}</strong><br/><code>{table.policies.length} سياسات</code></td>
+                <td><code>{table.columns.join(" · ")}</code></td>
+                <td>{table.rlsEnabled ? "مفعّل في الترحيلات" : "غير مثبت في الترحيلات"}</td>
+                <td>{tableCount.get(table.name) === null ? "غير متاح" : tableCount.get(table.name) ?? "—"}</td>
+              </tr>)}</tbody>
+            </table>
+          </div>
+          <details className="arch-details" style={{marginTop:12}} open>
+            <summary>علاقات الجداول ({databaseRelationships.length})</summary>
+            <div className="arch-list">{databaseRelationships.map((edge,index)=><div className="arch-item" key={index}>
+              <span><strong>{edge.fromTable}.{edge.fromColumn}</strong> ← {edge.toTable}.{edge.toColumn}</span><span>Foreign Key</span>
+            </div>)}</div>
+          </details>
         </section>
+
+        <section className="arch-grid">
+          <article className="arch-card"><span className="arch-tag">RLS</span><h2>سياسات الوصول</h2>
+            <p>السياسات المستخرجة من ملفات SQL حسب الجدول.</p>
+            <ul>{architecture.database.policies.map(policy=><li key={policy.name + policy.table}>{policy.name} — {policy.table}</li>)}</ul>
+          </article>
+          <article className="arch-card"><span className="arch-tag">PostgreSQL</span><h2>الدوال والمحفزات</h2>
+            <p>تعريفات قاعدة البيانات الموجودة في ملفات الترحيل.</p>
+            <ul>{architecture.database.functions.map(fn=><li key={fn.name}>{fn.name}()</li>)}{architecture.database.triggers.map(trigger=><li key={trigger.name}>{trigger.name} — {trigger.table}</li>)}</ul>
+          </article>
+          <article className="arch-card"><span className="arch-tag">Migrations</span><h2>ملفات الترحيل</h2>
+            <p>ملفات SQL الموجودة في المستودع، وليست بحد ذاتها إثباتًا على تنفيذ كل ملف حاليًا.</p>
+            <ul>{architecture.database.migrations.map(file=><li key={file}><a href={githubFile(`SUPER_PHONE_starter/supabase/migrations/${file}`)} target="_blank" rel="noreferrer">{file}</a></li>)}</ul>
+          </article>
+        </section>
+
         <section className="sp-admin-panel">
-          <h2>ملاحظات الفحص الأولي</h2>
-          <div className="arch-note">تنبيه أمني: أداة Supabase Advisors رصدت أن public.is_admin() قابلة للتنفيذ من anon وauthenticated بصلاحية SECURITY DEFINER. يلزم مراجعة الاعتماد عليها في سياسات RLS قبل تغيير الصلاحيات.</div>
-          <div className="arch-note" style={{marginTop:9}}>تحسين أمني موصى به: تفعيل حماية كلمات المرور المسربة في إعدادات Supabase Auth.</div>
-          <div className="arch-note" style={{marginTop:9}}>تحسين أداء: مفتاح أجنبي في reports.reporter_id بلا فهرس مغطٍ. كما ظهرت فهارس غير مستخدمة؛ لا يُنصح بحذفها قبل وجود حركة استخدام فعلية.</div>
-          <p className="meta">هذه ملاحظات فحص وليست تغييرات منفذة. تمت المحافظة على قاعدة البيانات دون أي تعديل.</p>
+          <h2 className="arch-subtitle">ملاحظات المراجعة الأمنية</h2>
+          <div className="arch-note">رصد فحص Supabase السابق أن الدالة public.is_admin() قابلة للتنفيذ من anon وauthenticated. يجب مراجعة صلاحية EXECUTE واحتياجات سياسات RLS قبل أي تغيير.</div>
+          <div className="arch-note" style={{marginTop:9}}>رصد فحص Supabase السابق توصية بتفعيل حماية كلمات المرور المسربة في إعدادات Auth.</div>
+          <div className="arch-note" style={{marginTop:9}}>هذه الصفحة تفحص تعريفات SQL والملفات ولا تنفذ تغييرات على قاعدة البيانات أو إعدادات المصادقة.</div>
         </section>
+
         <section className="arch-links">
           <Link href="/founder/settings">العودة إلى إعدادات المؤسس</Link>
-          <a href="https://github.com/orvexdcb/Super_phone/tree/main/SUPER_PHONE_starter" target="_blank" rel="noreferrer">فتح ملفات المشروع</a>
+          <a href="https://github.com/orvexdcb/Super_phone/tree/${encodeURIComponent(githubRef)}/SUPER_PHONE_starter" target="_blank" rel="noreferrer">فتح ملفات المشروع</a>
           <a href="https://supabase.com/dashboard/project/eqlenftagozvjezswbaf" target="_blank" rel="noreferrer">فتح قاعدة البيانات</a>
         </section>
       </div>
