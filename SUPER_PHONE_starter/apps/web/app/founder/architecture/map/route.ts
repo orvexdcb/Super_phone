@@ -3,6 +3,7 @@ import path from "node:path";
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "../../../../lib/supabase-server";
 
+// The HTML map is served from the private server bundle only after the founder role check.
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
