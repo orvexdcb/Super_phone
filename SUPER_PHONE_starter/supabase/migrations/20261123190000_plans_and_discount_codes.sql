@@ -65,3 +65,23 @@ grant select on public.subscription_plans to anon,authenticated;
 grant insert,update,delete on public.subscription_plans to authenticated;
 grant select,insert,update,delete on public.discount_codes to authenticated;
 grant select,insert,update,delete on public.discount_redemptions to authenticated;
+
+-- Server-side discount quote validation (redemption is recorded only after confirmed payment).
+create or replace function public.quote_discount_code(
+ p_code text,p_applies_to text,p_amount numeric,p_currency text,p_plan_id uuid default null
+) returns jsonb language plpgsql security definer set search_path=public,pg_temp as $$
+declare d public.discount_codes%rowtype; v_discount numeric(12,2); v_final numeric(12,2);
+begin
+ if auth.uid() is null then raise exception 'يجب تسجيل الدخول'; end if;
+ if p_amount is null or p_amount<0 or p_currency not in ('IQD','USD') or p_applies_to not in ('plan','listing_fee') then raise exception 'بيانات السعر غير صالحة'; end if;
+ select * into d from public.discount_codes where code=upper(trim(p_code)) and is_active=true and starts_at<=now()
+ and (expires_at is null or expires_at>now()) and (max_redemptions is null or redemption_count<max_redemptions)
+ and currency=p_currency and (applies_to='both' or (applies_to='plans' and p_applies_to='plan') or (applies_to='listing_fees' and p_applies_to='listing_fee'))
+ and (plan_id is null or (p_applies_to='plan' and plan_id=p_plan_id)) for update;
+ if not found then raise exception 'كود الخصم غير صالح أو منتهي أو غير متاح لهذا الشراء'; end if;
+ if d.discount_type='percentage' then v_discount:=round(p_amount*d.discount_value/100,2); else v_discount:=d.discount_value; end if;
+ v_discount:=least(p_amount,v_discount); v_final:=greatest(0,p_amount-v_discount);
+ return jsonb_build_object('valid',true,'code',d.code,'discount_type',d.discount_type,'discount_value',d.discount_value,'discount_amount',v_discount,'original_amount',p_amount,'final_amount',v_final,'currency',p_currency);
+end; $$;
+revoke all on function public.quote_discount_code(text,text,numeric,text,uuid) from public,anon;
+grant execute on function public.quote_discount_code(text,text,numeric,text,uuid) to authenticated;
