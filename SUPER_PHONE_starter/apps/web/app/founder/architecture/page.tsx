@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import architecture from "./architecture-data.json";
+import ArchitectureGraph from "./architecture-graph";
 import { createServerSupabase } from "../../../lib/supabase-server";
 
 export const dynamic = "force-dynamic";
@@ -103,6 +104,20 @@ export default async function FounderArchitecturePage() {
             <div className="arch-node"><strong>GitHub → Vercel</strong><small>مصدر الويب ونشره</small></div>
           </div>
           <p className="meta">الأسهم تمثل اعتماد التطبيقات على خدمات المصادقة والبيانات. تفاصيل استيرادات الملفات والعلاقات الفعلية مدرجة أدناه.</p>
+        </section>
+
+        <section className="sp-admin-panel">
+          <h2 className="arch-subtitle">خريطة العلاقات والتأثير التفاعلية</h2>
+          <p className="meta">اختر شاشة أو ملفاً أو جدولاً لاستكشاف ما يعتمد عليه وما قد يتأثر عند تغييره. جميع الروابط مبنية على ملفات المستودع وملفات ترحيل قاعدة البيانات.</p>
+          <ArchitectureGraph
+            sourceFiles={sourceFiles}
+            dependencies={architecture.dependencies}
+            webRoutes={webRoutes}
+            mobileScreens={mobileScreens}
+            mobileComponents={mobileComponents}
+            tables={databaseTables}
+            relationships={databaseRelationships}
+          />
         </section>
 
         <section>
