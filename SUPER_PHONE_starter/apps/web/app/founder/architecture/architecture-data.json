@@ -1,30 +1,1604 @@
 {
-  "generatedAt": null,
-  "commitSha": "pending-first-build",
+  "generatedAt": "2026-11-23T13:25:15.523Z",
+  "commitSha": "b242d4e7481af771452b382b938bea7733c0c70b",
   "counts": {
-    "sourceFiles": 0,
-    "webRoutes": 0,
-    "mobileScreens": 0,
-    "mobileComponents": 0,
-    "localDependencies": 0,
-    "databaseTables": 0,
-    "databaseRelationships": 0,
-    "migrations": 0,
-    "policies": 0,
-    "functions": 0,
-    "triggers": 0
+    "sourceFiles": 68,
+    "webRoutes": 23,
+    "mobileScreens": 9,
+    "mobileComponents": 3,
+    "localDependencies": 126,
+    "databaseTables": 11,
+    "databaseRelationships": 14,
+    "migrations": 10,
+    "policies": 27,
+    "functions": 8,
+    "triggers": 10
   },
-  "sourceFiles": [],
-  "webRoutes": [],
-  "mobileScreens": [],
-  "mobileComponents": [],
-  "dependencies": [],
+  "sourceFiles": [
+    "SUPER_PHONE_starter/apps/mobile/App.js",
+    "SUPER_PHONE_starter/apps/mobile/components/Chip.js",
+    "SUPER_PHONE_starter/apps/mobile/components/FirstRunFlow.js",
+    "SUPER_PHONE_starter/apps/mobile/components/ListingCard.js",
+    "SUPER_PHONE_starter/apps/mobile/index.js",
+    "SUPER_PHONE_starter/apps/mobile/lib/AuthContext.js",
+    "SUPER_PHONE_starter/apps/mobile/lib/constants.js",
+    "SUPER_PHONE_starter/apps/mobile/lib/i18n.js",
+    "SUPER_PHONE_starter/apps/mobile/lib/supabase.js",
+    "SUPER_PHONE_starter/apps/mobile/screens/AccountScreen.js",
+    "SUPER_PHONE_starter/apps/mobile/screens/AuthScreen.js",
+    "SUPER_PHONE_starter/apps/mobile/screens/BrowseScreen.js",
+    "SUPER_PHONE_starter/apps/mobile/screens/DetailScreen.js",
+    "SUPER_PHONE_starter/apps/mobile/screens/FavoritesScreen.js",
+    "SUPER_PHONE_starter/apps/mobile/screens/FounderSettingsScreen.js",
+    "SUPER_PHONE_starter/apps/mobile/screens/GuidanceScreen.js",
+    "SUPER_PHONE_starter/apps/mobile/screens/MyListingsScreen.js",
+    "SUPER_PHONE_starter/apps/mobile/screens/NewListingScreen.js",
+    "SUPER_PHONE_starter/apps/mobile/screens/StoreScreen.js",
+    "SUPER_PHONE_starter/apps/web/app/accessories/[id]/page.tsx",
+    "SUPER_PHONE_starter/apps/web/app/accessories/page.tsx",
+    "SUPER_PHONE_starter/apps/web/app/account/favorites/page.tsx",
+    "SUPER_PHONE_starter/apps/web/app/account/listings/[id]/edit/page.tsx",
+    "SUPER_PHONE_starter/apps/web/app/account/listings/new/page.tsx",
+    "SUPER_PHONE_starter/apps/web/app/account/listings/page.tsx",
+    "SUPER_PHONE_starter/apps/web/app/account/page.tsx",
+    "SUPER_PHONE_starter/apps/web/app/admin/listings/page.tsx",
+    "SUPER_PHONE_starter/apps/web/app/admin/reports/page.tsx",
+    "SUPER_PHONE_starter/apps/web/app/auth/callback/route.ts",
+    "SUPER_PHONE_starter/apps/web/app/buying-guide/page.tsx",
+    "SUPER_PHONE_starter/apps/web/app/favorites/page.tsx",
+    "SUPER_PHONE_starter/apps/web/app/founder/accessories/actions.ts",
+    "SUPER_PHONE_starter/apps/web/app/founder/accessories/page.tsx",
+    "SUPER_PHONE_starter/apps/web/app/founder/architecture/architecture-graph.tsx",
+    "SUPER_PHONE_starter/apps/web/app/founder/architecture/map/route.ts",
+    "SUPER_PHONE_starter/apps/web/app/founder/architecture/page.tsx",
+    "SUPER_PHONE_starter/apps/web/app/founder/settings/page.tsx",
+    "SUPER_PHONE_starter/apps/web/app/guide/page.tsx",
+    "SUPER_PHONE_starter/apps/web/app/layout.tsx",
+    "SUPER_PHONE_starter/apps/web/app/listing/[id]/page.tsx",
+    "SUPER_PHONE_starter/apps/web/app/login/page.tsx",
+    "SUPER_PHONE_starter/apps/web/app/manifest.ts",
+    "SUPER_PHONE_starter/apps/web/app/page.tsx",
+    "SUPER_PHONE_starter/apps/web/app/search/page.tsx",
+    "SUPER_PHONE_starter/apps/web/app/sell/page.tsx",
+    "SUPER_PHONE_starter/apps/web/app/signup/page.tsx",
+    "SUPER_PHONE_starter/apps/web/components/AuthForm.tsx",
+    "SUPER_PHONE_starter/apps/web/components/BottomNavigation.tsx",
+    "SUPER_PHONE_starter/apps/web/components/DeviceComparison.tsx",
+    "SUPER_PHONE_starter/apps/web/components/FirstRunFlow.tsx",
+    "SUPER_PHONE_starter/apps/web/components/Header.tsx",
+    "SUPER_PHONE_starter/apps/web/components/ListingActions.tsx",
+    "SUPER_PHONE_starter/apps/web/components/ListingCard.tsx",
+    "SUPER_PHONE_starter/apps/web/components/ListingForm.tsx",
+    "SUPER_PHONE_starter/apps/web/components/ListingRowActions.tsx",
+    "SUPER_PHONE_starter/apps/web/components/PWARegister.tsx",
+    "SUPER_PHONE_starter/apps/web/components/SignOutButton.tsx",
+    "SUPER_PHONE_starter/apps/web/lib/i18n.ts",
+    "SUPER_PHONE_starter/apps/web/lib/listings.ts",
+    "SUPER_PHONE_starter/apps/web/lib/phone.ts",
+    "SUPER_PHONE_starter/apps/web/lib/safe-next.ts",
+    "SUPER_PHONE_starter/apps/web/lib/supabase-browser.ts",
+    "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts",
+    "SUPER_PHONE_starter/apps/web/lib/supabase.ts",
+    "SUPER_PHONE_starter/apps/web/middleware.ts",
+    "SUPER_PHONE_starter/apps/web/next.config.ts",
+    "SUPER_PHONE_starter/apps/web/public/sw.js",
+    "SUPER_PHONE_starter/packages/shared/src/index.ts"
+  ],
+  "webRoutes": [
+    {
+      "route": "/",
+      "type": "Page",
+      "file": "SUPER_PHONE_starter/apps/web/app/page.tsx",
+      "imports": [
+        "SUPER_PHONE_starter/apps/web/components/FirstRunFlow.tsx",
+        "SUPER_PHONE_starter/apps/web/components/ListingCard.tsx",
+        "SUPER_PHONE_starter/apps/web/lib/i18n.ts",
+        "SUPER_PHONE_starter/apps/web/lib/listings.ts",
+        "SUPER_PHONE_starter/packages/shared/src/index.ts"
+      ]
+    },
+    {
+      "route": "/accessories",
+      "type": "Page",
+      "file": "SUPER_PHONE_starter/apps/web/app/accessories/page.tsx",
+      "imports": []
+    },
+    {
+      "route": "/accessories/[id]",
+      "type": "Page",
+      "file": "SUPER_PHONE_starter/apps/web/app/accessories/[id]/page.tsx",
+      "imports": []
+    },
+    {
+      "route": "/account",
+      "type": "Page",
+      "file": "SUPER_PHONE_starter/apps/web/app/account/page.tsx",
+      "imports": [
+        "SUPER_PHONE_starter/apps/web/lib/i18n.ts",
+        "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts",
+        "SUPER_PHONE_starter/packages/shared/src/index.ts"
+      ]
+    },
+    {
+      "route": "/account/favorites",
+      "type": "Page",
+      "file": "SUPER_PHONE_starter/apps/web/app/account/favorites/page.tsx",
+      "imports": [
+        "SUPER_PHONE_starter/apps/web/components/ListingCard.tsx",
+        "SUPER_PHONE_starter/apps/web/lib/i18n.ts",
+        "SUPER_PHONE_starter/apps/web/lib/listings.ts",
+        "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts"
+      ]
+    },
+    {
+      "route": "/account/listings",
+      "type": "Page",
+      "file": "SUPER_PHONE_starter/apps/web/app/account/listings/page.tsx",
+      "imports": [
+        "SUPER_PHONE_starter/apps/web/components/ListingRowActions.tsx",
+        "SUPER_PHONE_starter/apps/web/lib/i18n.ts",
+        "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts",
+        "SUPER_PHONE_starter/apps/web/lib/supabase.ts",
+        "SUPER_PHONE_starter/packages/shared/src/index.ts"
+      ]
+    },
+    {
+      "route": "/account/listings/[id]/edit",
+      "type": "Page",
+      "file": "SUPER_PHONE_starter/apps/web/app/account/listings/[id]/edit/page.tsx",
+      "imports": [
+        "SUPER_PHONE_starter/apps/web/lib/i18n.ts",
+        "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts"
+      ]
+    },
+    {
+      "route": "/account/listings/new",
+      "type": "Page",
+      "file": "SUPER_PHONE_starter/apps/web/app/account/listings/new/page.tsx",
+      "imports": [
+        "SUPER_PHONE_starter/apps/web/components/ListingForm.tsx",
+        "SUPER_PHONE_starter/apps/web/lib/i18n.ts",
+        "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts"
+      ]
+    },
+    {
+      "route": "/admin/listings",
+      "type": "Page",
+      "file": "SUPER_PHONE_starter/apps/web/app/admin/listings/page.tsx",
+      "imports": [
+        "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts",
+        "SUPER_PHONE_starter/packages/shared/src/index.ts"
+      ]
+    },
+    {
+      "route": "/admin/reports",
+      "type": "Page",
+      "file": "SUPER_PHONE_starter/apps/web/app/admin/reports/page.tsx",
+      "imports": [
+        "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts"
+      ]
+    },
+    {
+      "route": "/auth/callback",
+      "type": "API / Route Handler",
+      "file": "SUPER_PHONE_starter/apps/web/app/auth/callback/route.ts",
+      "imports": [
+        "SUPER_PHONE_starter/apps/web/lib/safe-next.ts",
+        "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts"
+      ]
+    },
+    {
+      "route": "/buying-guide",
+      "type": "Page",
+      "file": "SUPER_PHONE_starter/apps/web/app/buying-guide/page.tsx",
+      "imports": [
+        "SUPER_PHONE_starter/apps/web/components/DeviceComparison.tsx",
+        "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts"
+      ]
+    },
+    {
+      "route": "/favorites",
+      "type": "Page",
+      "file": "SUPER_PHONE_starter/apps/web/app/favorites/page.tsx",
+      "imports": []
+    },
+    {
+      "route": "/founder/accessories",
+      "type": "Page",
+      "file": "SUPER_PHONE_starter/apps/web/app/founder/accessories/page.tsx",
+      "imports": []
+    },
+    {
+      "route": "/founder/architecture",
+      "type": "Page",
+      "file": "SUPER_PHONE_starter/apps/web/app/founder/architecture/page.tsx",
+      "imports": [
+        "SUPER_PHONE_starter/apps/web/app/founder/architecture/architecture-graph.tsx",
+        "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts"
+      ]
+    },
+    {
+      "route": "/founder/architecture/map",
+      "type": "API / Route Handler",
+      "file": "SUPER_PHONE_starter/apps/web/app/founder/architecture/map/route.ts",
+      "imports": [
+        "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts"
+      ]
+    },
+    {
+      "route": "/founder/settings",
+      "type": "Page",
+      "file": "SUPER_PHONE_starter/apps/web/app/founder/settings/page.tsx",
+      "imports": []
+    },
+    {
+      "route": "/guide",
+      "type": "Page",
+      "file": "SUPER_PHONE_starter/apps/web/app/guide/page.tsx",
+      "imports": []
+    },
+    {
+      "route": "/listing/[id]",
+      "type": "Page",
+      "file": "SUPER_PHONE_starter/apps/web/app/listing/[id]/page.tsx",
+      "imports": [
+        "SUPER_PHONE_starter/apps/web/components/ListingActions.tsx",
+        "SUPER_PHONE_starter/apps/web/lib/i18n.ts",
+        "SUPER_PHONE_starter/apps/web/lib/phone.ts",
+        "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts",
+        "SUPER_PHONE_starter/apps/web/lib/supabase.ts",
+        "SUPER_PHONE_starter/packages/shared/src/index.ts"
+      ]
+    },
+    {
+      "route": "/login",
+      "type": "Page",
+      "file": "SUPER_PHONE_starter/apps/web/app/login/page.tsx",
+      "imports": [
+        "SUPER_PHONE_starter/apps/web/components/AuthForm.tsx"
+      ]
+    },
+    {
+      "route": "/search",
+      "type": "Page",
+      "file": "SUPER_PHONE_starter/apps/web/app/search/page.tsx",
+      "imports": [
+        "SUPER_PHONE_starter/apps/web/components/ListingCard.tsx",
+        "SUPER_PHONE_starter/apps/web/lib/i18n.ts",
+        "SUPER_PHONE_starter/apps/web/lib/listings.ts",
+        "SUPER_PHONE_starter/packages/shared/src/index.ts"
+      ]
+    },
+    {
+      "route": "/sell",
+      "type": "Page",
+      "file": "SUPER_PHONE_starter/apps/web/app/sell/page.tsx",
+      "imports": []
+    },
+    {
+      "route": "/signup",
+      "type": "Page",
+      "file": "SUPER_PHONE_starter/apps/web/app/signup/page.tsx",
+      "imports": [
+        "SUPER_PHONE_starter/apps/web/components/AuthForm.tsx"
+      ]
+    }
+  ],
+  "mobileScreens": [
+    {
+      "name": "BrowseScreen",
+      "file": "SUPER_PHONE_starter/apps/mobile/screens/BrowseScreen.js"
+    },
+    {
+      "name": "StoreScreen",
+      "file": "SUPER_PHONE_starter/apps/mobile/screens/StoreScreen.js"
+    },
+    {
+      "name": "GuidanceScreen",
+      "file": "SUPER_PHONE_starter/apps/mobile/screens/GuidanceScreen.js"
+    },
+    {
+      "name": "DetailScreen",
+      "file": "SUPER_PHONE_starter/apps/mobile/screens/DetailScreen.js"
+    },
+    {
+      "name": "FavoritesScreen",
+      "file": "SUPER_PHONE_starter/apps/mobile/screens/FavoritesScreen.js"
+    },
+    {
+      "name": "AccountScreen",
+      "file": "SUPER_PHONE_starter/apps/mobile/screens/AccountScreen.js"
+    },
+    {
+      "name": "FounderSettingsScreen",
+      "file": "SUPER_PHONE_starter/apps/mobile/screens/FounderSettingsScreen.js"
+    },
+    {
+      "name": "NewListingScreen",
+      "file": "SUPER_PHONE_starter/apps/mobile/screens/NewListingScreen.js"
+    },
+    {
+      "name": "MyListingsScreen",
+      "file": "SUPER_PHONE_starter/apps/mobile/screens/MyListingsScreen.js"
+    }
+  ],
+  "mobileComponents": [
+    {
+      "name": "Chip",
+      "file": "SUPER_PHONE_starter/apps/mobile/components/Chip.js"
+    },
+    {
+      "name": "FirstRunFlow",
+      "file": "SUPER_PHONE_starter/apps/mobile/components/FirstRunFlow.js"
+    },
+    {
+      "name": "ListingCard",
+      "file": "SUPER_PHONE_starter/apps/mobile/components/ListingCard.js"
+    }
+  ],
+  "dependencies": [
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/App.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/AuthContext.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/App.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/constants.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/App.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/supabase.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/App.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/screens/BrowseScreen.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/App.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/screens/StoreScreen.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/App.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/screens/GuidanceScreen.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/App.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/screens/DetailScreen.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/App.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/screens/FavoritesScreen.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/App.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/screens/AccountScreen.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/App.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/screens/FounderSettingsScreen.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/App.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/screens/NewListingScreen.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/App.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/screens/MyListingsScreen.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/App.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/components/FirstRunFlow.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/App.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/i18n.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/components/Chip.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/constants.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/components/FirstRunFlow.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/constants.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/components/FirstRunFlow.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/i18n.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/components/FirstRunFlow.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/supabase.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/components/FirstRunFlow.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/AuthContext.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/components/ListingCard.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/constants.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/components/ListingCard.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/supabase.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/components/ListingCard.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/i18n.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/index.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/App.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/lib/AuthContext.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/supabase.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/AccountScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/supabase.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/AccountScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/AuthContext.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/AccountScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/screens/AuthScreen.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/AccountScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/i18n.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/AuthScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/supabase.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/AuthScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/constants.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/AuthScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/i18n.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/BrowseScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/supabase.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/BrowseScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/constants.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/BrowseScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/components/ListingCard.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/BrowseScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/components/Chip.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/BrowseScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/i18n.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/DetailScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/supabase.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/DetailScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/AuthContext.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/DetailScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/constants.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/DetailScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/i18n.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/FavoritesScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/supabase.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/FavoritesScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/AuthContext.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/FavoritesScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/constants.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/FavoritesScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/components/ListingCard.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/FavoritesScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/i18n.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/FounderSettingsScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/supabase.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/FounderSettingsScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/AuthContext.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/FounderSettingsScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/constants.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/GuidanceScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/supabase.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/GuidanceScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/constants.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/GuidanceScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/i18n.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/MyListingsScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/supabase.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/MyListingsScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/AuthContext.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/MyListingsScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/constants.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/MyListingsScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/i18n.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/NewListingScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/supabase.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/NewListingScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/AuthContext.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/NewListingScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/constants.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/NewListingScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/components/Chip.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/mobile/screens/NewListingScreen.js",
+      "to": "SUPER_PHONE_starter/apps/mobile/lib/i18n.js",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/account/favorites/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/components/ListingCard.tsx",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/account/favorites/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/listings.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/account/favorites/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/account/favorites/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/i18n.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/account/listings/[id]/edit/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/account/listings/[id]/edit/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/i18n.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/account/listings/new/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/components/ListingForm.tsx",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/account/listings/new/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/account/listings/new/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/i18n.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/account/listings/page.tsx",
+      "to": "SUPER_PHONE_starter/packages/shared/src/index.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/account/listings/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/account/listings/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/supabase.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/account/listings/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/components/ListingRowActions.tsx",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/account/listings/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/i18n.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/account/page.tsx",
+      "to": "SUPER_PHONE_starter/packages/shared/src/index.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/account/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/account/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/i18n.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/admin/listings/page.tsx",
+      "to": "SUPER_PHONE_starter/packages/shared/src/index.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/admin/listings/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/admin/reports/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/auth/callback/route.ts",
+      "to": "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/auth/callback/route.ts",
+      "to": "SUPER_PHONE_starter/apps/web/lib/safe-next.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/buying-guide/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/buying-guide/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/components/DeviceComparison.tsx",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/founder/architecture/map/route.ts",
+      "to": "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/founder/architecture/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/app/founder/architecture/architecture-graph.tsx",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/founder/architecture/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/layout.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/components/Header.tsx",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/layout.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/components/BottomNavigation.tsx",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/layout.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/components/PWARegister.tsx",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/listing/[id]/page.tsx",
+      "to": "SUPER_PHONE_starter/packages/shared/src/index.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/listing/[id]/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/listing/[id]/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/supabase.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/listing/[id]/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/phone.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/listing/[id]/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/components/ListingActions.tsx",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/listing/[id]/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/i18n.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/login/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/components/AuthForm.tsx",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/page.tsx",
+      "to": "SUPER_PHONE_starter/packages/shared/src/index.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/components/ListingCard.tsx",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/listings.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/components/FirstRunFlow.tsx",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/i18n.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/search/page.tsx",
+      "to": "SUPER_PHONE_starter/packages/shared/src/index.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/search/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/components/ListingCard.tsx",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/search/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/listings.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/search/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/i18n.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/app/signup/page.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/components/AuthForm.tsx",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/components/AuthForm.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/supabase-browser.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/components/AuthForm.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/safe-next.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/components/AuthForm.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/i18n.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/components/FirstRunFlow.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/supabase-browser.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/components/FirstRunFlow.tsx",
+      "to": "SUPER_PHONE_starter/packages/shared/src/index.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/components/FirstRunFlow.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/i18n.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/components/Header.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/supabase-server.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/components/Header.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/components/SignOutButton.tsx",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/components/ListingActions.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/supabase-browser.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/components/ListingCard.tsx",
+      "to": "SUPER_PHONE_starter/packages/shared/src/index.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/components/ListingCard.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/i18n.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/components/ListingCard.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/supabase.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/components/ListingCard.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/listings.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/components/ListingForm.tsx",
+      "to": "SUPER_PHONE_starter/packages/shared/src/index.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/components/ListingForm.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/supabase-browser.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/components/ListingForm.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/i18n.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/components/ListingRowActions.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/supabase-browser.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/components/SignOutButton.tsx",
+      "to": "SUPER_PHONE_starter/apps/web/lib/supabase-browser.ts",
+      "kind": "local import"
+    },
+    {
+      "from": "SUPER_PHONE_starter/apps/web/lib/listings.ts",
+      "to": "SUPER_PHONE_starter/apps/web/lib/supabase.ts",
+      "kind": "local import"
+    }
+  ],
   "database": {
-    "tables": [],
-    "relationships": [],
-    "policies": [],
-    "functions": [],
-    "triggers": [],
-    "migrations": []
+    "tables": [
+      {
+        "name": "accessory_categories",
+        "columns": [
+          "id",
+          "name_ar",
+          "sort_order",
+          "created_at"
+        ],
+        "foreignKeys": [],
+        "migration": "20261122170000_accessories_store.sql",
+        "rlsEnabled": true,
+        "policies": [
+          "accessory_categories_read",
+          "accessory_categories_admin"
+        ]
+      },
+      {
+        "name": "accessory_orders",
+        "columns": [
+          "id",
+          "buyer_id",
+          "seller_id",
+          "product_id",
+          "quantity",
+          "unit_price",
+          "currency",
+          "contact_phone",
+          "status",
+          "created_at"
+        ],
+        "foreignKeys": [
+          {
+            "column": "buyer_id",
+            "referencesTable": "profiles",
+            "referencesColumn": "id"
+          },
+          {
+            "column": "seller_id",
+            "referencesTable": "profiles",
+            "referencesColumn": "id"
+          },
+          {
+            "column": "product_id",
+            "referencesTable": "accessory_products",
+            "referencesColumn": "id"
+          }
+        ],
+        "migration": "20261122170000_accessories_store.sql",
+        "rlsEnabled": true,
+        "policies": [
+          "accessory_orders_read",
+          "accessory_orders_create",
+          "accessory_orders_manage",
+          "accessory_orders_create",
+          "accessory_orders_manage"
+        ]
+      },
+      {
+        "name": "accessory_product_images",
+        "columns": [
+          "id",
+          "product_id",
+          "image_url",
+          "created_at"
+        ],
+        "foreignKeys": [
+          {
+            "column": "product_id",
+            "referencesTable": "accessory_products",
+            "referencesColumn": "id"
+          }
+        ],
+        "migration": "20261122170000_accessories_store.sql",
+        "rlsEnabled": true,
+        "policies": [
+          "accessory_product_images_read",
+          "accessory_product_images_admin_write"
+        ]
+      },
+      {
+        "name": "accessory_products",
+        "columns": [
+          "id",
+          "seller_id",
+          "category_id",
+          "title",
+          "description",
+          "price",
+          "currency",
+          "stock",
+          "is_featured",
+          "status",
+          "created_at"
+        ],
+        "foreignKeys": [
+          {
+            "column": "seller_id",
+            "referencesTable": "profiles",
+            "referencesColumn": "id"
+          },
+          {
+            "column": "category_id",
+            "referencesTable": "accessory_categories",
+            "referencesColumn": "id"
+          }
+        ],
+        "migration": "20261122170000_accessories_store.sql",
+        "rlsEnabled": true,
+        "policies": [
+          "accessory_products_read",
+          "accessory_products_insert",
+          "accessory_products_update",
+          "accessory_products_delete",
+          "accessory_products_insert",
+          "accessory_products_update"
+        ]
+      },
+      {
+        "name": "categories",
+        "columns": [
+          "id",
+          "slug",
+          "name_ar",
+          "name_en",
+          "sort_order",
+          "is_active"
+        ],
+        "foreignKeys": [],
+        "migration": "0001_core_schema.sql",
+        "rlsEnabled": true,
+        "policies": [
+          "categories_select",
+          "categories_admin"
+        ]
+      },
+      {
+        "name": "favorites",
+        "columns": [
+          "user_id",
+          "listing_id",
+          "created_at",
+          "primary"
+        ],
+        "foreignKeys": [
+          {
+            "column": "user_id",
+            "referencesTable": "profiles",
+            "referencesColumn": "id"
+          },
+          {
+            "column": "listing_id",
+            "referencesTable": "listings",
+            "referencesColumn": "id"
+          }
+        ],
+        "migration": "0001_core_schema.sql",
+        "rlsEnabled": true,
+        "policies": [
+          "favorites_own"
+        ]
+      },
+      {
+        "name": "listing_images",
+        "columns": [
+          "id",
+          "listing_id",
+          "storage_path",
+          "sort_order",
+          "created_at"
+        ],
+        "foreignKeys": [
+          {
+            "column": "listing_id",
+            "referencesTable": "listings",
+            "referencesColumn": "id"
+          }
+        ],
+        "migration": "0001_core_schema.sql",
+        "rlsEnabled": true,
+        "policies": [
+          "images_select",
+          "images_write"
+        ]
+      },
+      {
+        "name": "listing_specs",
+        "columns": [
+          "id",
+          "listing_id",
+          "spec_key",
+          "spec_value"
+        ],
+        "foreignKeys": [
+          {
+            "column": "listing_id",
+            "referencesTable": "listings",
+            "referencesColumn": "id"
+          }
+        ],
+        "migration": "0001_core_schema.sql",
+        "rlsEnabled": true,
+        "policies": [
+          "specs_select",
+          "specs_write"
+        ]
+      },
+      {
+        "name": "listings",
+        "columns": [
+          "id",
+          "seller_id",
+          "category_id",
+          "title",
+          "description",
+          "price",
+          "currency",
+          "condition",
+          "brand",
+          "model",
+          "governorate",
+          "city",
+          "contact_phone",
+          "status",
+          "rejection_reason",
+          "created_at",
+          "updated_at"
+        ],
+        "foreignKeys": [
+          {
+            "column": "seller_id",
+            "referencesTable": "profiles",
+            "referencesColumn": "id"
+          },
+          {
+            "column": "category_id",
+            "referencesTable": "categories",
+            "referencesColumn": "id"
+          }
+        ],
+        "migration": "0001_core_schema.sql",
+        "rlsEnabled": true,
+        "policies": [
+          "listings_select",
+          "listings_insert",
+          "listings_update",
+          "listings_delete"
+        ]
+      },
+      {
+        "name": "profiles",
+        "columns": [
+          "id",
+          "full_name",
+          "phone",
+          "governorate",
+          "role",
+          "is_banned",
+          "created_at",
+          "updated_at"
+        ],
+        "foreignKeys": [],
+        "migration": "0001_core_schema.sql",
+        "rlsEnabled": true,
+        "policies": [
+          "profiles_select",
+          "profiles_update"
+        ]
+      },
+      {
+        "name": "reports",
+        "columns": [
+          "id",
+          "listing_id",
+          "reporter_id",
+          "reason",
+          "status",
+          "created_at"
+        ],
+        "foreignKeys": [
+          {
+            "column": "listing_id",
+            "referencesTable": "listings",
+            "referencesColumn": "id"
+          },
+          {
+            "column": "reporter_id",
+            "referencesTable": "profiles",
+            "referencesColumn": "id"
+          }
+        ],
+        "migration": "0001_core_schema.sql",
+        "rlsEnabled": true,
+        "policies": [
+          "reports_insert",
+          "reports_admin",
+          "reports_admin_update"
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "fromTable": "accessory_orders",
+        "fromColumn": "buyer_id",
+        "toTable": "profiles",
+        "toColumn": "id"
+      },
+      {
+        "fromTable": "accessory_orders",
+        "fromColumn": "seller_id",
+        "toTable": "profiles",
+        "toColumn": "id"
+      },
+      {
+        "fromTable": "accessory_orders",
+        "fromColumn": "product_id",
+        "toTable": "accessory_products",
+        "toColumn": "id"
+      },
+      {
+        "fromTable": "accessory_product_images",
+        "fromColumn": "product_id",
+        "toTable": "accessory_products",
+        "toColumn": "id"
+      },
+      {
+        "fromTable": "accessory_products",
+        "fromColumn": "seller_id",
+        "toTable": "profiles",
+        "toColumn": "id"
+      },
+      {
+        "fromTable": "accessory_products",
+        "fromColumn": "category_id",
+        "toTable": "accessory_categories",
+        "toColumn": "id"
+      },
+      {
+        "fromTable": "favorites",
+        "fromColumn": "user_id",
+        "toTable": "profiles",
+        "toColumn": "id"
+      },
+      {
+        "fromTable": "favorites",
+        "fromColumn": "listing_id",
+        "toTable": "listings",
+        "toColumn": "id"
+      },
+      {
+        "fromTable": "listing_images",
+        "fromColumn": "listing_id",
+        "toTable": "listings",
+        "toColumn": "id"
+      },
+      {
+        "fromTable": "listing_specs",
+        "fromColumn": "listing_id",
+        "toTable": "listings",
+        "toColumn": "id"
+      },
+      {
+        "fromTable": "listings",
+        "fromColumn": "seller_id",
+        "toTable": "profiles",
+        "toColumn": "id"
+      },
+      {
+        "fromTable": "listings",
+        "fromColumn": "category_id",
+        "toTable": "categories",
+        "toColumn": "id"
+      },
+      {
+        "fromTable": "reports",
+        "fromColumn": "listing_id",
+        "toTable": "listings",
+        "toColumn": "id"
+      },
+      {
+        "fromTable": "reports",
+        "fromColumn": "reporter_id",
+        "toTable": "profiles",
+        "toColumn": "id"
+      }
+    ],
+    "policies": [
+      {
+        "name": "profiles_select",
+        "table": "profiles",
+        "migration": "0001_core_schema.sql"
+      },
+      {
+        "name": "profiles_update",
+        "table": "profiles",
+        "migration": "0001_core_schema.sql"
+      },
+      {
+        "name": "categories_select",
+        "table": "categories",
+        "migration": "0001_core_schema.sql"
+      },
+      {
+        "name": "categories_admin",
+        "table": "categories",
+        "migration": "0001_core_schema.sql"
+      },
+      {
+        "name": "listings_select",
+        "table": "listings",
+        "migration": "0001_core_schema.sql"
+      },
+      {
+        "name": "listings_insert",
+        "table": "listings",
+        "migration": "0001_core_schema.sql"
+      },
+      {
+        "name": "listings_update",
+        "table": "listings",
+        "migration": "0001_core_schema.sql"
+      },
+      {
+        "name": "listings_delete",
+        "table": "listings",
+        "migration": "0001_core_schema.sql"
+      },
+      {
+        "name": "images_select",
+        "table": "listing_images",
+        "migration": "0001_core_schema.sql"
+      },
+      {
+        "name": "images_write",
+        "table": "listing_images",
+        "migration": "0001_core_schema.sql"
+      },
+      {
+        "name": "specs_select",
+        "table": "listing_specs",
+        "migration": "0001_core_schema.sql"
+      },
+      {
+        "name": "specs_write",
+        "table": "listing_specs",
+        "migration": "0001_core_schema.sql"
+      },
+      {
+        "name": "favorites_own",
+        "table": "favorites",
+        "migration": "0001_core_schema.sql"
+      },
+      {
+        "name": "reports_insert",
+        "table": "reports",
+        "migration": "0001_core_schema.sql"
+      },
+      {
+        "name": "reports_admin",
+        "table": "reports",
+        "migration": "0001_core_schema.sql"
+      },
+      {
+        "name": "reports_admin_update",
+        "table": "reports",
+        "migration": "0001_core_schema.sql"
+      },
+      {
+        "name": "accessory_categories_read",
+        "table": "accessory_categories",
+        "migration": "20261122170000_accessories_store.sql"
+      },
+      {
+        "name": "accessory_categories_admin",
+        "table": "accessory_categories",
+        "migration": "20261122170000_accessories_store.sql"
+      },
+      {
+        "name": "accessory_products_read",
+        "table": "accessory_products",
+        "migration": "20261122170000_accessories_store.sql"
+      },
+      {
+        "name": "accessory_products_insert",
+        "table": "accessory_products",
+        "migration": "20261122171000_accessory_order_integrity.sql"
+      },
+      {
+        "name": "accessory_products_update",
+        "table": "accessory_products",
+        "migration": "20261122171000_accessory_order_integrity.sql"
+      },
+      {
+        "name": "accessory_products_delete",
+        "table": "accessory_products",
+        "migration": "20261122170000_accessories_store.sql"
+      },
+      {
+        "name": "accessory_product_images_read",
+        "table": "accessory_product_images",
+        "migration": "20261122170000_accessories_store.sql"
+      },
+      {
+        "name": "accessory_product_images_admin_write",
+        "table": "accessory_product_images",
+        "migration": "20261122170000_accessories_store.sql"
+      },
+      {
+        "name": "accessory_orders_read",
+        "table": "accessory_orders",
+        "migration": "20261122170000_accessories_store.sql"
+      },
+      {
+        "name": "accessory_orders_create",
+        "table": "accessory_orders",
+        "migration": "20261122173000_accessory_order_stock_reservation_and_integrity.sql"
+      },
+      {
+        "name": "accessory_orders_manage",
+        "table": "accessory_orders",
+        "migration": "20261122173000_accessory_order_stock_reservation_and_integrity.sql"
+      }
+    ],
+    "functions": [
+      {
+        "name": "set_updated_at",
+        "migration": "0001_core_schema.sql"
+      },
+      {
+        "name": "is_admin",
+        "migration": "0001_core_schema.sql"
+      },
+      {
+        "name": "handle_new_user",
+        "migration": "0001_core_schema.sql"
+      },
+      {
+        "name": "protect_profile_fields",
+        "migration": "0001_core_schema.sql"
+      },
+      {
+        "name": "protect_listing_status",
+        "migration": "0005_requeue_review_on_edit.sql"
+      },
+      {
+        "name": "requeue_listing_review",
+        "migration": "0005_requeue_review_on_edit.sql"
+      },
+      {
+        "name": "prepare_accessory_order",
+        "migration": "20261122173000_accessory_order_stock_reservation_and_integrity.sql"
+      },
+      {
+        "name": "protect_accessory_order_update",
+        "migration": "20261122173000_accessory_order_stock_reservation_and_integrity.sql"
+      }
+    ],
+    "triggers": [
+      {
+        "name": "trg_profiles_updated",
+        "table": "profiles",
+        "function": "set_updated_at",
+        "migration": "0001_core_schema.sql"
+      },
+      {
+        "name": "on_auth_user_created",
+        "table": "profiles",
+        "function": "protect_profile_fields",
+        "migration": "0001_core_schema.sql"
+      },
+      {
+        "name": "trg_listings_updated",
+        "table": "listings",
+        "function": "set_updated_at",
+        "migration": "0001_core_schema.sql"
+      },
+      {
+        "name": "trg_listings_protect",
+        "table": "listings",
+        "function": "protect_listing_status",
+        "migration": "0001_core_schema.sql"
+      },
+      {
+        "name": "trg_images_requeue",
+        "table": "listing_images",
+        "function": "requeue_listing_review",
+        "migration": "0005_requeue_review_on_edit.sql"
+      },
+      {
+        "name": "trg_specs_requeue",
+        "table": "listing_specs",
+        "function": "requeue_listing_review",
+        "migration": "0005_requeue_review_on_edit.sql"
+      },
+      {
+        "name": "trg_accessory_products_updated",
+        "table": "accessory_products",
+        "function": "set_updated_at",
+        "migration": "20261122170000_accessories_store.sql"
+      },
+      {
+        "name": "trg_accessory_orders_updated",
+        "table": "accessory_orders",
+        "function": "set_updated_at",
+        "migration": "20261122170000_accessories_store.sql"
+      },
+      {
+        "name": "trg_prepare_accessory_order",
+        "table": "accessory_orders",
+        "function": "prepare_accessory_order",
+        "migration": "20261122171000_accessory_order_integrity.sql"
+      },
+      {
+        "name": "trg_protect_accessory_order_update",
+        "table": "accessory_orders",
+        "function": "protect_accessory_order_update",
+        "migration": "20261122173000_accessory_order_stock_reservation_and_integrity.sql"
+      }
+    ],
+    "migrations": [
+      "0001_core_schema.sql",
+      "0002_reports_unique_per_user.sql",
+      "0003_revoke_trigger_function_execute.sql",
+      "0004_storage_select_own_folder.sql",
+      "0005_requeue_review_on_edit.sql",
+      "20261117153601_seed_categories.sql",
+      "20261122170000_accessories_store.sql",
+      "20261122171000_accessory_order_integrity.sql",
+      "20261122173000_accessory_order_stock_reservation_and_integrity.sql",
+      "20261122174500_accessory_orders_product_index.sql"
+    ]
   }
 }
