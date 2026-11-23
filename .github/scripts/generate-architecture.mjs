@@ -119,7 +119,7 @@ for (const migration of migrationFiles) {
     for (const line of body.split("\n")) {
       const columnMatch = line.trim().match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s+(?!constraint\b|primary\b|unique\b|foreign\b|check\b)([a-zA-Z][a-zA-Z0-9_]*(?:\([^)]*\))?)/i);
       if (columnMatch && !table.columns.includes(columnMatch[1])) table.columns.push(columnMatch[1]);
-      const fkMatch = line.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s+[^,]*?references\s+public\.([a-zA-Z0-9_]+)\s*\(\s*([a-zA-Z0-9_]+)\s*\)/i);
+      const fkMatch = line.trim().match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s+[^,]*?references\s+public\.([a-zA-Z0-9_]+)\s*\(\s*([a-zA-Z0-9_]+)\s*\)/i);
       if (fkMatch) {
         const edge = { column: fkMatch[1], referencesTable: fkMatch[2], referencesColumn: fkMatch[3] };
         if (!table.foreignKeys.some(item => JSON.stringify(item) === JSON.stringify(edge))) table.foreignKeys.push(edge);
