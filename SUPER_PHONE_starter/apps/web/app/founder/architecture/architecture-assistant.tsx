@@ -75,8 +75,9 @@ export default function ArchitectureAssistant(props: Props) {
 
     if (includesAny(lower, ["سياسة", "سياسات", "rls", "policy", "صلاحية", "وصول"])) {
       const policyRows: Policy[] = props.policies;
-      const matches = tableMention
-        ? policyRows.filter((item) => item.table === tableMention.name)
+      const selectedTableName = (tableMention as unknown as Table | undefined)?.name ?? "";
+      const matches = selectedTableName
+        ? policyRows.filter((item) => item.table === selectedTableName)
         : policyRows.filter((item) => !lower.includes("إكسسوارات") || item.table.includes("accessory"));
       setAnswer({ title: "سياسات الوصول المستخرجة", body: matches.map((item) => item.name + " — " + item.table).join("\n") || "لم أجد سياسة مطابقة في بيانات المستودع.", sources: matches.map((item) => item.table + " / " + item.name) });
       return;
