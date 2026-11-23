@@ -1,0 +1,137 @@
+name: SUPER PHONE Floorplan scan
+
+on:
+  push:
+    branches:
+      - feature/founder-architecture-center
+    paths:
+      - "SUPER_PHONE_starter/**"
+      - ".github/workflows/floorplan-scan.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: floorplan-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  floorplan-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout SUPER PHONE
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - name: Check Node.js
+        run: |
+          node --version
+          node -e "if (Number(process.versions.node.split('.')[0]) < 18) process.exit(1)"
+      - name: Fetch pinned Floorplan source
+        env:
+          FLOORPLAN_COMMIT: 94f81b463b7617e06d873ac71323ce71644c8399
+        run: |
+          mkdir -p /tmp/floorplan-upstream
+          curl --fail --location --silent --show-error \
+            "https://codeload.github.com/haydenschmitty/floorplan/tar.gz/$FLOORPLAN_COMMIT" \
+            | tar -xz --strip-components=1 -C /tmp/floorplan-upstream
+          test -f /tmp/floorplan-upstream/skills/floorplan/scripts/scan.mjs
+          printf 'Using Floorplan commit: %s\n' "$FLOORPLAN_COMMIT"
+      - name: Scan repository with upstream Floorplan
+        env:
+          FLOORPLAN_UNATTENDED: "1"
+          FLOORPLAN_AGENT: "none"
+        run: |
+          node /tmp/floorplan-upstream/skills/floorplan/scripts/scan.mjs . --json --unattended > /tmp/floorplan-scan-result.json
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const r = JSON.parse(fs.readFileSync('/tmp/floorplan-scan-result.json', 'utf8'));
+          const valid = r.schema === 'floorplan/scan-result@1'
+            && r.ok === true
+            && Number.isInteger(r.counts?.files) && r.counts.files > 0
+            && Number.isInteger(r.counts?.importEdges)
+            && Number.isInteger(r.counts?.routes)
+            && r.scanFile === 'floorplan/.cache/scan.json'
+            && Array.isArray(r.repos) && r.repos.length > 0
+            && r.repos.every(repo => repo.listed === true);
+          if (!valid) {
+            console.error('Floorplan scan result failed validation:', JSON.stringify(r, null, 2));
+            process.exit(1);
+          }
+          const scan = JSON.parse(fs.readFileSync(r.scanFile, 'utf8'));
+          if (!Array.isArray(scan.files) || scan.files.length !== r.counts.files) {
+            console.error('Scan artifact does not match its summary.');
+            process.exit(1);
+          }
+          console.log(JSON.stringify({
+            schema: r.schema,
+            ok: r.ok,
+            files: r.counts.files,
+            codeFiles: r.counts.code.files,
+            importEdges: r.counts.importEdges,
+            routes: r.counts.routes,
+            httpMatches: r.counts.httpMatches,
+            warnings: r.warnings.length
+          }, null, 2));
+          NODE
+          test -s floorplan/.cache/scan.json
+      - name: Generate founder architecture inventory
+        run: |
+          node .github/scripts/generate-architecture.mjs
+          test -s SUPER_PHONE_starter/apps/web/app/founder/architecture/architecture-data.json
+      - name: Build Floorplan architecture map
+        env:
+          FLOORPLAN_UNATTENDED: "1"
+          FLOORPLAN_AGENT: "none"
+        run: |
+          node /tmp/floorplan-upstream/skills/floorplan/scripts/build.mjs . --json --unattended > /tmp/floorplan-build-result.json
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const r = JSON.parse(fs.readFileSync('/tmp/floorplan-build-result.json', 'utf8'));
+          const required = ['floorplan/graph.json', 'floorplan/index.html'];
+          const valid = r.schema === 'floorplan/build-result@1'
+            && r.ok === true
+            && Array.isArray(r.errors) && r.errors.length === 0
+            && required.every(file => fs.existsSync(file) && fs.statSync(file).size > 0);
+          if (!valid) {
+            console.error('Floorplan map build failed:', JSON.stringify(r, null, 2));
+            process.exit(1);
+          }
+          console.log(r.report);
+          console.log(JSON.stringify({
+            schema: r.schema,
+            ok: r.ok,
+            files: r.files?.mapped,
+            nodes: r.nodes?.length,
+            links: r.links?.length,
+            screens: r.screens
+          }, null, 2));
+          NODE
+      - name: Publish map data to the protected founder route
+        run: |
+          mkdir -p SUPER_PHONE_starter/apps/web/private/founder
+          cp floorplan/index.html SUPER_PHONE_starter/apps/web/private/founder/floorplan-map.html
+          cp floorplan/graph.json SUPER_PHONE_starter/apps/web/private/founder/floorplan-graph.json
+          git add SUPER_PHONE_starter/apps/web/private/founder/floorplan-map.html SUPER_PHONE_starter/apps/web/private/founder/floorplan-graph.json SUPER_PHONE_starter/apps/web/app/founder/architecture/architecture-data.json
+          if git diff --cached --quiet; then
+            echo "The founder map has not changed."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "chore: refresh founder Floorplan map [skip ci]"
+            git pull --rebase origin "$GITHUB_REF_NAME"
+            git push
+          fi
+      - name: Upload Floorplan map and scan artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: super-phone-floorplan-map
+          path: |
+            /tmp/floorplan-scan-result.json
+            /tmp/floorplan-build-result.json
+            floorplan/architecture.json
+            floorplan/.cache/scan.json
+            floorplan/graph.json
+            floorplan/index.html
+          if-no-files-found: error
+          retention-days: 7
