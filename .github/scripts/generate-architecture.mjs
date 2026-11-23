@@ -52,7 +52,7 @@ function resolveImport(fromFile, specifier) {
   return null;
 }
 
-const importPattern = /(?:import|export)\\s+(?:[\\s\\S]*?\\s+from\\s+)?["']([^"']+)["']|import\\s*\\(\\s*["']([^"']+)["']\\s*\\)/g;
+const importPattern = /(?:import|export)\s+(?:[\s\S]*?\s+from\s+)?["']([^"']+)["']|import\s*\(\s*["']([^"']+)["']\s*\)/g;
 const dependencies = [];
 const importsByFile = new Map();
 for (const file of files) {
@@ -88,13 +88,13 @@ const webRoutes = webRouteFiles.map(file => ({
 const mobileApp = path.join(projectRoot, "apps/mobile/App.js");
 const mobileSource = read(mobileApp);
 const mobileImports = [];
-const mobileImportPattern = /import\\s+(?:[\\s\\S]*?\\s+from\\s+)?["']([^"']+)["']/g;
+const mobileImportPattern = /import\s+(?:[\s\S]*?\s+from\s+)?["']([^"']+)["']/g;
 let mobileMatch;
 while ((mobileMatch = mobileImportPattern.exec(mobileSource)) !== null) {
   const specifier = mobileMatch[1];
   const target = resolveImport(mobileApp, specifier);
   if (target && (target.includes("/screens/") || target.includes("/components/"))) {
-    mobileImports.push({ name: path.basename(target).replace(/\\.[^.]+$/, ""), file: target });
+    mobileImports.push({ name: path.basename(target).replace(/\.[^.]+$/, ""), file: target });
   }
 }
 const mobileScreens = mobileImports.filter(item => item.file.includes("/screens/"));
@@ -111,33 +111,33 @@ const rlsEnabled = new Set();
 
 for (const migration of migrationFiles) {
   const sql = read(path.join(sqlDir, migration));
-  const createTablePattern = /create\\s+table\\s+(?:if\\s+not\\s+exists\\s+)?public\\.([a-zA-Z0-9_]+)\\s*\\(([\\s\\S]*?)\\n\\s*\\);/gi;
+  const createTablePattern = /create\s+table\s+(?:if\s+not\s+exists\s+)?public\.([a-zA-Z0-9_]+)\s*\(([\s\S]*?)\n\s*\);/gi;
   let tableMatch;
   while ((tableMatch = createTablePattern.exec(sql)) !== null) {
     const tableName = tableMatch[1];
     const body = tableMatch[2];
     if (!tables.has(tableName)) tables.set(tableName, { name: tableName, columns: [], foreignKeys: [], migration });
     const table = tables.get(tableName);
-    for (const line of body.split("\\n")) {
-      const columnMatch = line.trim().match(/^([a-zA-Z_][a-zA-Z0-9_]*)\\s+(?!constraint\\b|primary\\b|unique\\b|foreign\\b|check\\b)([a-zA-Z][a-zA-Z0-9_]*(?:\\([^)]*\\))?)/i);
+    for (const line of body.split("\n")) {
+      const columnMatch = line.trim().match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s+(?!constraint\b|primary\b|unique\b|foreign\b|check\b)([a-zA-Z][a-zA-Z0-9_]*(?:\([^)]*\))?)/i);
       if (columnMatch && !table.columns.includes(columnMatch[1])) table.columns.push(columnMatch[1]);
-      const fkMatch = line.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\\s+[^,]*?references\\s+public\\.([a-zA-Z0-9_]+)\\s*\\(\\s*([a-zA-Z0-9_]+)\\s*\\)/i);
+      const fkMatch = line.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s+[^,]*?references\s+public\.([a-zA-Z0-9_]+)\s*\(\s*([a-zA-Z0-9_]+)\s*\)/i);
       if (fkMatch) {
         const edge = { column: fkMatch[1], referencesTable: fkMatch[2], referencesColumn: fkMatch[3] };
         if (!table.foreignKeys.some(item => JSON.stringify(item) === JSON.stringify(edge))) table.foreignKeys.push(edge);
       }
     }
-    const tableConstraint = /foreign\\s+key\\s*\\(\\s*([a-zA-Z0-9_]+)\\s*\\)\\s*references\\s+public\\.([a-zA-Z0-9_]+)\\s*\\(\\s*([a-zA-Z0-9_]+)\\s*\\)/gi;
+    const tableConstraint = /foreign\s+key\s*\(\s*([a-zA-Z0-9_]+)\s*\)\s*references\s+public\.([a-zA-Z0-9_]+)\s*\(\s*([a-zA-Z0-9_]+)\s*\)/gi;
     let fk;
     while ((fk = tableConstraint.exec(body)) !== null) {
       const edge = { column: fk[1], referencesTable: fk[2], referencesColumn: fk[3] };
       if (!table.foreignKeys.some(item => JSON.stringify(item) === JSON.stringify(edge))) table.foreignKeys.push(edge);
     }
   }
-  for (const match of sql.matchAll(/alter\\s+table\\s+public\\.([a-zA-Z0-9_]+)\\s+enable\\s+row\\s+level\\s+security/gi)) rlsEnabled.add(match[1]);
-  for (const match of sql.matchAll(/create\\s+policy\\s+([a-zA-Z0-9_]+)\\s+on\\s+public\\.([a-zA-Z0-9_]+)/gi)) policies.push({ name: match[1], table: match[2], migration });
-  for (const match of sql.matchAll(/create\\s+or\\s+replace\\s+function\\s+public\\.([a-zA-Z0-9_]+)\\s*\\(/gi)) functions.push({ name: match[1], migration });
-  for (const match of sql.matchAll(/create\\s+trigger\\s+([a-zA-Z0-9_]+)[\\s\\S]*?\\bon\\s+public\\.([a-zA-Z0-9_]+)[\\s\\S]*?execute\\s+function\\s+public\\.([a-zA-Z0-9_]+)\\s*\\(/gi)) triggers.push({ name: match[1], table: match[2], function: match[3], migration });
+  for (const match of sql.matchAll(/alter\s+table\s+public\.([a-zA-Z0-9_]+)\s+enable\s+row\s+level\s+security/gi)) rlsEnabled.add(match[1]);
+  for (const match of sql.matchAll(/create\s+policy\s+([a-zA-Z0-9_]+)\s+on\s+public\.([a-zA-Z0-9_]+)/gi)) policies.push({ name: match[1], table: match[2], migration });
+  for (const match of sql.matchAll(/create\s+or\s+replace\s+function\s+public\.([a-zA-Z0-9_]+)\s*\(/gi)) functions.push({ name: match[1], migration });
+  for (const match of sql.matchAll(/create\s+trigger\s+([a-zA-Z0-9_]+)[\s\S]*?\bon\s+public\.([a-zA-Z0-9_]+)[\s\S]*?execute\s+function\s+public\.([a-zA-Z0-9_]+)\s*\(/gi)) triggers.push({ name: match[1], table: match[2], function: match[3], migration });
 }
 const uniqueBy = (items, keyFn) => [...new Map(items.map(item => [keyFn(item), item])).values()];
 const dbTables = [...tables.values()].map(table => ({ ...table, rlsEnabled: rlsEnabled.has(table.name), policies: policies.filter(policy => policy.table === table.name).map(policy => policy.name) })).sort((a,b) => a.name.localeCompare(b.name));
@@ -176,5 +176,5 @@ const output = {
   }
 };
 fs.mkdirSync(path.dirname(outFile), { recursive: true });
-fs.writeFileSync(outFile, JSON.stringify(output, null, 2) + "\\n");
+fs.writeFileSync(outFile, JSON.stringify(output, null, 2) + "\n");
 console.log("[architecture] generated", rel(outFile), JSON.stringify(output.counts));
