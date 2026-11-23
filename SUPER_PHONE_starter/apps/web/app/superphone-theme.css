@@ -597,3 +597,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     border-radius:10px!important;
   }
 }
+
+
+/* Compact accessory category tiles and clearer red illustrations */
+.sp-store-category-grid{gap:9px!important}
+.sp-store-category-grid button{box-sizing:border-box;min-height:104px!important;padding:10px 12px!important;gap:9px!important;border-radius:14px!important;justify-content:flex-start}
+.sp-store-category-grid button span{display:grid;place-items:center;flex:0 0 34px;width:34px;height:34px;color:#C8102E;background:#fff1f3;border-radius:10px;font-size:0!important}
+.sp-store-category-grid button span svg{width:25px;height:25px;display:block}
+.sp-store-category-grid button strong{font-size:.92rem;line-height:1.45}
+@media(max-width:760px){.sp-store-category-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}.sp-store-category-grid button{min-height:92px!important;padding:9px!important}.sp-store-category-grid button span{flex-basis:30px;width:30px;height:30px}.sp-store-category-grid button span svg{width:22px;height:22px}.sp-store-category-grid button strong{font-size:.84rem}}
