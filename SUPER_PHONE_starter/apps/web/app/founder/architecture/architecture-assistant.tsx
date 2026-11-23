@@ -35,7 +35,8 @@ export default function ArchitectureAssistant(props: Props) {
     const q = raw.trim();
     if (!q) return;
     const lower = q.toLowerCase();
-    const tableMention = props.tables.find((table) => lower.includes(table.name.toLowerCase()));
+    const tableRows: Table[] = props.tables as Table[];
+    const tableMention: Table | undefined = tableRows.find((table: Table) => lower.includes(table.name.toLowerCase()));
     const routeMatches = props.routes.filter((route) =>
       includesAny(lower, [route.route.toLowerCase(), route.file.split("/").pop()!.toLowerCase()]) ||
       (includesAny(lower, ["دخول", "تسجيل", "login", "auth"]) && includesAny(route.route, ["login", "auth"]))
