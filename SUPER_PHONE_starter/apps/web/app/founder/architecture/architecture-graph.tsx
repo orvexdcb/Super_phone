@@ -81,6 +81,22 @@ export default function ArchitectureGraph(props: Props) {
     <section className="ag-box" aria-label="خريطة العلاقات التفاعلية">
       <style>{`
         .ag-box{display:grid;gap:12px}
+        .ag-box{color:#1f2937}
+        .ag-filter{background:#fff;color:#374151;border-color:#e5e7eb}
+        .ag-filter[aria-pressed="true"]{border-color:#c8102e;color:#c8102e;background:#fff1f2}
+        .ag-search{background:#fff;color:#1f2937;border-color:#d1d5db}
+        .ag-panel{background:#fff;border-color:#e5e7eb}
+        .ag-head{color:#c8102e;border-bottom-color:#e5e7eb}
+        .ag-head small,.ag-node small,.ag-selected p,.ag-hint,.ag-link small{color:#6b7280}
+        .ag-node{color:#1f2937}
+        .ag-node[aria-pressed="true"]{background:#fff1f2;border-color:#fda4af}
+        .ag-node:hover{background:#fff7f7}
+        .ag-dot{background:#9ca3af}.ag-dot.mobile{background:#c8102e}.ag-dot.shared{background:#6b7280}.ag-dot.database{background:#c8102e}
+        .ag-selected{background:#fff7f7;border-color:#fecdd3}
+        .ag-selected small,.ag-group h4{color:#c8102e}
+        .ag-count{background:#fff;border-color:#e5e7eb;color:#374151}
+        .ag-link{background:#fff;color:#1f2937;border-color:#e5e7eb}
+        .ag-link:hover{border-color:#c8102e}
         .ag-bar{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
         .ag-filter{border:1px solid var(--line);background:#142338;color:#d6deea;border-radius:20px;padding:8px 12px;font:inherit;font-size:.77rem;cursor:pointer}
         .ag-filter[aria-pressed="true"]{border-color:var(--gold);color:var(--gold-light);background:rgba(216,173,94,.12)}
