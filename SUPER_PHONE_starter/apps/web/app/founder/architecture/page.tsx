@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import architecture from "./architecture-data.json";
 import ArchitectureGraph from "./architecture-graph";
+import ArchitectureAssistant from "./architecture-assistant";
 import { createServerSupabase } from "../../../lib/supabase-server";
 
 export const dynamic = "force-dynamic";
@@ -218,6 +219,19 @@ export default async function FounderArchitecturePage() {
             <p>ملفات SQL الموجودة في المستودع، وليست بحد ذاتها إثباتًا على تنفيذ كل ملف حاليًا.</p>
             <ul>{architecture.database.migrations.map(file=><li key={file}><a href={githubFile(`SUPER_PHONE_starter/supabase/migrations/${file}`)} target="_blank" rel="noreferrer">{file}</a></li>)}</ul>
           </article>
+        </section>
+
+        <section className="sp-admin-panel">
+          <h2 className="arch-subtitle">اسأل عن هندسة المشروع</h2>
+          <ArchitectureAssistant
+            sourceFiles={sourceFiles}
+            routes={webRoutes}
+            tables={databaseTables}
+            relationships={databaseRelationships}
+            policies={architecture.database.policies}
+            functions={architecture.database.functions}
+            triggers={architecture.database.triggers}
+          />
         </section>
 
         <section className="sp-admin-panel">
