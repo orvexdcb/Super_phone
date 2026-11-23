@@ -19,3 +19,5 @@ The generated scan is followed by a validated Floorplan build. The resulting gra
 
 
 The generated map is served only through an admin-checked Next.js route and embedded in the founder page with a sandboxed iframe. The HTML and graph JSON are kept in the web server's private directory, not the public assets folder.
+
+The generator excludes its own HTML and graph snapshots from the next source scan to avoid counting generated output as application code.
