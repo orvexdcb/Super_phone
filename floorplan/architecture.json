@@ -201,5 +201,9 @@
       "title": "الخدمات الخارجية",
       "note": "اختم بمصدر المصادقة والبيانات والصور."
     }
+  ],
+  "ignore": [
+    "SUPER_PHONE_starter/apps/web/private/founder/floorplan-map.html",
+    "SUPER_PHONE_starter/apps/web/private/founder/floorplan-graph.json"
   ]
 }
