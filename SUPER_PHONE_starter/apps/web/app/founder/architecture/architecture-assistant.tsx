@@ -4,12 +4,13 @@ import { useMemo, useState } from "react";
 
 type Table = { name: string; columns: string[]; policies: string[]; rlsEnabled: boolean; migration?: string };
 type Route = { route: string; file: string; type: string; imports: string[] };
+type Policy = { name: string; table: string };
 type Props = {
   sourceFiles: string[];
   routes: Route[];
   tables: Table[];
   relationships: { fromTable: string; fromColumn: string; toTable: string; toColumn: string }[];
-  policies: { name: string; table: string }[];
+  policies: Policy[];
   functions: { name: string; migration: string }[];
   triggers: { name: string; table: string; function: string; migration: string }[];
 };
@@ -72,7 +73,10 @@ export default function ArchitectureAssistant(props: Props) {
     }
 
     if (includesAny(lower, ["سياسة", "سياسات", "rls", "policy", "صلاحية", "وصول"])) {
-      const matches: Props["policies"] = tableMention ? props.policies.filter((item: Props["policies"][number]) => item.table === tableMention.name) : props.policies.filter((item: Props["policies"][number]) => !lower.includes("إكسسوارات") || item.table.includes("accessory"));
+      const policyRows: Policy[] = props.policies;
+      const matches = tableMention
+        ? policyRows.filter((item) => item.table === tableMention.name)
+        : policyRows.filter((item) => !lower.includes("إكسسوارات") || item.table.includes("accessory"));
       setAnswer({ title: "سياسات الوصول المستخرجة", body: matches.map((item) => item.name + " — " + item.table).join("\n") || "لم أجد سياسة مطابقة في بيانات المستودع.", sources: matches.map((item) => item.table + " / " + item.name) });
       return;
     }
