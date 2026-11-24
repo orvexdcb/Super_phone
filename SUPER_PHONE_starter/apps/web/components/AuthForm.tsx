@@ -21,7 +21,14 @@ export default function AuthForm({ mode, lang = "ar" }: { mode: "login" | "signu
     const password = String(form.get("password") ?? "");
     const fullName = String(form.get("full_name") ?? "").trim();
 
-    if (mode === "signup" && password.length < 8) {
+    const strongPassword =
+      password.length >= 12 &&
+      /[a-z]/.test(password) &&
+      /[A-Z]/.test(password) &&
+      /\d/.test(password) &&
+      /[^A-Za-z0-9]/.test(password);
+
+    if (mode === "signup" && !strongPassword) {
       setError(t(lang, "passwordLength"));
       return;
     }
@@ -67,6 +74,8 @@ export default function AuthForm({ mode, lang = "ar" }: { mode: "login" | "signu
           type="password"
           placeholder={t(lang, "password")}
           required
+          minLength={mode === "signup" ? 12 : undefined}
+          maxLength={128}
           autoComplete={mode === "login" ? "current-password" : "new-password"}
           dir="ltr"
         />
