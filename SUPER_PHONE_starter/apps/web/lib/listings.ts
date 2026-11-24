@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { supabase } from "./supabase";
 
 export type ListingCard = {
@@ -25,16 +26,31 @@ export type Filters = {
 
 const PAGE_SIZE = 24;
 
+// Public category metadata changes infrequently; share it across requests.
+const getCachedCategories = unstable_cache(
+  async () => {
+    const { data, error } = await supabase
+      .from("categories")
+      .select("slug, name_ar")
+      .eq("is_active", true)
+      .order("sort_order");
+    if (error) throw new Error(error.message);
+    return data ?? [];
+  },
+  ["public-categories-v1"],
+  { revalidate: 3600, tags: ["public-categories"] }
+);
+
 export async function fetchCategories() {
-  const { data } = await supabase
-    .from("categories")
-    .select("slug, name_ar")
-    .eq("is_active", true)
-    .order("sort_order");
-  return data ?? [];
+  try {
+    return await getCachedCategories();
+  } catch {
+    // Keep the page usable if the data source is temporarily unavailable.
+    return [];
+  }
 }
 
-export async function fetchListings(f: Filters) {
+async function queryListings(f: Filters) {
   let query = supabase
     .from("listings")
     .select(
@@ -55,9 +71,37 @@ export async function fetchListings(f: Filters) {
 
   const page = Math.max(1, Math.floor(Number(f.page)) || 1);
   const from = (page - 1) * PAGE_SIZE;
-  // نجلب عنصراً زائداً لمعرفة وجود صفحة تالية
+  // Fetch one extra row to detect whether another page exists.
   const { data, error } = await query.range(from, from + PAGE_SIZE);
-  if (error) return { listings: [] as ListingCard[], error: error.message, hasNext: false, page };
+  if (error) throw new Error(error.message);
   const rows = (data ?? []) as unknown as ListingCard[];
-  return { listings: rows.slice(0, PAGE_SIZE), error: null, hasNext: rows.length > PAGE_SIZE, page };
+  return {
+    listings: rows.slice(0, PAGE_SIZE),
+    error: null,
+    hasNext: rows.length > PAGE_SIZE,
+    page,
+  };
+}
+
+// The filter object is part of the cache key, so searches never share results
+// with a different filter set. A short TTL keeps public listings fresh while
+// preventing every homepage request from hitting Supabase.
+const getCachedListings = unstable_cache(
+  async (filters: Filters) => queryListings(filters),
+  ["public-listings-v1"],
+  { revalidate: 15, tags: ["public-listings"] }
+);
+
+export async function fetchListings(f: Filters) {
+  const page = Math.max(1, Math.floor(Number(f.page)) || 1);
+  try {
+    return await getCachedListings(f);
+  } catch (error) {
+    return {
+      listings: [] as ListingCard[],
+      error: error instanceof Error ? error.message : "Could not load listings",
+      hasNext: false,
+      page,
+    };
+  }
 }
