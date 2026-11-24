@@ -25,7 +25,7 @@ This folder is a version-controlled, repeatable baseline for reviewing the produ
 ## Files
 - `01-schema-inventory.sql`: read-only catalog export query for tables, columns, keys, policies, triggers, routines, enums, indexes and storage bucket settings.
 - `02-integrity-checks.sql`: repeatable read-only orphan checks for all captured FK relationships.
-- `backup-database.ps1`: local PowerShell export script for roles, schema and data; it writes outside the repository and uses the current Supabase CLI `--remote=<connection-string>` syntax.
+- `backup-database.ps1`: local PowerShell export script for roles, schema and data; it writes outside the repository and uses the documented Supabase CLI `--db-url <connection-string>` syntax.
 - `03-auth-storage-recovery-checklist.md`: Auth/provider and Storage recovery checklist.
 
 ## Backup status and plan
@@ -33,8 +33,8 @@ This folder is a schema/security baseline, **not a complete database backup**.
 - The organization is currently on the Supabase Free plan. Supabase documentation states that daily managed backups are automatically provided for Pro, Team and Enterprise projects; Free projects should regularly export data using the Supabase CLI `db dump` workflow and keep off-site copies. No downloadable daily backup or PITR restore point has been verified for this project.
 - The available Supabase connector does not expose a database dump download or a bulk Storage-object export operation. No dump files have been generated in this repository or verified in a secure backup destination.
 - Supabase's supported CLI workflow requires the project database connection string/password and local Supabase CLI + Docker. It exports roles, schema and data separately. Credentials must be entered locally and must never be committed to Git.
-- Database dumps include database data such as `auth.users`, but Storage object bytes are not included. Storage files must be copied separately. At this snapshot there are zero rows in `storage.objects`, so there are currently no Storage objects to copy; re-check before every backup.
-- Current Auth count is one user. The Auth database rows are part of the database dump, but project-level Auth/provider settings, OAuth secrets, SMTP settings, JWT/API secrets and redirect configuration must be documented separately and restored/configured securely.
+- The current CLI reference says `supabase db dump` excludes Supabase-managed schemas including `auth` and `storage`. Therefore do not assume `auth.users` or Storage metadata are included in these three dump files. Storage object bytes must be copied separately; at this snapshot there are zero rows in `storage.objects`, so there are currently no object bytes to copy, but re-check before every backup. Auth users and Auth configuration require a separately verified export/restore procedure before this can be called a complete backup.
+- Current Auth count is one user. The CLI dump excludes the `auth` schema, so Auth user records and project-level Auth/provider settings, OAuth secrets, SMTP settings, JWT/API secrets and redirect configuration require separate handling. Do not assume user records are protected by the three SQL dump files.
 - No full database dump, Storage archive, or restore test has been completed yet.
 
 ## Required completion steps
