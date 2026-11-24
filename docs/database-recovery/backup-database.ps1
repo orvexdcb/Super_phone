@@ -28,13 +28,13 @@ function Invoke-Dump {
 }
 
 Write-Host "Exporting database roles..."
-Invoke-Dump @("db", "dump", "--db-url", $env:SUPERPHONE_DB_URL, "-f", (Join-Path $backupDir "roles.sql"), "--role-only")
+Invoke-Dump @("db", "dump", ("--remote=" + $env:SUPERPHONE_DB_URL), "-f", (Join-Path $backupDir "roles.sql"), "--role-only")
 
 Write-Host "Exporting database schema..."
-Invoke-Dump @("db", "dump", "--db-url", $env:SUPERPHONE_DB_URL, "-f", (Join-Path $backupDir "schema.sql"))
+Invoke-Dump @("db", "dump", ("--remote=" + $env:SUPERPHONE_DB_URL), "-f", (Join-Path $backupDir "schema.sql"))
 
 Write-Host "Exporting database data..."
-Invoke-Dump @("db", "dump", "--db-url", $env:SUPERPHONE_DB_URL, "-f", (Join-Path $backupDir "data.sql"), "--use-copy", "--data-only", "-x", "storage.buckets_vectors", "-x", "storage.vector_indexes")
+Invoke-Dump @("db", "dump", ("--remote=" + $env:SUPERPHONE_DB_URL), "-f", (Join-Path $backupDir "data.sql"), "--use-copy", "--data-only", "-x", "storage.buckets_vectors", "-x", "storage.vector_indexes")
 
 $files = @("roles.sql", "schema.sql", "data.sql") | ForEach-Object {
     $path = Join-Path $backupDir $_
