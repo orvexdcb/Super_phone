@@ -18,7 +18,13 @@ export default function AuthScreen({ lang = 'ar' }) {
     setError('');
     setInfo('');
     if (!email.trim() || !password) return setError(t('enterCredentials'));
-    if (mode === 'signup' && password.length < 8) return setError(t('passwordLength'));
+    const strongPassword =
+      password.length >= 12 &&
+      /[a-z]/.test(password) &&
+      /[A-Z]/.test(password) &&
+      /\d/.test(password) &&
+      /[^A-Za-z0-9]/.test(password);
+    if (mode === 'signup' && !strongPassword) return setError(t('passwordLength'));
 
     setBusy(true);
     try {
@@ -51,7 +57,7 @@ export default function AuthScreen({ lang = 'ar' }) {
       )}
       <TextInput style={styles.input} placeholder={t('email')} value={email} onChangeText={setEmail}
         autoCapitalize="none" keyboardType="email-address" autoComplete="email" />
-      <TextInput style={styles.input} placeholder={t('password')} value={password} onChangeText={setPassword} secureTextEntry autoCapitalize="none" />
+      <TextInput style={styles.input} placeholder={t('password')} value={password} onChangeText={setPassword} secureTextEntry autoCapitalize="none" maxLength={128} />
       <Pressable style={[styles.btn, busy && { opacity: 0.6 }]} onPress={submit} disabled={busy}>
         {busy ? <ActivityIndicator color={COLORS.bg} /> : <Text style={styles.btnText}>{mode === 'login' ? t('enter') : t('createAccount')}</Text>}
       </Pressable>
