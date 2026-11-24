@@ -25,6 +25,8 @@ This folder is a version-controlled, repeatable baseline for reviewing the produ
 ## Files
 - `01-schema-inventory.sql`: read-only catalog export query for tables, columns, keys, policies, triggers, routines, enums, indexes and storage bucket settings.
 - `02-integrity-checks.sql`: repeatable read-only orphan checks for all captured FK relationships.
+- `backup-database.ps1`: local PowerShell export script for roles, schema and data; it writes outside the repository and uses the current Supabase CLI `--remote=<connection-string>` syntax.
+- `03-auth-storage-recovery-checklist.md`: Auth/provider and Storage recovery checklist.
 
 ## Backup status and plan
 This folder is a schema/security baseline, **not a complete database backup**.
@@ -38,7 +40,7 @@ This folder is a schema/security baseline, **not a complete database backup**.
 ## Required completion steps
 1. On a trusted local machine, install Supabase CLI and Docker; create a secure private backup directory outside this repository.
 2. Use the Supabase Dashboard Connect panel to obtain the session-pooler connection string. Enter the database password locally; do not paste it into chat, GitHub, or this README.
-3. Run the official `supabase db dump` commands to export roles, schema and data to separate files. Verify the files exist, are non-empty, and are stored securely off-site.
+3. Run `docs/database-recovery/backup-database.ps1` in PowerShell after setting `SUPERPHONE_DB_URL` only in that local session. The script uses `supabase db dump --remote=<connection-string>` to export roles, schema and data separately. Verify the files exist, are non-empty, and are stored securely off-site.
 4. Re-check `storage.objects`. If objects exist, export their bytes separately using Supabase Storage CLI or an S3-compatible client and preserve paths/metadata.
 5. Record Auth settings and external provider configuration without exporting secrets into Git.
 6. Restore the dump and Storage objects into a separate test project. Verify table counts, Auth user count, FK integrity, RLS, triggers, Storage reads, and application sign-in/listing/order workflows before any cutover.
