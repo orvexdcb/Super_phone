@@ -13,7 +13,7 @@ This folder is a version-controlled, repeatable baseline for reviewing the produ
 - 14 tables in `public`; RLS is enabled on all 14.
 - 18 foreign-key relationships; all are validated.
 - Read-only orphan checks on all 18 relationships returned zero rows.
-- 17 triggers and 9 public routines were present at capture.
+- 12 distinct triggers (17 trigger-event rows) and 9 public routines were present at capture.
 - Storage bucket `listing-images`: public, 5 MiB limit, JPEG/PNG/WebP.
 - 14 migrations were recorded in Supabase; latest recorded version: `20261124155337`.
 - Health advisor returned no findings.
