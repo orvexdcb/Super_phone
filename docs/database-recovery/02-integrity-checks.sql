@@ -10,7 +10,7 @@ select * from (
  union all select 'reports -> profiles', count(*) from public.reports c left join public.profiles p on p.id=c.reporter_id where p.id is null
  union all select 'reports -> listings', count(*) from public.reports c left join public.listings p on p.id=c.listing_id where p.id is null
  union all select 'accessory_products -> profiles', count(*) from public.accessory_products c left join public.profiles p on p.id=c.seller_id where p.id is null
- union all select 'accessory_products -> accessory_categories', count(*) from public.accessory_products c left join public.accessory_categories p on p.id=c.id where p.id is null
+ union all select 'accessory_products -> accessory_categories', count(*) from public.accessory_products c left join public.accessory_categories p on p.id=c.category_id where p.id is null
  union all select 'accessory_product_images -> accessory_products', count(*) from public.accessory_product_images c left join public.accessory_products p on p.id=c.product_id where p.id is null
  union all select 'accessory_orders -> buyer profiles', count(*) from public.accessory_orders c left join public.profiles p on p.id=c.buyer_id where p.id is null
  union all select 'accessory_orders -> seller profiles', count(*) from public.accessory_orders c left join public.profiles p on p.id=c.seller_id where p.id is null
